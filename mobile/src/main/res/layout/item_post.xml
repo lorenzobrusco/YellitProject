@@ -1,34 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/cardview_post"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_alignParentStart="true"
-    android:layout_marginBottom="16dp"
-    android:layout_alignParentTop="true">
+    android:layout_height="wrap_content">
 
-    <RelativeLayout
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardview_post"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="8dp"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="6dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp">
 
-        <ImageView
-            android:id="@+id/image_profile_post"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/ic_launcher" />
+        <LinearLayout
+            android:id="@+id/content_post"
+            style="@style/Widget.CardContent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/corner_post"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/full_name_post"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/image_profile_post"
-            android:layout_marginBottom="11dp"
-            android:layout_marginStart="16dp"
-            android:layout_toEndOf="@+id/image_profile_post"
-            android:text="Name and Surname" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
+                <RelativeLayout
+                    android:id="@+id/user_profile_post"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background">
 
-    </RelativeLayout>
-</android.support.v7.widget.CardView>
+                    <ImageView
+                        android:id="@+id/image_profile_post"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/ic_launcher" />
+
+                    <TextView
+                        android:id="@+id/full_name_post"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/image_profile_post"
+                        android:layout_centerVertical="true"
+                        android:layout_marginBottom="11dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_toEndOf="@+id/image_profile_post"
+                        android:text="Name and Surname" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/data_post"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginLeft="8dp"
+                        android:text="Adesso"
+                        android:textSize="10dp" />
+
+                    <ImageView
+                        android:id="@+id/type_post"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:src="@mipmap/ic_launcher" />
+
+                </RelativeLayout>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginTop="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:text="Sta categoria presso" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/comment_content_post"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginTop="8dp">
+
+                <TextView
+                    android:id="@+id/comment_value_post"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:text="commento" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/image_content_post"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginTop="8dp">
+
+                <ImageView
+                    android:id="@+id/image_value_post"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:src="@mipmap/ic_launcher" />
+            </RelativeLayout>
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</LinearLayout>
