@@ -13,7 +13,7 @@ import android.widget.LinearLayout;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import unical.master.computerscience.yellit.R;
-import unical.master.computerscience.yellit.graphic.dialog.CustomDialogPrivacy;
+import unical.master.computerscience.yellit.graphic.Dialog.CustomDialogPrivacy;
 
 /**
  * Created by Lorenzo on 07/09/2016.

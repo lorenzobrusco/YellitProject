@@ -8,7 +8,10 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -19,6 +22,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import unical.master.computerscience.yellit.graphic.Activities.SettingActivity;
 import unical.master.computerscience.yellit.graphic.Fragments.PostFragment;
+import unical.master.computerscience.yellit.graphic.Fragments.ProfileFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,6 +43,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+       // mSearchView.setQueryHint("Query Hint");
+
         currentFragment = new PostFragment();
         MainActivity.this.setFragment(currentFragment);
         this.setupViews();
@@ -84,12 +94,18 @@ public class MainActivity extends AppCompatActivity {
                             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         }
                         currentItem = 1;
+                        removeFragment(currentFragment);
+                        currentFragment = new ProfileFragment();
+                        setFragment(currentFragment);
                         break;
                     case 2:
                         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
                             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         }
                         currentItem = 2;
+                        removeFragment(currentFragment);
+                        currentFragment = new PostFragment();
+                        setFragment(currentFragment);
                         break;
                     case 3:
                         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {

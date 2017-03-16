@@ -1,4 +1,4 @@
-package unical.master.computerscience.yellit.graphic.dialog;
+package unical.master.computerscience.yellit.graphic.Dialog;
 
 /**
  * Created by Lorenzo on 22/02/2017.

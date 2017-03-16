@@ -14,7 +14,7 @@
         android:paddingRight="24dp"
         android:paddingTop="32dp">
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <ImageView
             android:id="@+id/profile_image_signup"
             android:layout_width="100dp"
             android:layout_height="100dp"
