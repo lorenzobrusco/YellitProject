@@ -42,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         this.mBottomSheetBehavior =  BottomSheetBehavior.from(bottomSheet);
+        this.mBottomSheetBehavior.setHideable(true);
+        this.mBottomSheetBehavior.setPeekHeight(300);
+        this.mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         currentFragment = new PostFragment();
         MainActivity.this.setFragment(currentFragment);
         this.setupBottomNavigation(mBottomNavigation);
@@ -80,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
                         if(mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
                             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                         } else {
-                            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         }
                         break;
                 }
