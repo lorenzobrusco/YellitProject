@@ -3,10 +3,12 @@ package unical.master.computerscience.yellit;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -26,17 +28,20 @@ public class MainActivity extends AppCompatActivity {
     private static int ADD = 3;
     private static int MENU = 4;
 
-    @Bind(R.id.content_frame)
-    FrameLayout mFrame;
     @Bind(R.id.bottom_navigation_view)
     AHBottomNavigation mBottomNavigation;
+    @Bind(R.id.bottom_sheet1)
+    View bottomSheet;
     private Fragment currentFragment;
+    private BottomSheetBehavior mBottomSheetBehavior;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        this.mBottomSheetBehavior =  BottomSheetBehavior.from(bottomSheet);
         currentFragment = new PostFragment();
         MainActivity.this.setFragment(currentFragment);
         this.setupBottomNavigation(mBottomNavigation);
@@ -72,8 +77,11 @@ public class MainActivity extends AppCompatActivity {
             public boolean onTabSelected(int position, boolean wasSelected) {
                 switch (position) {
                     case 4:
-                        final CustomDialogBottomSheet dialogBottomSheet = CustomDialogBottomSheet.newInstance("Modal Bottom Sheet");
-                        dialogBottomSheet.show(getSupportFragmentManager().beginTransaction(),dialogBottomSheet.getTag());
+                        if(mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+                            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                        } else {
+                            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                        }
                         break;
                 }
 
