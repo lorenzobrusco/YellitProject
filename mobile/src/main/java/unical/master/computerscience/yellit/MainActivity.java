@@ -17,12 +17,6 @@ import unical.master.computerscience.yellit.graphic.Fragments.PostFragment;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static int FITNESS = 0;
-    private static int PROFILE = 1;
-    private static int HOME = 2;
-    private static int ADD = 3;
-    private static int MENU = 4;
-
     private int currentItem;
 
     @Bind(R.id.bottom_navigation_view)
