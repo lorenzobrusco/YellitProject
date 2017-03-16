@@ -1,4 +1,4 @@
-package unical.master.computerscience.yellit.Logic.Objects;
+package unical.master.computerscience.yellit.logic.Objects;
 
 /**
  * Created by Lorenzo on 14/03/2017.

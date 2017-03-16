@@ -9,15 +9,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import unical.master.computerscience.yellit.Logic.Objects.Post;
-import unical.master.computerscience.yellit.Logic.Objects.User;
+import unical.master.computerscience.yellit.logic.Objects.Post;
+import unical.master.computerscience.yellit.logic.Objects.User;
 import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.graphic.Adapters.PostAdapter;
 
