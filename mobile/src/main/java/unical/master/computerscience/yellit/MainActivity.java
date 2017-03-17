@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     View bottomSheet;
     @Bind(R.id.setting_buttom_menu)
     LinearLayout mSettingLayout;
+    @Bind(R.id.custom_search_view)SearchView mSearchView;
     private Fragment currentFragment;
     private BottomSheetBehavior mBottomSheetBehavior;
 
@@ -47,7 +48,9 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-       // mSearchView.setQueryHint("Query Hint");
+        mSearchView.onActionViewExpanded();
+        mSearchView.setIconified(true);
+        mSearchView.setQueryHint("Query Hint");
 
         currentFragment = new PostFragment();
         MainActivity.this.setFragment(currentFragment);
