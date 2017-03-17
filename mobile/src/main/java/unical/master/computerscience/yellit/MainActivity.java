@@ -1,7 +1,10 @@
 package unical.master.computerscience.yellit;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
@@ -16,21 +19,25 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import unical.master.computerscience.yellit.graphic.Activities.SettingActivity;
 import unical.master.computerscience.yellit.graphic.Fragments.PostFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.ProfileFragment;
+import unical.master.computerscience.yellit.utiliies.PermissionCheckUtils;
 
 public class MainActivity extends AppCompatActivity {
 
     private int currentItem;
+    private static final int REQUEST_ALL_MISSING_PERMISSIONS = 1;
 
     @Bind(R.id.bottom_navigation_view)
     AHBottomNavigation mBottomNavigation;
@@ -38,7 +45,8 @@ public class MainActivity extends AppCompatActivity {
     View bottomSheet;
     @Bind(R.id.setting_buttom_menu)
     LinearLayout mSettingLayout;
-    @Bind(R.id.custom_search_view)SearchView mSearchView;
+    @Bind(R.id.custom_search_view)
+    SearchView mSearchView;
     private Fragment currentFragment;
     private BottomSheetBehavior mBottomSheetBehavior;
 
@@ -64,18 +72,17 @@ public class MainActivity extends AppCompatActivity {
 
     @TargetApi(Build.VERSION_CODES.M)
     private void setupViews() {
-        AHBottomNavigationItem itemFitness = new AHBottomNavigationItem(R.string.tab_fitness, R.drawable.ic_fitness_center_black_24, R.color.color_bottom_navigation);
-        AHBottomNavigationItem itemProfile = new AHBottomNavigationItem(R.string.tab_profile, R.drawable.ic_person_black_24, R.color.color_bottom_navigation);
-        AHBottomNavigationItem itemHome = new AHBottomNavigationItem(R.string.tab_home, R.drawable.ic_home_black_24dp, R.color.color_bottom_navigation);
-        AHBottomNavigationItem itemAdd = new AHBottomNavigationItem(R.string.tab_add_post, R.drawable.ic_public_black_24, R.color.color_bottom_navigation);
-        AHBottomNavigationItem itemSomeThing = new AHBottomNavigationItem(R.string.tab_something, R.drawable.ic_menu_black_24
-                , R.color.color_bottom_navigation);
+        AHBottomNavigationItem itemFitness = new AHBottomNavigationItem(R.string.tab_fitness, R.drawable.ic_fitness_center_black_24, R.color.aluminum);
+        AHBottomNavigationItem itemProfile = new AHBottomNavigationItem(R.string.tab_profile, R.drawable.ic_person_black_24, R.color.aluminum);
+        AHBottomNavigationItem itemHome = new AHBottomNavigationItem(R.string.tab_home, R.drawable.ic_home_black_24dp, R.color.aluminum);
+        AHBottomNavigationItem itemAdd = new AHBottomNavigationItem(R.string.tab_add_post, R.drawable.ic_public_black_24, R.color.aluminum);
+        AHBottomNavigationItem itemSomeThing = new AHBottomNavigationItem(R.string.tab_something, R.drawable.ic_menu_black_24, R.color.aluminum);
         mBottomNavigation.addItem(itemFitness);
         mBottomNavigation.addItem(itemProfile);
         mBottomNavigation.addItem(itemHome);
         mBottomNavigation.addItem(itemAdd);
         mBottomNavigation.addItem(itemSomeThing);
-        mBottomNavigation.setColoredModeColors(getResources().getColor(R.color.active_button_bottom_navitagiont, getTheme()), getResources().getColor(R.color.inactive_button_bottom_navitagiont, getTheme()));
+        mBottomNavigation.setColoredModeColors(getResources().getColor(R.color.colorPrimary, getTheme()), getResources().getColor(R.color.inactive_button_bottom_navitagiont, getTheme()));
         mBottomNavigation.setForceTint(true);
         mBottomNavigation.setTranslucentNavigationEnabled(true);
         mBottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
@@ -122,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case 4:
                         if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
-                            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                         } else {
                             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         }
@@ -159,6 +166,15 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (!hasAllRequiredPermissions()) {
+            requestAllRequiredPermissions();
+        }
+    }
+
     @Override
     public void onBackPressed() {
         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
@@ -187,4 +203,68 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.remove(fragment);
         fragmentTransaction.commit();
     }
+
+    /*****************************************************************************************/
+    /**                                       Permits                                       **/
+    /*****************************************************************************************/
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_ALL_MISSING_PERMISSIONS: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    onAllRequiredPermissionsGranted();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please allow all permissions", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+                break;
+            }
+        }
+    }
+
+
+    @SuppressLint("NewApi")
+    private void requestAllRequiredPermissions() {
+        ArrayList<String> notGrantedPermissions = new ArrayList<>();
+
+        for (String permission : getRequiredPermissions()) {
+            if (!PermissionCheckUtils.hasPermission(getApplicationContext(), permission)) {
+                notGrantedPermissions.add(permission);
+            }
+        }
+
+        if (notGrantedPermissions.size() > 0) {
+            requestPermissions(notGrantedPermissions.toArray(new String[notGrantedPermissions.size()]),
+                    REQUEST_ALL_MISSING_PERMISSIONS);
+        }
+    }
+
+    /**
+     * @return All permission which this activity needs
+     */
+    protected String[] getRequiredPermissions() {
+        return new String[]{
+                Manifest.permission.INTERNET
+        };
+    }
+
+    /**
+     * Called when all need permissions granted
+     */
+    protected void onAllRequiredPermissionsGranted() {
+        Toast.makeText(getApplicationContext(), "all permissions are allow", Toast.LENGTH_SHORT).show();
+    }
+
+    private boolean hasAllRequiredPermissions() {
+        for (String permission : getRequiredPermissions()) {
+            if (!PermissionCheckUtils.hasPermission(getApplicationContext(), permission)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
+
