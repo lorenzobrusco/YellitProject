@@ -1,6 +1,5 @@
 package unical.master.computerscience.yellit;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -8,9 +7,7 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -21,10 +18,17 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import unical.master.computerscience.yellit.graphic.Activities.SettingActivity;
+import unical.master.computerscience.yellit.graphic.Fragments.AddPostFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.PostFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.ProfileFragment;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final int FITNESS_FRAG_BUTTON = 0;
+    private static final int PROFILE_FRAG_BUTTON = 1;
+    private static final int HOME_FRAG_BUTTON = 2;
+    private static final int ADDPOST_FRAG_BUTTON = 3;
+    private static final int OTHER_FRAG_BUTTON = 4;
 
     private int currentItem;
 
@@ -86,14 +90,15 @@ public class MainActivity extends AppCompatActivity {
         mBottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
             @Override
             public boolean onTabSelected(int position, boolean wasSelected) {
+
                 switch (position) {
-                    case 0:
+                    case FITNESS_FRAG_BUTTON:
                         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
                             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         }
                         currentItem = 0;
                         break;
-                    case 1:
+                    case PROFILE_FRAG_BUTTON:
                         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
                             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         }
@@ -102,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
                         currentFragment = new ProfileFragment();
                         setFragment(currentFragment);
                         break;
-                    case 2:
+                    case HOME_FRAG_BUTTON:
                         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
                             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         }
@@ -111,13 +116,16 @@ public class MainActivity extends AppCompatActivity {
                         currentFragment = new PostFragment();
                         setFragment(currentFragment);
                         break;
-                    case 3:
+                    case ADDPOST_FRAG_BUTTON:
                         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
                             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         }
                         currentItem = 3;
+                        removeFragment(currentFragment);
+                        currentFragment = new AddPostFragment();
+                        setFragment(currentFragment);
                         break;
-                    case 4:
+                    case OTHER_FRAG_BUTTON:
                         if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
                             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                         } else {

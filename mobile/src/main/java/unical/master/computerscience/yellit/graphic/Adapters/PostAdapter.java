@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import unical.master.computerscience.yellit.logic.Objects.Post;
+import unical.master.computerscience.yellit.logic.objects.Post;
 import unical.master.computerscience.yellit.R;
 
 /**
