@@ -10,10 +10,14 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+
+import java.lang.reflect.Field;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -38,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     View bottomSheet;
     @Bind(R.id.setting_buttom_menu)
     LinearLayout mSettingLayout;
+    @Bind(R.id.custom_search_view)SearchView mSearchView;
     private Fragment currentFragment;
     private BottomSheetBehavior mBottomSheetBehavior;
 
@@ -50,9 +55,11 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-       // mSearchView.setQueryHint("Query Hint");
-
+        mSearchView.setFocusable(false);
+        mSearchView.onActionViewExpanded();
+        mSearchView.clearFocus();
+        mSearchView.requestFocusFromTouch();
+        mSearchView.setQueryHint(" Search ");
         currentFragment = new PostFragment();
         MainActivity.this.setFragment(currentFragment);
         this.setupViews();
