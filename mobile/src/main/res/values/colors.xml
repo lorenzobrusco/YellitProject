@@ -6,4 +6,18 @@
     <color name="color_bottom_navigation">#cecece</color>
     <color name="inactive_button_bottom_navitagiont">#797979</color>
     <color name="active_button_bottom_navitagiont">#e60707</color>
+    <color name="colorConfirm">#009900</color>
+    <color name="colorAccentPressed">#d59368</color>
+    <color name="colorFacebook">#3b5998</color>
+    <color name="colorGoogle">#d34836</color>
+
+    <color name="black">#000000</color>
+    <color name="jet">#222222</color>
+    <color name="oil">#333333</color>
+    <color name="monsoon">#777777</color>
+    <color name="jumbo">#888888</color>
+    <color name="aluminum">#999999</color>
+    <color name="base">#AAAAAA</color>
+    <color name="iron">#CCCCCC</color>
+    <color name="white">#FFFFFF</color>
 </resources>

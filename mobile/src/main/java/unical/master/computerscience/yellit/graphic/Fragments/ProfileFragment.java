@@ -15,16 +15,16 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import unical.master.computerscience.yellit.logic.Objects.Post;
-import unical.master.computerscience.yellit.logic.Objects.User;
 import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.graphic.Adapters.PostAdapter;
+import unical.master.computerscience.yellit.logic.Objects.Post;
+import unical.master.computerscience.yellit.logic.Objects.User;
 
 /**
- * Created by Lorenzo on 14/03/2017.
+ * Created by Lorenzo on 16/03/2017.
  */
 
-public class PostFragment extends Fragment {
+public class ProfileFragment extends Fragment {
 
     @Bind(R.id.recycleview_posts)
     RecyclerView mPosts;
@@ -32,7 +32,7 @@ public class PostFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_posts, container, false);
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
         ButterKnife.bind(this, view);
         Log.d("post", "create");
         final PostAdapter mPostAdapter = new PostAdapter(this.getContext(), initList());

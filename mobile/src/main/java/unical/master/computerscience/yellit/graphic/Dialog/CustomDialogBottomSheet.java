@@ -1,4 +1,4 @@
-package unical.master.computerscience.yellit.graphic.dialog;
+package unical.master.computerscience.yellit.graphic.Dialog;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import unical.master.computerscience.yellit.R;

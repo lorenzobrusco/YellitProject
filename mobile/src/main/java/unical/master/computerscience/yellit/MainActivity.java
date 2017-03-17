@@ -1,19 +1,28 @@
 package unical.master.computerscience.yellit;
 
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.LinearLayout;
+
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import unical.master.computerscience.yellit.graphic.Activities.SettingActivity;
 import unical.master.computerscience.yellit.graphic.Fragments.PostFragment;
+import unical.master.computerscience.yellit.graphic.Fragments.ProfileFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
     AHBottomNavigation mBottomNavigation;
     @Bind(R.id.bottom_sheet1)
     View bottomSheet;
+    @Bind(R.id.setting_buttom_menu)
+    LinearLayout mSettingLayout;
     private Fragment currentFragment;
     private BottomSheetBehavior mBottomSheetBehavior;
 
@@ -32,6 +43,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+       // mSearchView.setQueryHint("Query Hint");
+
         currentFragment = new PostFragment();
         MainActivity.this.setFragment(currentFragment);
         this.setupViews();
@@ -81,12 +98,18 @@ public class MainActivity extends AppCompatActivity {
                             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         }
                         currentItem = 1;
+                        removeFragment(currentFragment);
+                        currentFragment = new ProfileFragment();
+                        setFragment(currentFragment);
                         break;
                     case 2:
                         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
                             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         }
                         currentItem = 2;
+                        removeFragment(currentFragment);
+                        currentFragment = new PostFragment();
+                        setFragment(currentFragment);
                         break;
                     case 3:
                         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
@@ -115,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
                 } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
 
                 } else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-                    if(mBottomNavigation.getCurrentItem() == 4)
+                    if (mBottomNavigation.getCurrentItem() == 4)
                         mBottomNavigation.setCurrentItem(currentItem);
                 }
             }
@@ -124,7 +147,26 @@ public class MainActivity extends AppCompatActivity {
             public void onSlide(View bottomSheet, float slideOffset) {
             }
         });
+        this.mSettingLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, SettingActivity.class));
+                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+            }
+        });
+    }
 
+    @Override
+    public void onBackPressed() {
+        if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
+            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        } else if (currentItem == 2) {
+            super.onBackPressed();
+        } else {
+            currentItem = 2;
+            mBottomNavigation.setCurrentItem(currentItem);
+            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        }
     }
 
     protected void setFragment(Fragment fragment) {
