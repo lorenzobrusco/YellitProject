@@ -13,10 +13,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+
+import java.lang.reflect.Field;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -47,11 +51,11 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        mSearchView.setFocusable(false);
         mSearchView.onActionViewExpanded();
-        mSearchView.setIconified(true);
-        mSearchView.setQueryHint("Query Hint");
-
+        mSearchView.clearFocus();
+        mSearchView.requestFocusFromTouch();
+        mSearchView.setQueryHint(" Search ");
         currentFragment = new PostFragment();
         MainActivity.this.setFragment(currentFragment);
         this.setupViews();
