@@ -22,13 +22,19 @@
             app:layout_scrollFlags="scroll|enterAlways|snap"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="16dp"
+                android:src="@mipmap/ic_launcher_round" />
+
             <android.support.v7.widget.SearchView
                 android:id="@+id/custom_search_view"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
                 android:layout_marginBottom="8dp"
                 android:layout_marginRight="16dp"
-                android:background="@color/colorPrimaryDark"/>
+                android:background="@color/colorPrimaryDark" />
 
         </android.support.v7.widget.Toolbar>
 
