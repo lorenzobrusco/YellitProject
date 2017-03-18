@@ -4,6 +4,7 @@ package unical.master.computerscience.yellit.graphic.Activities;
  * Created by Lorenzo on 22/02/2017.
  */
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import unical.master.computerscience.yellit.MainActivity;
 import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.graphic.Dialog.CustomDialogPrivacy;
 
@@ -47,6 +49,7 @@ public class SettingActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     private void buildPrivacyDialog() {
         final CustomDialogPrivacy customDialogPrivacy = new CustomDialogPrivacy(SettingActivity.this);
