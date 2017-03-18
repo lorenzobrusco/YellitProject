@@ -34,4 +34,7 @@
     <string name="play_again_desc">view again the welcome pages</string>
     <string name="build_version">1.0</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

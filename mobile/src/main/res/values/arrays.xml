@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="icons">
+        <item>@drawable/ic_flash_on</item>
+        <item>@drawable/ic_battery</item>
+        <item>@drawable/ic_gps_not_fixed</item>
+        <item>@drawable/blui</item>
+        <item>@drawable/ic_battery</item>
+    </array>
+
+    <array name="colors">
+        <item>@android:color/holo_blue_bright</item>
+        <item>@android:color/holo_purple</item>
+        <item>@android:color/holo_orange_light</item>
+        <item>@android:color/holo_green_light</item>
+        <item>@android:color/holo_blue_bright</item>
+    </array>
+
+    <array name="pressed_colors">
+        <item>@android:color/holo_red_dark</item>
+        <item>@android:color/holo_red_dark</item>
+        <item>@android:color/holo_red_dark</item>
+        <item>@android:color/holo_red_dark</item>
+        <item>@android:color/holo_red_dark</item>
+    </array>
+
+    <!-- Qualora volessimo mettere titoli sotto i bottoni -->
+    <array name="titles">
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+    </array>
+</resources>
