@@ -70,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
     private void setupViews() {
         AHBottomNavigationItem itemFitness = new AHBottomNavigationItem(R.string.tab_fitness, R.drawable.ic_fitness_center_black_24, R.color.aluminum);
         AHBottomNavigationItem itemProfile = new AHBottomNavigationItem(R.string.tab_profile, R.drawable.ic_person_black_24, R.color.aluminum);
@@ -82,7 +81,11 @@ public class MainActivity extends AppCompatActivity {
         mBottomNavigation.addItem(itemHome);
         mBottomNavigation.addItem(itemAdd);
         mBottomNavigation.addItem(itemSomeThing);
-        mBottomNavigation.setColoredModeColors(getResources().getColor(R.color.colorPrimary, getTheme()), getResources().getColor(R.color.inactive_button_bottom_navitagiont, getTheme()));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mBottomNavigation.setColoredModeColors(getResources().getColor(R.color.colorPrimary, getTheme()), getResources().getColor(R.color.inactive_button_bottom_navitagiont, getTheme()));
+        } else {
+            mBottomNavigation.setColoredModeColors(getResources().getColor(R.color.colorPrimary), getResources().getColor(R.color.inactive_button_bottom_navitagiont));
+        }
         mBottomNavigation.setForceTint(true);
         mBottomNavigation.setTranslucentNavigationEnabled(true);
         mBottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
