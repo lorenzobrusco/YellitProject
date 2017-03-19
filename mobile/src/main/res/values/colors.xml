@@ -20,4 +20,11 @@
     <color name="base">#AAAAAA</color>
     <color name="iron">#CCCCCC</color>
     <color name="white">#FFFFFF</color>
+
+    <!-- dots inactive colors -->
+    <color name="dot_dark_screen">#c0c0c0</color>
+
+    <!-- dots active colors -->
+    <color name="dot_light_screen">#808080</color>
+
 </resources>

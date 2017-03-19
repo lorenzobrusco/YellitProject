@@ -5,6 +5,7 @@ package unical.master.computerscience.yellit.graphic.Activities;
  */
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -22,8 +23,13 @@ import unical.master.computerscience.yellit.graphic.Dialog.CustomDialogPrivacy;
  */
 public class SettingActivity extends AppCompatActivity {
 
+    private static final String IS_FIRST_TIME_LAUNCH = "IsFirstTimeLaunch";
+    private static final String PREF_NAME = "androidhive-welcome";
+
     @Bind(R.id.privacy)
     LinearLayout privacy;
+    @Bind(R.id.welcomePage)
+    LinearLayout welcomePage;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,6 +43,16 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 buildPrivacyDialog();
+            }
+        });
+        this.welcomePage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences settings = SettingActivity.this.getSharedPreferences(PREF_NAME, 0);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putBoolean(IS_FIRST_TIME_LAUNCH, true);
+                editor.commit();
+                startActivity(new Intent(SettingActivity.this, WelcomeActivity.class));
             }
         });
 

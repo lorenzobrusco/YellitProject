@@ -9,6 +9,7 @@
     <string name="tab_add_post">New Post</string>
     <string name="tab_something">Something</string>
 
+    <string name="play_again_desc">To see the welcome pages again, click here</string>
 
     <string name="privacy_policy">
         L\'applicazione Routines non memorizza alcun dato dell\'utente fata eccezzione per i dati
@@ -31,10 +32,35 @@
         L\'applicazione si riserva il dirito di tenere traccia e di creare report in forma anonima
         dell\'utilizzo del\'applicazione stessa utilizzando strumenti come Google Analytics.
     </string>
-    <string name="play_again_desc">view again the welcome pages</string>
     <string name="build_version">1.0</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Example settings for Data & Sync -->
+    <string name="pref_header_data_sync">Data &amp; sync</string>
+
+    <string name="pref_title_sync_frequency">Sync frequency</string>
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+
+    <string name="next">NEXT</string>
+    <string name="skip">SKIP</string>
+    <string name="start">DONE</string>
+
 
 </resources>
