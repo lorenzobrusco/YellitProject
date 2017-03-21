@@ -52,6 +52,11 @@ public class Post {
         this.likes = likes;
     }
 
+    public Post(String userName) {
+        this.userName = userName;
+    }
+
+
     public Integer getIdPost() {
         return idPost;
     }
