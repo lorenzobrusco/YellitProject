@@ -10,37 +10,42 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.github.mikephil.charting.interfaces.datasets.IDataSet;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.utils.MPPointF;
 
 import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import unical.master.computerscience.yellit.R;
-import unical.master.computerscience.yellit.graphic.CircularLayout;
 
 /**
     Created by Salvatore on the 17/03/2017
  */
-public class AddPostFragment extends Fragment {
+public class AddPostFragment extends Fragment implements OnChartValueSelectedListener {
 
     //@Bind(R.id.circular_layout)
     //CircularLayout circLayout;
 
     @Bind(R.id.pie_menu)
-    PieChart mChart;
+    PieChart mainMenu;
+
+    //@Bind(R.id.sub_menu)
+    PieChart subMenu;
 
     protected Typeface mTfRegular;
     protected Typeface mTfLight;
@@ -58,6 +63,9 @@ public class AddPostFragment extends Fragment {
         ButterKnife.bind(this, view);
         Log.d("post", "creating AddPostFragment");
 
+        mTfRegular = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Regular.ttf");
+        mTfLight = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Light.ttf");
+
         /* if (circLayout != null) {
 
             circLayout.setOnCircularItemClickListener(new CircularLayout.OnCircularItemClickListener() {
@@ -68,52 +76,102 @@ public class AddPostFragment extends Fragment {
             });
         } */
 
-        mTfRegular = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Regular.ttf");
-        mTfLight = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Light.ttf");
+        buildMainMenu();
 
-        mChart.setUsePercentValues(true);
-        mChart.getDescription().setEnabled(false);
-        mChart.setExtraOffsets(5, 10, 5, 5);
-
-        mChart.setDragDecelerationFrictionCoef(10f);
-
-        mChart.setCenterTextTypeface(mTfLight);
-        mChart.setCenterText(generateCenterSpannableText());
-
-        mChart.setDrawHoleEnabled(true);
-        mChart.setHoleColor(Color.WHITE);
-
-        mChart.setTransparentCircleColor(Color.WHITE);
-        mChart.setTransparentCircleAlpha(110);
-
-        mChart.setHoleRadius(39f);
-        mChart.setTransparentCircleRadius(42f);
-
-        mChart.setDrawCenterText(true);
-
-        mChart.setRotationAngle(0);
-        // enable rotation of the chart by touch
-        mChart.setRotationEnabled(true);
-        mChart.setHighlightPerTapEnabled(true);
-
-        // mChart.setUnit(" €");
-        // mChart.setDrawUnitsInChart(true);
-
-        // add a selection listener
-        //mChart.setOnChartValueSelectedListener(this);
-
-        setData(5, 100);
-
-        mChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
-        // mChart.spin(2000, 0, 360);
-
-
-        // entry label styling
-        mChart.setEntryLabelColor(Color.WHITE);
-        mChart.setEntryLabelTypeface(mTfRegular);
-        mChart.setEntryLabelTextSize(12f);
+        //buildSubMenu();
 
         return view;
+    }
+
+    public void buildMainMenu() {
+
+        mainMenu.setBackgroundColor(Color.WHITE);
+
+        mainMenu.setUsePercentValues(true);
+        mainMenu.getDescription().setEnabled(false);
+        mainMenu.setExtraOffsets(5, 10, 5, 5);
+
+        mainMenu.setDragDecelerationFrictionCoef(0.9f);
+
+        mainMenu.setCenterTextTypeface(mTfLight);
+        mainMenu.setCenterText(generateCenterSpannableText());
+
+        mainMenu.setDrawHoleEnabled(true);
+        mainMenu.setHoleColor(Color.WHITE);
+
+        mainMenu.setTransparentCircleColor(Color.WHITE);
+        mainMenu.setTransparentCircleAlpha(110);
+
+        mainMenu.setHoleRadius(42f);
+        mainMenu.setTransparentCircleRadius(45f);
+
+        mainMenu.setDrawCenterText(true);
+
+        mainMenu.setRotationAngle(0);
+        // enable rotation of the chart by touch
+        mainMenu.setRotationEnabled(true);
+        mainMenu.setHighlightPerTapEnabled(true);
+
+        // mainMenu.setUnit(" €");
+        // mainMenu.setDrawUnitsInChart(true);
+
+        // add a selection listener
+        mainMenu.setOnChartValueSelectedListener(this);
+
+        setData(5, mainMenu, ColorTemplate.MATERIAL_COLORS);
+
+        //mainMenu.animateY(1400, Easing.EasingOption.EaseInOutQuad);
+        // mainMenu.spin(2000, 0, 360);
+
+        mainMenu.getLegend().setEnabled(false);
+
+        // entry label styling
+        mainMenu.setEntryLabelColor(Color.WHITE);
+        mainMenu.setEntryLabelTypeface(mTfRegular);
+        mainMenu.setEntryLabelTextSize(12f);
+    }
+
+    public void buildSubMenu() {
+
+        subMenu.setBackgroundColor(Color.BLUE);
+
+        moveOffScreen();
+
+        subMenu.setUsePercentValues(true);
+        subMenu.getDescription().setEnabled(false);
+
+        subMenu.setCenterTextTypeface(mTfLight);
+        subMenu.setCenterText(generateCenterSpannableText());
+
+        subMenu.setDrawHoleEnabled(true);
+        subMenu.setHoleColor(Color.WHITE);
+
+        subMenu.setTransparentCircleColor(Color.WHITE);
+        subMenu.setTransparentCircleAlpha(110);
+
+        subMenu.setHoleRadius(58f);
+        subMenu.setTransparentCircleRadius(61f);
+
+        subMenu.setDrawCenterText(true);
+
+        subMenu.setRotationEnabled(false);
+        subMenu.setHighlightPerTapEnabled(true);
+
+        subMenu.setMaxAngle(180f); // HALF CHART
+        subMenu.setRotationAngle(180f);
+        subMenu.setCenterTextOffset(0, -20);
+
+        setData(4, subMenu, ColorTemplate.VORDIPLOM_COLORS);
+
+        subMenu.animateY(1400, Easing.EasingOption.EaseInOutQuad);
+
+        subMenu.getLegend().setEnabled(false);
+
+        // entry label styling
+        subMenu.setEntryLabelColor(Color.WHITE);
+        subMenu.setEntryLabelTypeface(mTfRegular);
+        subMenu.setEntryLabelTextSize(12f);
+
     }
 
     private SpannableString generateCenterSpannableText() {
@@ -128,9 +186,9 @@ public class AddPostFragment extends Fragment {
         return s;
     }
 
-    private void setData(int count, float range) {
+    private void setData(int count, PieChart chart, int[] colorz) {
 
-        float mult = range;
+        float mult = 100;   //range
 
         ArrayList<PieEntry> entries = new ArrayList<PieEntry>();
 
@@ -148,42 +206,83 @@ public class AddPostFragment extends Fragment {
 
         dataSet.setSliceSpace(3f);
         //dataSet.setsetIconsOffset(new MPPointF(0, 40));
-        dataSet.setSelectionShift(5f);
-
-        // add a lot of colors
+        dataSet.setSelectionShift(10f);
 
         ArrayList<Integer> colors = new ArrayList<Integer>();
 
-        for (int c : ColorTemplate.VORDIPLOM_COLORS)
+        for (int c : colorz)
             colors.add(c);
-
-        for (int c : ColorTemplate.JOYFUL_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.COLORFUL_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.LIBERTY_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.PASTEL_COLORS)
-            colors.add(c);
-
-        colors.add(ColorTemplate.getHoloBlue());
 
         dataSet.setColors(colors);
-        //dataSet.setSelectionShift(0f);
 
         PieData data = new PieData(dataSet);
         data.setValueFormatter(new PercentFormatter());
-        data.setValueTextSize(11f);
+        data.setValueTextSize(16f);
         data.setValueTextColor(Color.WHITE);
         data.setValueTypeface(mTfLight);
-        mChart.setData(data);
+        chart.setData(data);
 
         // undo all highlights
-        mChart.highlightValues(null);
+        chart.highlightValues(null);
 
-        mChart.invalidate();
+        chart.invalidate();
     }
+
+    private void moveOffScreen() {
+
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        int height = display.getHeight();  // deprecated
+
+        int offset = (int)(height * 0.65); /* percent to move */
+
+        RelativeLayout.LayoutParams rlParams =
+                (RelativeLayout.LayoutParams) subMenu.getLayoutParams();
+
+        rlParams.setMargins(0, 0, 0, -offset);
+        subMenu.setLayoutParams(rlParams);
+    }
+
+    @Override
+    public void onValueSelected(Entry e, Highlight h) {
+
+        if (e == null)
+            return;
+
+        setData(5, mainMenu, ColorTemplate.LIBERTY_COLORS);
+
+        int index = (int) h.getX();
+
+        switch(index)
+        {
+            case 0:
+                Log.e("VAL ", "" + index);
+                mainMenu.animateX(1000, Easing.EasingOption.EaseOutCirc);
+                //mainMenu.spin(2000, 0, 360);
+                break;
+            case 1:
+                Log.e("VAL ", "" + index);
+                mainMenu.animateX(500);
+                break;
+            case 2:
+                mainMenu.animateX(1000, Easing.EasingOption.EaseInOutBack);
+                break;
+            case 3:
+                mainMenu.animateX(1000, Easing.EasingOption.EaseInOutQuart);
+                break;
+            case 4:
+                mainMenu.animateX(1000, Easing.EasingOption.EaseInOutExpo);
+                break;
+
+        }
+
+        /* Log.i("VAL SELECTED",
+                "Value: " + e.getX() + ", index: " + h.getX()
+                        + ", DataSet index: " + h.getDataSetIndex()); */
+    }
+
+    @Override
+    public void onNothingSelected() {
+        Log.i("PieChart", "nothing selected");
+    }
+
 }

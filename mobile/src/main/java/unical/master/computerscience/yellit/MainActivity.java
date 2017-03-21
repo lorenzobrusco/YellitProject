@@ -1,6 +1,9 @@
 package unical.master.computerscience.yellit;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
@@ -12,18 +15,19 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
-
-import java.lang.reflect.Field;
-
+import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import unical.master.computerscience.yellit.graphic.Activities.SettingActivity;
 import unical.master.computerscience.yellit.graphic.Fragments.AddPostFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.PostFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.ProfileFragment;
+import unical.master.computerscience.yellit.utiliies.PermissionCheckUtils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int OTHER_FRAG_BUTTON = 4;
 
     private int currentItem;
+    private static final int REQUEST_ALL_MISSING_PERMISSIONS = 1;
+
 
     @Bind(R.id.bottom_navigation_view)
     AHBottomNavigation mBottomNavigation;
@@ -41,7 +47,8 @@ public class MainActivity extends AppCompatActivity {
     View bottomSheet;
     @Bind(R.id.setting_buttom_menu)
     LinearLayout mSettingLayout;
-    @Bind(R.id.custom_search_view)SearchView mSearchView;
+    @Bind(R.id.custom_search_view)
+    SearchView mSearchView;
     private Fragment currentFragment;
     private BottomSheetBehavior mBottomSheetBehavior;
 
@@ -67,21 +74,20 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void setupViews() {
-        AHBottomNavigationItem itemFitness = new AHBottomNavigationItem(R.string.tab_fitness, R.drawable.ic_fitness_center_black_24, R.color.color_bottom_navigation);
-        AHBottomNavigationItem itemProfile = new AHBottomNavigationItem(R.string.tab_profile, R.drawable.ic_person_black_24, R.color.color_bottom_navigation);
-        AHBottomNavigationItem itemHome = new AHBottomNavigationItem(R.string.tab_home, R.drawable.ic_home_black_24dp, R.color.color_bottom_navigation);
-        AHBottomNavigationItem itemAdd = new AHBottomNavigationItem(R.string.tab_add_post, R.drawable.ic_public_black_24, R.color.color_bottom_navigation);
-        AHBottomNavigationItem itemSomeThing = new AHBottomNavigationItem(R.string.tab_something, R.drawable.ic_menu_black_24
-                , R.color.color_bottom_navigation);
+        AHBottomNavigationItem itemFitness = new AHBottomNavigationItem(R.string.tab_fitness, R.drawable.ic_fitness_center_black_24, R.color.aluminum);
+        AHBottomNavigationItem itemProfile = new AHBottomNavigationItem(R.string.tab_profile, R.drawable.ic_person_black_24, R.color.aluminum);
+        AHBottomNavigationItem itemHome = new AHBottomNavigationItem(R.string.tab_home, R.drawable.ic_home_black_24dp, R.color.aluminum);
+        AHBottomNavigationItem itemAdd = new AHBottomNavigationItem(R.string.tab_add_post, R.drawable.ic_public_black_24, R.color.aluminum);
+        AHBottomNavigationItem itemSomeThing = new AHBottomNavigationItem(R.string.tab_something, R.drawable.ic_menu_black_24, R.color.aluminum);
         mBottomNavigation.addItem(itemFitness);
         mBottomNavigation.addItem(itemProfile);
         mBottomNavigation.addItem(itemHome);
         mBottomNavigation.addItem(itemAdd);
         mBottomNavigation.addItem(itemSomeThing);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            mBottomNavigation.setColoredModeColors(getResources().getColor(R.color.active_button_bottom_navitagiont, getTheme()), getResources().getColor(R.color.inactive_button_bottom_navitagiont, getTheme()));
+            mBottomNavigation.setColoredModeColors(getResources().getColor(R.color.colorPrimary, getTheme()), getResources().getColor(R.color.inactive_button_bottom_navitagiont, getTheme()));
         } else {
-            mBottomNavigation.setColoredModeColors(getResources().getColor(R.color.active_button_bottom_navitagiont), getResources().getColor(R.color.inactive_button_bottom_navitagiont));
+            mBottomNavigation.setColoredModeColors(getResources().getColor(R.color.colorPrimary), getResources().getColor(R.color.inactive_button_bottom_navitagiont));
         }
         mBottomNavigation.setForceTint(true);
         mBottomNavigation.setTranslucentNavigationEnabled(true);
@@ -164,10 +170,19 @@ public class MainActivity extends AppCompatActivity {
         this.mSettingLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, SettingActivity.class));
+                startActivity(new Intent(getApplicationContext(), SettingActivity.class));
                 mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
             }
         });
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (!hasAllRequiredPermissions()) {
+            requestAllRequiredPermissions();
+        }
     }
 
     @Override
@@ -198,4 +213,68 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.remove(fragment);
         fragmentTransaction.commit();
     }
+
+    /*****************************************************************************************/
+    /**                                       Permits                                       **/
+    /*****************************************************************************************/
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_ALL_MISSING_PERMISSIONS: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    onAllRequiredPermissionsGranted();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please allow all permissions", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+                break;
+            }
+        }
+    }
+
+
+    @SuppressLint("NewApi")
+    private void requestAllRequiredPermissions() {
+        ArrayList<String> notGrantedPermissions = new ArrayList<>();
+
+        for (String permission : getRequiredPermissions()) {
+            if (!PermissionCheckUtils.hasPermission(getApplicationContext(), permission)) {
+                notGrantedPermissions.add(permission);
+            }
+        }
+
+        if (notGrantedPermissions.size() > 0) {
+            requestPermissions(notGrantedPermissions.toArray(new String[notGrantedPermissions.size()]),
+                    REQUEST_ALL_MISSING_PERMISSIONS);
+        }
+    }
+
+    /**
+     * @return All permission which this activity needs
+     */
+    protected String[] getRequiredPermissions() {
+        return new String[]{
+                Manifest.permission.INTERNET
+        };
+    }
+
+    /**
+     * Called when all need permissions granted
+     */
+    protected void onAllRequiredPermissionsGranted() {
+        Toast.makeText(getApplicationContext(), "all permissions are allow", Toast.LENGTH_SHORT).show();
+    }
+
+    private boolean hasAllRequiredPermissions() {
+        for (String permission : getRequiredPermissions()) {
+            if (!PermissionCheckUtils.hasPermission(getApplicationContext(), permission)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
+

@@ -3,6 +3,7 @@
     package="unical.master.computerscience.yellit">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -12,22 +13,24 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".graphic.Activities.LoginActivity"
-            android:windowSoftInputMode="stateAlwaysHidden">
+            android:name=".graphic.Activities.LoadActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".graphic.Activities.WelcomeActivity"/>
+        <activity
+            android:name=".graphic.Activities.LoginActivity"
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".graphic.Activities.SignUpActivity"
-
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/Base.Theme.DesignDemo"
-            android:windowSoftInputMode="stateAlwaysHidden"></activity>
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name=".graphic.Activities.SettingActivity" />
     </application>
 
