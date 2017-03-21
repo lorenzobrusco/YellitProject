@@ -1,29 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/color_bottom_navigation">
 
     <android.support.v7.widget.CardView
         android:id="@+id/cardview_post"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="1dp"
         android:layout_marginBottom="6dp"
         android:layout_marginLeft="2dp"
-        android:layout_marginRight="2dp">
+        android:layout_marginRight="2dp"
+        android:layout_marginTop="1dp">
 
         <LinearLayout
             android:id="@+id/content_post"
             style="@style/Widget.CardContent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/corner_post"
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/user_info_post"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="invisible">
 
                 <RelativeLayout
                     android:id="@+id/user_profile_post"
@@ -33,20 +35,18 @@
 
                     <ImageView
                         android:id="@+id/image_profile_post"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
                         android:src="@mipmap/ic_launcher" />
 
                     <TextView
                         android:id="@+id/full_name_post"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignBottom="@+id/image_profile_post"
                         android:layout_centerVertical="true"
-                        android:layout_marginBottom="11dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"
                         android:layout_toEndOf="@+id/image_profile_post"
+                        android:paddingLeft="32dp"
+                        android:paddingRight="32dp"
                         android:text="Name and Surname" />
                 </RelativeLayout>
 
@@ -74,9 +74,11 @@
             </LinearLayout>
 
             <RelativeLayout
+                android:id="@+id/current_action_post"
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
-                android:layout_marginTop="8dp">
+                android:layout_marginTop="8dp"
+                android:visibility="invisible">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -87,10 +89,23 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ProgressBar
+                    android:id="@+id/load_post"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true" />
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/comment_content_post"
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
-                android:layout_marginTop="8dp">
+                android:layout_marginTop="8dp"
+                android:visibility="invisible">
 
                 <TextView
                     android:id="@+id/comment_value_post"
@@ -112,23 +127,38 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    android:src="@mipmap/ic_launcher" />
+                    android:layout_centerHorizontal="true" />
             </RelativeLayout>
 
 
             <RelativeLayout
                 android:id="@+id/video_content_post"
                 android:layout_width="match_parent"
-                android:layout_height="fill_parent"
-                android:layout_marginTop="8dp">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:visibility="invisible">
 
                 <VideoView
                     android:id="@+id/video_value_post"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="32dp"/>
+                    android:layout_height="wrap_content" />
             </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/likes_content_post"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp">
+
+                <TextView
+                    android:id="@+id/likes_value_post"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="n likes" />
+            </RelativeLayout>
+
 
         </LinearLayout>
     </android.support.v7.widget.CardView>

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import unical.master.computerscience.yellit.graphic.Activities.SettingActivity;
+import unical.master.computerscience.yellit.graphic.Fragments.AddPostFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.PostFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.ProfileFragment;
 import unical.master.computerscience.yellit.utiliies.PermissionCheckUtils;
@@ -48,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mSearchView.setFocusable(false);
@@ -96,31 +96,45 @@ public class MainActivity extends AppCompatActivity {
                         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
                             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         }
-                        currentItem = 0;
+                        if(currentItem != position){
+                            currentItem = 0;
+                            removeFragment(currentFragment);
+                            currentFragment = new ProfileFragment();
+                            setFragment(currentFragment);
+                        }
                         break;
                     case 1:
                         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
                             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         }
-                        currentItem = 1;
-                        removeFragment(currentFragment);
-                        currentFragment = new ProfileFragment();
-                        setFragment(currentFragment);
+                        if(currentItem != position){
+                            currentItem = 1;
+                            removeFragment(currentFragment);
+                            currentFragment = new ProfileFragment();
+                            setFragment(currentFragment);
+                        }
                         break;
                     case 2:
                         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
                             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         }
-                        currentItem = 2;
-                        removeFragment(currentFragment);
-                        currentFragment = new PostFragment();
-                        setFragment(currentFragment);
+                        if(currentItem != position){
+                            currentItem = 2;
+                            removeFragment(currentFragment);
+                            currentFragment = new PostFragment();
+                            setFragment(currentFragment);
+                        }
                         break;
                     case 3:
                         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
                             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         }
-                        currentItem = 3;
+                        if(currentItem != position){
+                            currentItem = 3;
+                            removeFragment(currentFragment);
+                            currentFragment = new AddPostFragment();
+                            setFragment(currentFragment);
+                        }
                         break;
                     case 4:
                         if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {

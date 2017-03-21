@@ -15,12 +15,18 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.ceylonlabs.imageviewpopup.ImagePopup;
 
 import java.util.List;
@@ -37,7 +43,6 @@ import unical.master.computerscience.yellit.utiliies.BaseURL;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
 
-    private static final String BASEURL = "http://10.0.2.2:8080/HobbiesServer/";
     private Context mContext;
     private List<Post> mPosts;
 
@@ -71,6 +76,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
     public class PostViewHolder extends RecyclerView.ViewHolder {
 
+        @Bind(R.id.user_info_post)
+        LinearLayout userInfo;
+        @Bind(R.id.current_action_post)
+        RelativeLayout actionUser;
+        @Bind(R.id.comment_content_post)
+        RelativeLayout commentUser;
         @Bind(R.id.cardview_post)
         CardView mCardView;
         @Bind(R.id.full_name_post)
@@ -81,35 +92,73 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         ImageView imagePost;
         @Bind(R.id.video_value_post)
         VideoView videoPost;
+        @Bind(R.id.load_post)
+        ProgressBar progressBar;
 
         public PostViewHolder(final View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             Glide.with(mContext)
-                    .load(BaseURL.URL + "Images/banana.jpg")
-                    .error(R.mipmap.ic_launcher)
+                    .load(BaseURL.URL + "Images/user.jpg")
+                    .listener(new RequestListener<String, GlideDrawable>() {
+                        @Override
+                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                            progressBar.setVisibility(View.INVISIBLE);
+                            userInfo.setVisibility(View.VISIBLE);
+                            actionUser.setVisibility(View.VISIBLE);
+                            commentUser.setVisibility(View.VISIBLE);
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                            progressBar.setVisibility(View.INVISIBLE);
+                            userInfo.setVisibility(View.VISIBLE);
+                            actionUser.setVisibility(View.VISIBLE);
+                            commentUser.setVisibility(View.VISIBLE);
+                            return false;
+                        }
+
+                    })
+                    .fitCenter()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .error(mContext.getResources().getDrawable(R.mipmap.ic_launcher))
+                    .into(userImage);
+            Glide.with(mContext)
+                    .load(BaseURL.URL + "Images/pizza.jpg")
+                    .listener(new RequestListener<String, GlideDrawable>() {
+                        @Override
+                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                            progressBar.setVisibility(View.GONE);
+                            userInfo.setVisibility(View.VISIBLE);
+                            actionUser.setVisibility(View.VISIBLE);
+                            commentUser.setVisibility(View.VISIBLE);
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                            progressBar.setVisibility(View.GONE);
+                            userInfo.setVisibility(View.VISIBLE);
+                            actionUser.setVisibility(View.VISIBLE);
+                            commentUser.setVisibility(View.VISIBLE);
+                            return false;
+                        }
+                    })
+                    .fitCenter()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .error(mContext.getResources().getDrawable(R.mipmap.ic_launcher))
                     .into(imagePost);
             final ImagePopup imagePopup = new ImagePopup(mContext);
             imagePopup.setBackgroundColor(Color.TRANSPARENT);
-            final int width = Resources.getSystem().getDisplayMetrics().widthPixels / 2;
-            final int height = Resources.getSystem().getDisplayMetrics().heightPixels / 2;
-
             imagePost.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     /** Initiate Popup view **/
                     final Dialog dialog = new Dialog(mContext);
                     dialog.setContentView(R.layout.dialog_image_popup);
-                    ImageButton close = (ImageButton) dialog.findViewById(R.id.btnClose);
                     ImageView imageView = (ImageView) dialog.findViewById(R.id.image_popup);
                     imageView.setImageDrawable(imagePost.getDrawable());
-                    close.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            dialog.dismiss();
-                            //TODO Close button action
-                        }
-                    });
                     dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     dialog.show();
                 }
