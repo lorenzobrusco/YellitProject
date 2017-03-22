@@ -33,6 +33,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 import unical.master.computerscience.yellit.logic.objects.Post;
 import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.utiliies.BaseURL;
@@ -87,7 +88,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         @Bind(R.id.full_name_post)
         TextView personName;
         @Bind(R.id.image_profile_post)
-        ImageView userImage;
+        CircleImageView userImage;
         @Bind(R.id.image_value_post)
         ImageView imagePost;
         @Bind(R.id.video_value_post)

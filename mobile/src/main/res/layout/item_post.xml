@@ -11,11 +11,11 @@
         android:layout_marginBottom="6dp"
         android:layout_marginLeft="2dp"
         android:layout_marginRight="2dp"
+        android:background="@drawable/corner_post"
         android:layout_marginTop="1dp">
 
         <LinearLayout
             android:id="@+id/content_post"
-            style="@style/Widget.CardContent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -24,20 +24,22 @@
                 android:id="@+id/user_info_post"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="8dp"
                 android:orientation="horizontal"
                 android:visibility="invisible">
 
                 <RelativeLayout
                     android:id="@+id/user_profile_post"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/background">
+                    android:layout_height="wrap_content">
 
-                    <ImageView
+                    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:id="@+id/image_profile_post"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:src="@mipmap/ic_launcher" />
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:src="@mipmap/ic_launcher"
+                        app:civ_border_color="#FF000000"
+                        app:civ_border_width="0.5dp" />
 
                     <TextView
                         android:id="@+id/full_name_post"
@@ -45,30 +47,27 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_toEndOf="@+id/image_profile_post"
-                        android:paddingLeft="32dp"
-                        android:paddingRight="32dp"
-                        android:text="Name and Surname" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                        android:paddingLeft="8dp"
+                        android:text="Name and Surname"
+                        android:textColor="@android:color/black"
+                        android:textSize="14dp" />
 
                     <TextView
                         android:id="@+id/data_post"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginLeft="8dp"
+                        android:layout_below="@+id/full_name_post"
+                        android:layout_marginTop="18dp"
+                        android:layout_toEndOf="@+id/image_profile_post"
+                        android:paddingLeft="8dp"
                         android:text="Adesso"
                         android:textSize="10dp" />
 
-                    <ImageView
-                        android:id="@+id/type_post"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:src="@mipmap/ic_launcher" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
                 </RelativeLayout>
             </LinearLayout>
@@ -77,7 +76,10 @@
                 android:id="@+id/current_action_post"
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
-                android:layout_marginTop="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"
                 android:visibility="invisible">
 
                 <TextView
@@ -98,22 +100,6 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/comment_content_post"
-                android:layout_width="match_parent"
-                android:layout_height="fill_parent"
-                android:layout_marginTop="8dp"
-                android:visibility="invisible">
-
-                <TextView
-                    android:id="@+id/comment_value_post"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    android:text="commento" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -144,12 +130,33 @@
                     android:layout_height="wrap_content" />
             </RelativeLayout>
 
+            <RelativeLayout
+                android:id="@+id/comment_content_post"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:layout_margin="8dp"
+                android:visibility="invisible">
+
+                <TextView
+                    android:id="@+id/comment_value_post"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:text="@string/lorem" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="5dp"
+                android:background="@android:color/darker_gray" />
 
             <RelativeLayout
                 android:id="@+id/likes_content_post"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp">
+                android:layout_margin="8dp">
 
                 <TextView
                     android:id="@+id/likes_value_post"
