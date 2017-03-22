@@ -14,6 +14,8 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
 
 import com.github.mikephil.charting.animation.Easing;
@@ -38,6 +40,15 @@ import unical.master.computerscience.yellit.R;
  */
 public class AddPostFragment extends Fragment implements OnChartValueSelectedListener {
 
+    /* if (circLayout != null) {
+
+       circLayout.setOnCircularItemClickListener(new CircularLayout.OnCircularItemClickListener() {
+         @Override
+         public void onCircularItemClick(int index) {
+               Toast.makeText(getContext(), "Item " + index + " clicked", Toast.LENGTH_SHORT).show();
+          }
+         });
+    } */
     //@Bind(R.id.circular_layout)
     //CircularLayout circLayout;
 
@@ -56,6 +67,9 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
             "Party Y", "Party Z"
     };
 
+    Animation expandIn;
+    Animation expandOut;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -66,15 +80,30 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         mTfRegular = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Regular.ttf");
         mTfLight = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Light.ttf");
 
-        /* if (circLayout != null) {
+        expandIn = AnimationUtils.loadAnimation(getContext(), R.anim.expand_in);
+        expandOut = AnimationUtils.loadAnimation(getContext(), R.anim.expand_out);
 
-            circLayout.setOnCircularItemClickListener(new CircularLayout.OnCircularItemClickListener() {
-                @Override
-                public void onCircularItemClick(int index) {
-                    Toast.makeText(getContext(), "Item " + index + " clicked", Toast.LENGTH_SHORT).show();
-                }
-            });
-        } */
+        Animation.AnimationListener animation1Listener = new Animation.AnimationListener() {
+
+            @Override
+            public void onAnimationStart(Animation animation) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mainMenu.startAnimation(expandOut);
+            }
+        };
+
+        expandIn.setAnimationListener(animation1Listener);
 
         buildMainMenu();
 
@@ -85,7 +114,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
     public void buildMainMenu() {
 
-        mainMenu.setBackgroundColor(Color.WHITE);
+        mainMenu.setBackgroundColor(Color.TRANSPARENT);
 
         mainMenu.setUsePercentValues(true);
         mainMenu.getDescription().setEnabled(false);
@@ -248,6 +277,8 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         if (e == null)
             return;
 
+        mainMenu.startAnimation(expandIn);
+
         setData(5, mainMenu, ColorTemplate.LIBERTY_COLORS);
 
         int index = (int) h.getX();
@@ -256,21 +287,23 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         {
             case 0:
                 Log.e("VAL ", "" + index);
-                mainMenu.animateX(1000, Easing.EasingOption.EaseOutCirc);
+
+                // /mainMenu.animateX(1000, Easing.EasingOption.EaseOutCirc);
                 //mainMenu.spin(2000, 0, 360);
                 break;
             case 1:
                 Log.e("VAL ", "" + index);
-                mainMenu.animateX(500);
+
+                // mainMenu.animateX(500);
                 break;
             case 2:
-                mainMenu.animateX(1000, Easing.EasingOption.EaseInOutBack);
+                //mainMenu.animateX(1000, Easing.EasingOption.EaseInOutBack);
                 break;
             case 3:
-                mainMenu.animateX(1000, Easing.EasingOption.EaseInOutQuart);
+                //mainMenu.animateX(1000, Easing.EasingOption.EaseInOutQuart);
                 break;
             case 4:
-                mainMenu.animateX(1000, Easing.EasingOption.EaseInOutExpo);
+                //mainMenu.animateX(1000, Easing.EasingOption.EaseInOutExpo);
                 break;
 
         }
