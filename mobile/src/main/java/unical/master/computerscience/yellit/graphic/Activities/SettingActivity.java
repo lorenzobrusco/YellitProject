@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import unical.master.computerscience.yellit.R;
-import unical.master.computerscience.yellit.graphic.dialog.*;
+import unical.master.computerscience.yellit.graphic.Dialog.CustomDialogPrivacy;
 
 /**
  * Created by Lorenzo on 07/09/2016.
@@ -67,6 +67,7 @@ public class SettingActivity extends AppCompatActivity {
 
 
     private void buildPrivacyDialog() {
+
         final CustomDialogPrivacy customDialogPrivacy = new CustomDialogPrivacy(SettingActivity.this);
         customDialogPrivacy.show();
     }
