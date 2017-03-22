@@ -15,7 +15,9 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import java.util.ArrayList;
@@ -29,8 +31,15 @@ import unical.master.computerscience.yellit.utiliies.PermissionCheckUtils;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int FITNESS_FRAG_BUTTON = 0;
+    private static final int PROFILE_FRAG_BUTTON = 1;
+    private static final int HOME_FRAG_BUTTON = 2;
+    private static final int ADDPOST_FRAG_BUTTON = 3;
+    private static final int OTHER_FRAG_BUTTON = 4;
+
     private int currentItem;
     private static final int REQUEST_ALL_MISSING_PERMISSIONS = 1;
+
 
     @Bind(R.id.bottom_navigation_view)
     AHBottomNavigation mBottomNavigation;
@@ -49,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mSearchView.setFocusable(false);
@@ -61,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         this.setupViews();
 
     }
+
 
     private void setupViews() {
         AHBottomNavigationItem itemFitness = new AHBottomNavigationItem(R.string.tab_fitness, R.drawable.ic_fitness_center_black_24, R.color.aluminum);
@@ -91,54 +102,44 @@ public class MainActivity extends AppCompatActivity {
         mBottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
             @Override
             public boolean onTabSelected(int position, boolean wasSelected) {
+
                 switch (position) {
-                    case 0:
+                    case FITNESS_FRAG_BUTTON:
                         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
                             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         }
-                        if(currentItem != position){
-                            currentItem = 0;
-                            removeFragment(currentFragment);
-                            currentFragment = new ProfileFragment();
-                            setFragment(currentFragment);
-                        }
+                        currentItem = 0;
                         break;
-                    case 1:
+                    case PROFILE_FRAG_BUTTON:
                         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
                             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         }
-                        if(currentItem != position){
-                            currentItem = 1;
-                            removeFragment(currentFragment);
-                            currentFragment = new ProfileFragment();
-                            setFragment(currentFragment);
-                        }
+                        currentItem = 1;
+                        removeFragment(currentFragment);
+                        currentFragment = new ProfileFragment();
+                        setFragment(currentFragment);
                         break;
-                    case 2:
+                    case HOME_FRAG_BUTTON:
                         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
                             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         }
-                        if(currentItem != position){
-                            currentItem = 2;
-                            removeFragment(currentFragment);
-                            currentFragment = new PostFragment();
-                            setFragment(currentFragment);
-                        }
+                        currentItem = 2;
+                        removeFragment(currentFragment);
+                        currentFragment = new PostFragment();
+                        setFragment(currentFragment);
                         break;
-                    case 3:
+                    case ADDPOST_FRAG_BUTTON:
                         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
                             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         }
-                        if(currentItem != position){
-                            currentItem = 3;
-                            removeFragment(currentFragment);
-                            currentFragment = new AddPostFragment();
-                            setFragment(currentFragment);
-                        }
+                        currentItem = 3;
+                        removeFragment(currentFragment);
+                        currentFragment = new AddPostFragment();
+                        setFragment(currentFragment);
                         break;
-                    case 4:
+                    case OTHER_FRAG_BUTTON:
                         if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
-                            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                         } else {
                             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         }

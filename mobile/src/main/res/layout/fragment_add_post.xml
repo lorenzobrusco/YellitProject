@@ -5,7 +5,25 @@
     android:layout_height="match_parent"
     tools:context="unical.master.computerscience.yellit.graphic.Fragments.AddPostFragment">
 
-    <unical.master.computerscience.yellit.graphic.CircularLayout
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/pie_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+        <!-- <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/sub_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/> -->
+
+</RelativeLayout>
+
+</FrameLayout>
+
+    <!-- <unical.master.computerscience.yellit.graphic.CircularLayout
         android:id="@+id/circular_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -20,6 +38,5 @@
         app:outer_radius="@dimen/outer_radius"
         app:title_color="@android:color/white"
         app:title_padding="@dimen/title_padding"
-        app:title_size="@dimen/title_size" />
-
-</FrameLayout>
+        android:fitsSystemWindows="true"
+        app:title_size="@dimen/title_size" /> -->
