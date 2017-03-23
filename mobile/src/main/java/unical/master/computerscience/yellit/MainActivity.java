@@ -20,7 +20,9 @@ import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+
 import java.util.ArrayList;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import unical.master.computerscience.yellit.graphic.Activities.SettingActivity;
@@ -58,9 +60,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        getSupportActionBar().hide();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         mSearchView.setFocusable(false);
         mSearchView.onActionViewExpanded();
         mSearchView.clearFocus();
@@ -108,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
                             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         }
-                        if(currentItem != position) {
+                        if (currentItem != position) {
                             currentItem = position;
                         }
                         break;
@@ -117,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
                             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         }
 
-                        if(currentItem != position) {
+                        if (currentItem != position) {
                             currentItem = position;
                             removeFragment(currentFragment);
                             currentFragment = new ProfileFragment();
@@ -130,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
                             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         }
 
-                        if(currentItem != position) {
+                        if (currentItem != position) {
                             currentItem = position;
                             removeFragment(currentFragment);
                             currentFragment = new PostFragment();
@@ -142,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
                             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         }
 
-                        if(currentItem != position) {
+                        if (currentItem != position) {
                             currentItem = position;
                             removeFragment(currentFragment);
                             currentFragment = new AddPostFragment();

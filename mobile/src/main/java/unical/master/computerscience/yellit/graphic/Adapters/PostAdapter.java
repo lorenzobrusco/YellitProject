@@ -1,5 +1,7 @@
 package unical.master.computerscience.yellit.graphic.Adapters;
 
+import android.animation.Animator;
+import android.animation.StateListAnimator;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,6 +14,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -37,6 +42,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import unical.master.computerscience.yellit.logic.objects.Post;
 import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.utiliies.BaseURL;
+
+import static android.R.attr.animateFirstView;
+import static android.R.attr.pivotX;
+import static android.R.attr.pivotY;
 
 /**
  * Created by Lorenzo on 14/03/2017.
@@ -95,6 +104,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         VideoView videoPost;
         @Bind(R.id.load_post)
         ProgressBar progressBar;
+        @Bind(R.id.like_post)
+        ImageView like;
 
         public PostViewHolder(final View itemView) {
             super(itemView);
@@ -104,7 +115,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                     .listener(new RequestListener<String, GlideDrawable>() {
                         @Override
                         public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                            progressBar.setVisibility(View.INVISIBLE);
+                            progressBar.setVisibility(View.GONE);
                             userInfo.setVisibility(View.VISIBLE);
                             actionUser.setVisibility(View.VISIBLE);
                             commentUser.setVisibility(View.VISIBLE);
@@ -113,7 +124,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
                         @Override
                         public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                            progressBar.setVisibility(View.INVISIBLE);
+                            progressBar.setVisibility(View.GONE);
                             userInfo.setVisibility(View.VISIBLE);
                             actionUser.setVisibility(View.VISIBLE);
                             commentUser.setVisibility(View.VISIBLE);
@@ -165,6 +176,36 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                 }
             });
 
+            like.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    like.animate().setListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animator) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animator) {
+                            //like.setImageDrawable(mContext.getResources().getDrawable(R.mipmap.ic_like));
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animator) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animator) {
+
+                        }
+                    }).rotationY(360f)
+                      .setDuration(500)
+                      .start();
+
+                }
+            });
         }
 
     }

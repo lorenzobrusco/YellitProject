@@ -8,11 +8,10 @@
         android:id="@+id/cardview_post"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="6dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginLeft="2dp"
         android:layout_marginRight="2dp"
-        android:background="@drawable/corner_post"
-        android:layout_marginTop="1dp">
+        android:background="@drawable/corner_post">
 
         <LinearLayout
             android:id="@+id/content_post"
@@ -69,6 +68,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
+                    <ImageView
+                        android:id="@+id/like_post"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="5dp"
+                        android:src="@mipmap/ic_no_like" />
+
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_below="@+id/like_post"
+                        android:paddingRight="6dp"
+                        android:text="0 like" />
+
                 </RelativeLayout>
             </LinearLayout>
 
@@ -76,18 +92,39 @@
                 android:id="@+id/current_action_post"
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
+                android:layout_marginBottom="1dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
-                android:visibility="invisible">
+                android:visibility="invisible"
+                android:layout_marginTop="1dp">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
-                    android:text="Sta categoria presso" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="4dp"
+                        android:text="Stà" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="4dp"
+                        android:text="mangiando"
+                        android:textSize="16dp"
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="presso" />
+                </LinearLayout>
+
             </RelativeLayout>
 
             <RelativeLayout
@@ -151,20 +188,6 @@
                 android:layout_height="0.5dp"
                 android:layout_marginTop="5dp"
                 android:background="@android:color/darker_gray" />
-
-            <RelativeLayout
-                android:id="@+id/likes_content_post"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp">
-
-                <TextView
-                    android:id="@+id/likes_value_post"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:text="n likes" />
-            </RelativeLayout>
 
 
         </LinearLayout>

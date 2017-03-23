@@ -15,6 +15,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import unical.master.computerscience.yellit.graphic.custom.PaddingItemDecoration;
 import unical.master.computerscience.yellit.logic.objects.Post;
 import unical.master.computerscience.yellit.logic.objects.User;
 import unical.master.computerscience.yellit.R;
@@ -38,6 +39,7 @@ public class PostFragment extends Fragment {
         final PostAdapter mPostAdapter = new PostAdapter(this.getContext(), initList());
         mPosts.setLayoutManager(new LinearLayoutManager(this.getContext()));
         mPosts.setAdapter(mPostAdapter);
+        mPosts.addItemDecoration( new PaddingItemDecoration(170));
         return view;
     }
 
