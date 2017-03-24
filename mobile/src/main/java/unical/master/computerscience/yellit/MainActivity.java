@@ -61,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         getSupportActionBar().hide();
-
         mSearchView.setFocusable(false);
         mSearchView.onActionViewExpanded();
         mSearchView.clearFocus();
