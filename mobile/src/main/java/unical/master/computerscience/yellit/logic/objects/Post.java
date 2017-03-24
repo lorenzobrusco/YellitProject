@@ -1,20 +1,93 @@
 package unical.master.computerscience.yellit.logic.objects;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by Lorenzo on 14/03/2017.
  */
 
 public class Post {
 
-    private String type, text;
-    private User user;
+    @SerializedName("id_post")
+    private Integer idPost;
 
-    public Post(String type, String text, User user) {
+    @SerializedName("user_nick")
+    private String userName;
+
+    @SerializedName("user_image")
+    private String userImagePath;
+
+    @SerializedName("date")
+    private String date;
+
+    @SerializedName("type")
+    private String type;
+
+    @SerializedName("location")
+    private String location;
+
+    @SerializedName("comment")
+    private String comment;
+
+    @SerializedName("post_image")
+    private String postImagePost;
+
+    @SerializedName("post_video")
+    private String postVideoPost;
+
+    @SerializedName("likes")
+    private String likes;
+
+    public Post(Integer idPost, String userName, String userImagePath, String date, String type, String location, String comment, String postImagePost,
+                String postVideoPost, String likes) {
+        this.idPost = idPost;
+        this.userName = userName;
+        this.userImagePath = userImagePath;
+        this.date = date;
         this.type = type;
-        this.text = text;
-        this.user = user;
+        this.location = location;
+        this.comment = comment;
+        this.postImagePost = postImagePost;
+        this.postVideoPost = postVideoPost;
+        this.likes = likes;
     }
 
+    public Post(String userName) {
+        this.userName = userName;
+    }
+
+
+    public Integer getIdPost() {
+        return idPost;
+    }
+
+    public void setIdPost(Integer idPost) {
+        this.idPost = idPost;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserImagePath() {
+        return userImagePath;
+    }
+
+    public void setUserImagePath(String userImagePath) {
+        this.userImagePath = userImagePath;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 
     public String getType() {
         return type;
@@ -24,19 +97,43 @@ public class Post {
         this.type = type;
     }
 
-    public String getText() {
-        return this.text;
+    public String getLocation() {
+        return location;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
-    public User getUser() {
-        return user;
+    public String getComment() {
+        return comment;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public String getPostImagePost() {
+        return postImagePost;
+    }
+
+    public void setPostImagePost(String postImagePost) {
+        this.postImagePost = postImagePost;
+    }
+
+    public String getPostVideoPost() {
+        return postVideoPost;
+    }
+
+    public void setPostVideoPost(String postVideoPost) {
+        this.postVideoPost = postVideoPost;
+    }
+
+    public String getLikes() {
+        return likes;
+    }
+
+    public void setLikes(String likes) {
+        this.likes = likes;
     }
 }

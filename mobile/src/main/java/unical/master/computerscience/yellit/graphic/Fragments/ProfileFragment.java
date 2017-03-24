@@ -43,12 +43,12 @@ public class ProfileFragment extends Fragment {
 
     private List<Post> initList() {
         final List<Post> posts = new ArrayList<>();
-        posts.add(new Post("food", "...", new User("Lorenzo Brusco")));
-        posts.add(new Post("drink", "...", new User("Salvatore Isabella")));
-        posts.add(new Post("outside", "...", new User("Francesco Cosco")));
-        posts.add(new Post("inside", "...", new User("Francesca Tassoni")));
-        posts.add(new Post("travel", "...", new User("Eliana Cannella")));
-        posts.add(new Post("fitness", "...", new User("Paola Arcuri")));
+        posts.add(new Post("Lorenzo Brusco"));
+        posts.add(new Post("Salvatore Isabella"));
+        posts.add(new Post("Francesco Cosco"));
+        posts.add(new Post("Francesca Tassoni"));
+        posts.add(new Post("Eliana Cannella"));
+        posts.add(new Post("Paola Arcuri"));
         return posts;
     }
 
