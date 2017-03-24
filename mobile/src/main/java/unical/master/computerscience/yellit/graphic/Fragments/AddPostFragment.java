@@ -1,5 +1,6 @@
 package unical.master.computerscience.yellit.graphic.Fragments;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -10,15 +11,12 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.RelativeLayout;
 
-import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
@@ -35,40 +33,30 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import unical.master.computerscience.yellit.R;
 
+import android.os.Vibrator;
+import android.widget.Toast;
+
+
 /**
-    Created by Salvatore on the 17/03/2017
+ * Created by Salvatore on the 17/03/2017
  */
 public class AddPostFragment extends Fragment implements OnChartValueSelectedListener {
 
-    /* if (circLayout != null) {
-
-       circLayout.setOnCircularItemClickListener(new CircularLayout.OnCircularItemClickListener() {
-         @Override
-         public void onCircularItemClick(int index) {
-               Toast.makeText(getContext(), "Item " + index + " clicked", Toast.LENGTH_SHORT).show();
-          }
-         });
-    } */
-    //@Bind(R.id.circular_layout)
-    //CircularLayout circLayout;
-
     @Bind(R.id.pie_menu)
-    PieChart mainMenu;
+    protected PieChart mainMenu;
 
-    //@Bind(R.id.sub_menu)
-    PieChart subMenu;
+    private Typeface mTfRegular;
+    private Typeface mTfLight;
+    private String[] mainCategoryLabels;
+    private String[] subCategoryLabels;
+    private int[] mainCategoryColors;
+    private int[] subCategoryColors;
 
-    protected Typeface mTfRegular;
-    protected Typeface mTfLight;
-    protected String[] mParties = new String[] {
-            "Party A", "Party B", "Party C", "Party D", "Party E", "Party F", "Party G", "Party H",
-            "Party I", "Party J", "Party K", "Party L", "Party M", "Party N", "Party O", "Party P",
-            "Party Q", "Party R", "Party S", "Party T", "Party U", "Party V", "Party W", "Party X",
-            "Party Y", "Party Z"
-    };
+    private Animation expandIn;
+    private Animation expandOut;
 
-    Animation expandIn;
-    Animation expandOut;
+    private boolean isSubMenu;
+    private int lastSubMenu;
 
     @Nullable
     @Override
@@ -77,11 +65,17 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         ButterKnife.bind(this, view);
         Log.d("post", "creating AddPostFragment");
 
+        mainCategoryLabels = getResources().getStringArray(R.array.main_categories);
+        mainCategoryColors = getResources().getIntArray(R.array.pressed_colors);
+
         mTfRegular = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Regular.ttf");
         mTfLight = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Light.ttf");
 
         expandIn = AnimationUtils.loadAnimation(getContext(), R.anim.expand_in);
         expandOut = AnimationUtils.loadAnimation(getContext(), R.anim.expand_out);
+
+        isSubMenu = false;
+        lastSubMenu = -1;
 
         Animation.AnimationListener animation1Listener = new Animation.AnimationListener() {
 
@@ -99,6 +93,18 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
             @Override
             public void onAnimationEnd(Animation animation) {
+
+                if(isSubMenu)
+                {
+                    mainMenu.setCenterText(mainCategoryLabels[lastSubMenu]);
+                    setData(subCategoryLabels, mainCategoryColors);
+                }
+                else
+                {
+                    mainMenu.setCenterText(generateCenterSpannableText());
+                    setData(mainCategoryLabels, ColorTemplate.MATERIAL_COLORS);
+                }
+
                 mainMenu.startAnimation(expandOut);
             }
         };
@@ -106,8 +112,6 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         expandIn.setAnimationListener(animation1Listener);
 
         buildMainMenu();
-
-        //buildSubMenu();
 
         return view;
     }
@@ -141,71 +145,22 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         mainMenu.setRotationEnabled(true);
         mainMenu.setHighlightPerTapEnabled(true);
 
-        // mainMenu.setUnit(" €");
-        // mainMenu.setDrawUnitsInChart(true);
-
         // add a selection listener
         mainMenu.setOnChartValueSelectedListener(this);
 
-        setData(5, mainMenu, ColorTemplate.MATERIAL_COLORS);
-
-        //mainMenu.animateY(1400, Easing.EasingOption.EaseInOutQuad);
-        // mainMenu.spin(2000, 0, 360);
+        setData(mainCategoryLabels, ColorTemplate.MATERIAL_COLORS);
 
         mainMenu.getLegend().setEnabled(false);
 
         // entry label styling
         mainMenu.setEntryLabelColor(Color.WHITE);
         mainMenu.setEntryLabelTypeface(mTfRegular);
-        mainMenu.setEntryLabelTextSize(12f);
-    }
-
-    public void buildSubMenu() {
-
-        subMenu.setBackgroundColor(Color.BLUE);
-
-        moveOffScreen();
-
-        subMenu.setUsePercentValues(true);
-        subMenu.getDescription().setEnabled(false);
-
-        subMenu.setCenterTextTypeface(mTfLight);
-        subMenu.setCenterText(generateCenterSpannableText());
-
-        subMenu.setDrawHoleEnabled(true);
-        subMenu.setHoleColor(Color.WHITE);
-
-        subMenu.setTransparentCircleColor(Color.WHITE);
-        subMenu.setTransparentCircleAlpha(110);
-
-        subMenu.setHoleRadius(58f);
-        subMenu.setTransparentCircleRadius(61f);
-
-        subMenu.setDrawCenterText(true);
-
-        subMenu.setRotationEnabled(false);
-        subMenu.setHighlightPerTapEnabled(true);
-
-        subMenu.setMaxAngle(180f); // HALF CHART
-        subMenu.setRotationAngle(180f);
-        subMenu.setCenterTextOffset(0, -20);
-
-        setData(4, subMenu, ColorTemplate.VORDIPLOM_COLORS);
-
-        subMenu.animateY(1400, Easing.EasingOption.EaseInOutQuad);
-
-        subMenu.getLegend().setEnabled(false);
-
-        // entry label styling
-        subMenu.setEntryLabelColor(Color.WHITE);
-        subMenu.setEntryLabelTypeface(mTfRegular);
-        subMenu.setEntryLabelTextSize(12f);
-
+        mainMenu.setEntryLabelTextSize(11f);
     }
 
     private SpannableString generateCenterSpannableText() {
 
-        SpannableString s = new SpannableString("What r you doin'?\npowered by Yellit");
+        SpannableString s = new SpannableString("What are you doing?\npowered by Yellit");
         s.setSpan(new RelativeSizeSpan(1.7f), 0, 17, 0);
         s.setSpan(new StyleSpan(Typeface.NORMAL), 17, s.length() - 18, 0);
         s.setSpan(new ForegroundColorSpan(Color.GRAY), 17, s.length() - 18, 0);
@@ -215,18 +170,16 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         return s;
     }
 
-    private void setData(int count, PieChart chart, int[] colorz) {
-
-        float mult = 100;   //range
+    private void setData(String[] labels, int[] colorz) {
 
         ArrayList<PieEntry> entries = new ArrayList<PieEntry>();
 
-        for (int i = 0; i < count ; i++) {
-;
+        for (int i = 0; i < labels.length; i++) {
+
             entries.add(
                     new PieEntry(20,
-                    mParties[i % mParties.length],
-                    getResources().getDrawable(R.drawable.blui)));
+                            labels[i],
+                            getResources().getDrawable(R.drawable.blui)));
         }
 
         PieDataSet dataSet = new PieDataSet(entries, "");
@@ -235,7 +188,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
         dataSet.setSliceSpace(3f);
         //dataSet.setsetIconsOffset(new MPPointF(0, 40));
-        dataSet.setSelectionShift(10f);
+        dataSet.setSelectionShift(11f);
 
         ArrayList<Integer> colors = new ArrayList<Integer>();
 
@@ -246,71 +199,163 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
         PieData data = new PieData(dataSet);
         data.setValueFormatter(new PercentFormatter());
-        data.setValueTextSize(16f);
+        data.setValueTextSize(40f);
         data.setValueTextColor(Color.WHITE);
         data.setValueTypeface(mTfLight);
-        chart.setData(data);
+        mainMenu.setData(data);
 
         // undo all highlights
-        chart.highlightValues(null);
+        mainMenu.highlightValues(null);
 
-        chart.invalidate();
+        mainMenu.invalidate();
     }
 
-    private void moveOffScreen() {
+    /*
+        In base all'index del bottone premuto carichiamo uno specifico sub menù, secondo l'ordine:
 
-        Display display = getActivity().getWindowManager().getDefaultDisplay();
-        int height = display.getHeight();  // deprecated
-
-        int offset = (int)(height * 0.65); /* percent to move */
-
-        RelativeLayout.LayoutParams rlParams =
-                (RelativeLayout.LayoutParams) subMenu.getLayoutParams();
-
-        rlParams.setMargins(0, 0, 0, -offset);
-        subMenu.setLayoutParams(rlParams);
-    }
-
+        Category 1 = Index 0
+        Category 2 = Index 1
+        etc
+     */
     @Override
     public void onValueSelected(Entry e, Highlight h) {
 
         if (e == null)
             return;
 
-        mainMenu.startAnimation(expandIn);
+        if (isSubMenu) {
 
-        setData(5, mainMenu, ColorTemplate.LIBERTY_COLORS);
+            switch(lastSubMenu)
+            {
+                case 0:
+                    handleSubMenu1(e, h);
+                    break;
+                case 1:
+                    handleSubMenu2(e, h);
+                    break;
+                case 2:
+                    handleSubMenu3(e, h);
+                    break;
+                case 3:
+                    handleSubMenu4(e, h);
+                    break;
+                case 4:
+                    handleSubMenu5(e, h);
+                    break;
+            }
 
-        int index = (int) h.getX();
+        } else {
 
-        switch(index)
-        {
-            case 0:
-                Log.e("VAL ", "" + index);
+            // Vibrator v = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+            // v.vibrate(80); // milliseconds
 
-                // /mainMenu.animateX(1000, Easing.EasingOption.EaseOutCirc);
-                //mainMenu.spin(2000, 0, 360);
-                break;
-            case 1:
-                Log.e("VAL ", "" + index);
+            int index = (int) h.getX();
 
-                // mainMenu.animateX(500);
-                break;
-            case 2:
-                //mainMenu.animateX(1000, Easing.EasingOption.EaseInOutBack);
-                break;
-            case 3:
-                //mainMenu.animateX(1000, Easing.EasingOption.EaseInOutQuart);
-                break;
-            case 4:
-                //mainMenu.animateX(1000, Easing.EasingOption.EaseInOutExpo);
-                break;
+            switch (index) {
+                case 0:
+                    Log.i("VAL SELECTED",
+                            "Value: " + e.getData() + ", index: " + h.getY()
+                                    + ", DataSet index: " + h.getDataSetIndex());
+                    subCategoryLabels = getResources().getStringArray(R.array.sub_categories_1);
+                    break;
+                case 1:
+                    subCategoryLabels = getResources().getStringArray(R.array.sub_categories_2);
+                    break;
+                case 2:
+                    subCategoryLabels = getResources().getStringArray(R.array.sub_categories_3);
+                    break;
+                case 3:
+                    subCategoryLabels = getResources().getStringArray(R.array.sub_categories_4);
+                    break;
+                case 4:
+                    subCategoryLabels = getResources().getStringArray(R.array.sub_categories_5);
+                    break;
+            }
 
+            isSubMenu = true;
+            lastSubMenu = index;
+            mainMenu.startAnimation(expandIn);
         }
-
         /* Log.i("VAL SELECTED",
                 "Value: " + e.getX() + ", index: " + h.getX()
                         + ", DataSet index: " + h.getDataSetIndex()); */
+    }
+
+    private void handleSubMenu1(Entry e, Highlight h) {
+
+        int index = (int) h.getX();
+
+        switch (index) {
+
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+                Toast.makeText(getContext(), e.getY() + "", Toast.LENGTH_SHORT);
+                break;
+
+            default:
+                isSubMenu = false;
+                lastSubMenu = -1;
+                mainMenu.startAnimation(expandIn);
+                break;
+        }
+    }
+
+    private void handleSubMenu2(Entry e, Highlight h) {
+
+        int index = (int) h.getX();
+
+        switch (index) {
+
+            default:
+                isSubMenu = false;
+                lastSubMenu = -1;
+                mainMenu.startAnimation(expandIn);
+                break;
+        }
+    }
+
+    private void handleSubMenu3(Entry e, Highlight h) {
+
+        int index = (int) h.getX();
+
+        switch (index) {
+
+            default:
+                isSubMenu = false;
+                lastSubMenu = -1;
+                mainMenu.startAnimation(expandIn);
+                break;
+        }
+    }
+
+    private void handleSubMenu4(Entry e, Highlight h) {
+
+        int index = (int) h.getX();
+
+        switch (index) {
+
+            default:
+                isSubMenu = false;
+                lastSubMenu = -1;
+                mainMenu.startAnimation(expandIn);
+                break;
+        }
+    }
+
+    private void handleSubMenu5(Entry e, Highlight h) {
+
+        int index = (int) h.getX();
+
+        switch (index) {
+
+            default:
+                isSubMenu = false;
+                lastSubMenu = -1;
+                mainMenu.startAnimation(expandIn);
+                break;
+        }
     }
 
     @Override

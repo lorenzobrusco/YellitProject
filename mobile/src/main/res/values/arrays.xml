@@ -24,12 +24,61 @@
         <item>@android:color/holo_red_dark</item>
     </array>
 
-    <!-- Qualora volessimo mettere titoli sotto i bottoni -->
-    <array name="titles">
-        <item></item>
-        <item></item>
-        <item></item>
-        <item></item>
-        <item></item>
+    <!--> Categorie e Sottocategorie <-->
+    <array name="main_categories">
+        <item>Categoria 1</item>
+        <item>Categoria 2</item>
+        <item>Categoria 3</item>
+        <item>Categoria 4</item>
+        <item>Categoria 5</item>
     </array>
+
+    <!--> Categorie e Sottocategorie <-->
+    <array name="sub_categories_1">
+        <item>Sub 1 Cat 1</item>
+        <item>Sub 2 Cat 1</item>
+        <item>Sub 3 Cat 1</item>
+        <item>Sub 4 Cat 1</item>
+        <item>Sub 5 Cat 1</item>
+        <item>Back</item>
+    </array>
+
+    <!--> Categorie e Sottocategorie <-->
+    <array name="sub_categories_2">
+        <item>Sub 1 Cat 2</item>
+        <item>Sub 2 Cat 2</item>
+        <item>Sub 3 Cat 2</item>
+        <item>Sub 4 Cat 2</item>
+        <item>Back</item>
+    </array>
+
+    <!--> Categorie e Sottocategorie <-->
+    <array name="sub_categories_3">
+        <item>Sub 1 Cat 3</item>
+        <item>Sub 2 Cat 3</item>
+        <item>Sub 3 Cat 3</item>
+        <item>Sub 4 Cat 3</item>
+        <item>Sub 5 Cat 3</item>
+        <item>Back</item>
+    </array>
+
+    <!--> Categorie e Sottocategorie <-->
+    <array name="sub_categories_4">
+        <item>Sub 1 Cat 4</item>
+        <item>Sub 2 Cat 4</item>
+        <item>Sub 3 Cat 4</item>
+        <item>Sub 4 Cat 4</item>
+        <item>Sub 5 Cat 4</item>
+        <item>Back</item>
+    </array>
+
+    <!--> Categorie e Sottocategorie <-->
+    <array name="sub_categories_5">
+        <item>Sub 1 Cat 5</item>
+        <item>Sub 2 Cat 5</item>
+        <item>Sub 4 Cat 5</item>
+        <item>Sub 5 Cat 5</item>
+        <item>Back</item>
+    </array>
+
 </resources>
