@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import unical.master.computerscience.yellit.R;
+import unical.master.computerscience.yellit.graphic.Dialog.CustomDialogBottomSheet;
 
 import android.os.Vibrator;
 import android.widget.Toast;
@@ -291,7 +292,10 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
             case 1:
             case 2:
             case 3:
-                Toast.makeText(getContext(), e.getY() + "", Toast.LENGTH_SHORT);
+
+                CustomDialogBottomSheet c = CustomDialogBottomSheet.newInstance("");
+                c.show(getFragmentManager().beginTransaction(),"");
+
                 break;
 
             default:
