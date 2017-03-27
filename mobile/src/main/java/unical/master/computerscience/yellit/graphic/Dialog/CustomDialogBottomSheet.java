@@ -17,7 +17,6 @@ import unical.master.computerscience.yellit.R;
 
 public class CustomDialogBottomSheet extends BottomSheetDialogFragment {
 
-
     //TODO replace this class
     String mString;
 
@@ -41,15 +40,5 @@ public class CustomDialogBottomSheet extends BottomSheetDialogFragment {
         View v = inflater.inflate(R.layout.bottom_sheet_modal, container, false);
         TextView tv = (TextView) v.findViewById(R.id.text);
         return v;
-    }
-
-    @Override
-    public int show(FragmentTransaction transaction, String tag) {
-        return super.show(transaction, tag);
-    }
-
-    public void show(FragmentTransaction fragmentTransaction){
-        fragmentTransaction.add(this,getTag());
-        fragmentTransaction.commit();
     }
 }
