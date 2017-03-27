@@ -26,6 +26,7 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.MPPointF;
 
 import java.util.ArrayList;
 
@@ -188,7 +189,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         dataSet.setDrawValues(false);
 
         dataSet.setSliceSpace(3f);
-        //dataSet.setsetIconsOffset(new MPPointF(0, 40));
+        dataSet.setIconsOffset(new MPPointF(0, 40));
         dataSet.setSelectionShift(11f);
 
         ArrayList<Integer> colors = new ArrayList<Integer>();
