@@ -30,7 +30,7 @@
                 android:layout_marginTop="15dp"
                 android:text="Notifications"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/colorPrimary" />
+                android:textColor="@color/colorAccent" />
 
 
             <Switch
@@ -82,7 +82,7 @@
                 android:layout_marginTop="15dp"
                 android:text="Fitness"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/colorPrimary" />
+                android:textColor="@color/colorAccent" />
 
             <Switch
                 android:id="@+id/EnableWear"
@@ -105,7 +105,7 @@
                 android:layout_marginTop="15dp"
                 android:text="Informations"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/colorPrimary" />
+                android:textColor="@color/colorAccent" />
 
             <TextView
                 android:layout_width="wrap_content"
