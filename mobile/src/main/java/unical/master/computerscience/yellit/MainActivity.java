@@ -2,6 +2,7 @@ package unical.master.computerscience.yellit;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -14,6 +15,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout mSettingLayout;
     @Bind(R.id.custom_search_view)
     SearchView mSearchView;
+    @Bind(R.id.post_filter)
+    ImageView filterImage;
     private Fragment currentFragment;
     private BottomSheetBehavior mBottomSheetBehavior;
 
@@ -186,8 +192,34 @@ public class MainActivity extends AppCompatActivity {
                 mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
             }
         });
+        this.filterImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                buildDialogFilter();
+            }
+        });
     }
 
+    private void buildDialogFilter(){
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_post_filter);
+        dialog.setTitle("Choose Filter");
+        //TextView text = (TextView) dialog.findViewById(R.id.text_dialog);
+        //text.setText("Choose Filter");
+
+        Button dialogButton = (Button) dialog.findViewById(R.id.delete);
+        dialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+
+    }
 
     @Override
     protected void onStart() {
