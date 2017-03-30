@@ -11,7 +11,7 @@
     <color name="colorFacebook">#3b5998</color>
     <color name="colorGoogle">#d34836</color>
 
-    <color name="transp">#80000000</color>
+    <color name="transp">#02000000</color>
     <color name="black">#000000</color>
     <color name="jet">#222222</color>
     <color name="oil">#333333</color>
@@ -27,5 +27,9 @@
 
     <!-- dots active colors -->
     <color name="dot_light_screen">#808080</color>
+
+    <color name="walk">#FFFF8800</color>
+    <color name="running">#9544ff</color>
+    <color name="bicycle">#34b44a</color>
 
 </resources>

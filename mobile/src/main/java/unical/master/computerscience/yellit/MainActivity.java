@@ -31,6 +31,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import unical.master.computerscience.yellit.graphic.Activities.SettingActivity;
 import unical.master.computerscience.yellit.graphic.Fragments.AddPostFragment;
+import unical.master.computerscience.yellit.graphic.Fragments.FitnessFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.PostFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.ProfileFragment;
 import unical.master.computerscience.yellit.utiliies.PermissionCheckUtils;
@@ -116,6 +117,9 @@ public class MainActivity extends AppCompatActivity {
                         }
                         if (currentItem != position) {
                             currentItem = position;
+                            removeFragment(currentFragment);
+                            currentFragment = new FitnessFragment();
+                            setFragment(currentFragment);
                         }
                         break;
                     case PROFILE_FRAG_BUTTON:
