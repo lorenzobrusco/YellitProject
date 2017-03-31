@@ -1,10 +1,14 @@
 package unical.master.computerscience.yellit.graphic.Fragments;
 
-import android.content.Context;
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -16,6 +20,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.ImageView;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
@@ -26,17 +32,19 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.utils.MPPointF;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import siclo.com.ezphotopicker.api.EZPhotoPick;
+import siclo.com.ezphotopicker.api.EZPhotoPickStorage;
+import siclo.com.ezphotopicker.api.models.EZPhotoPickConfig;
+import siclo.com.ezphotopicker.api.models.PhotoSource;
+import siclo.com.ezphotopicker.models.PhotoIntentException;
 import unical.master.computerscience.yellit.R;
-import unical.master.computerscience.yellit.graphic.Dialog.CustomDialogBottomSheet;
-
-import android.os.Vibrator;
-import android.widget.Toast;
+import unical.master.computerscience.yellit.graphic.Dialog.AddPostDialogBotSh;
 
 
 /**
@@ -44,8 +52,18 @@ import android.widget.Toast;
  */
 public class AddPostFragment extends Fragment implements OnChartValueSelectedListener {
 
+    private static final String DEMO_PHOTO_PATH = "MyDemoPhotoDir";
+
     @Bind(R.id.pie_menu)
     protected PieChart mainMenu;
+    @Bind(R.id.addpost_floating_button)
+    protected FloatingActionButton floatingButton;
+    @Bind(R.id.addpost_img)
+    protected ImageView imageLoaded;
+    @Bind(R.id.addpost_cam_button)
+    protected Button camButton;
+    @Bind(R.id.addpost_gall_button)
+    protected Button galButton;
 
     private Typeface mTfRegular;
     private Typeface mTfLight;
@@ -60,12 +78,17 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
     private boolean isSubMenu;
     private int lastSubMenu;
 
+    @Bind(R.id.addpost_bottomsheet)
+    View bottomSheet;
+
+    private BottomSheetBehavior mBottomSheetBehavior;
+    private EZPhotoPickStorage ezPhotoPickStorage;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_post, container, false);
         ButterKnife.bind(this, view);
-        Log.d("post", "creating AddPostFragment");
 
         mainCategoryLabels = getResources().getStringArray(R.array.main_categories);
         mainCategoryColors = getResources().getIntArray(R.array.main_colors);
@@ -73,11 +96,102 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         mTfRegular = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Regular.ttf");
         mTfLight = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Light.ttf");
 
-        expandIn = AnimationUtils.loadAnimation(getContext(), R.anim.expand_in);
-        expandOut = AnimationUtils.loadAnimation(getContext(), R.anim.expand_out);
-
         isSubMenu = false;
         lastSubMenu = -1;
+
+        buildAnimationStuff();
+
+        mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        mBottomSheetBehavior.setHideable(true);
+        mBottomSheetBehavior.setPeekHeight(900);
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+
+        mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+
+                } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+
+                    floatingButton.setVisibility(View.VISIBLE);
+                    //animate().scaleX(1).scaleY(1).setDuration(300).start();
+
+
+                } else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+
+                    floatingButton.setVisibility(View.INVISIBLE);
+                    //.animate().scaleX(0).scaleY(0).setDuration(300).start();
+
+                }
+            }
+
+            @Override
+            public void onSlide(View bottomSheet, float slideOffset) {
+            }
+        });
+
+        buildMainMenu();
+
+        ezPhotoPickStorage = new EZPhotoPickStorage(getActivity());
+
+        buildButtonsCallback();
+
+        return view;
+    }
+
+    private void buildButtonsCallback() {
+
+        floatingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+            }
+        });
+
+        camButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                try {
+
+                    EZPhotoPickConfig config = new EZPhotoPickConfig();
+                    config.photoSource = PhotoSource.CAMERA;
+                    config.storageDir = DEMO_PHOTO_PATH;
+                    config.needToAddToGallery = true;
+                    config.exportingSize = 1000;
+                    EZPhotoPick.startPhotoPickActivity(AddPostFragment.this, config);
+
+                } catch (PhotoIntentException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        galButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                try {
+
+                    EZPhotoPickConfig config = new EZPhotoPickConfig();
+                    config.photoSource = PhotoSource.GALERY;
+                    config.needToExportThumbnail = true;
+                    config.isAllowMultipleSelect = true;
+                    config.storageDir = DEMO_PHOTO_PATH;
+                    config.exportingThumbSize = 200;
+                    config.exportingSize = 1000;
+                    EZPhotoPick.startPhotoPickActivity(AddPostFragment.this, config);
+
+                } catch (PhotoIntentException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void buildAnimationStuff() {
+        expandIn = AnimationUtils.loadAnimation(getContext(), R.anim.expand_in);
+        expandOut = AnimationUtils.loadAnimation(getContext(), R.anim.expand_out);
 
         Animation.AnimationListener animation1Listener = new Animation.AnimationListener() {
 
@@ -112,10 +226,6 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         };
 
         expandIn.setAnimationListener(animation1Listener);
-
-        buildMainMenu();
-
-        return view;
     }
 
     public void buildMainMenu() {
@@ -291,11 +401,14 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         switch (index) {
 
             case 0:
+                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                break;
+
             case 1:
             case 2:
             case 3:
 
-                CustomDialogBottomSheet c = CustomDialogBottomSheet.newInstance("");
+                AddPostDialogBotSh c = AddPostDialogBotSh.newInstance("");
                 c.show(getFragmentManager().beginTransaction(),"");
 
                 break;
@@ -369,4 +482,47 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         Log.i("PieChart", "nothing selected");
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+
+        if (requestCode == EZPhotoPick.PHOTO_PICK_GALERY_REQUEST_CODE) {
+
+            try {
+                ArrayList<String> pickedPhotoNames = data.getStringArrayListExtra(EZPhotoPick.PICKED_PHOTO_NAMES_KEY);
+
+                for(String photoName: pickedPhotoNames){
+                    Bitmap pickedPhoto = ezPhotoPickStorage.loadStoredPhotoBitmap(DEMO_PHOTO_PATH, photoName, 300);
+
+                    imageLoaded.setBackground(null);
+
+                    imageLoaded.setImageBitmap(pickedPhoto);
+                    imageLoaded.setScaleType(ImageView.ScaleType.FIT_CENTER);
+
+                    imageLoaded.setVisibility(View.VISIBLE);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } else if (requestCode == EZPhotoPick.PHOTO_PICK_CAMERA_REQUEST_CODE) {
+
+            try {
+
+                Bitmap pickedPhoto = ezPhotoPickStorage.loadLatestStoredPhotoBitmap(300);
+
+                imageLoaded.setImageBitmap(pickedPhoto);
+                imageLoaded.setScaleType(ImageView.ScaleType.FIT_CENTER);
+
+                imageLoaded.setVisibility(View.VISIBLE);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

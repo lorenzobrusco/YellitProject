@@ -19,7 +19,6 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
@@ -189,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
             public void onSlide(View bottomSheet, float slideOffset) {
             }
         });
+
         this.mSettingLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
