@@ -8,22 +8,6 @@
         <item>@drawable/ic_battery</item>
     </array>
 
-    <array name="colors">
-        <item>@android:color/holo_blue_bright</item>
-        <item>@android:color/holo_purple</item>
-        <item>@android:color/holo_orange_light</item>
-        <item>@android:color/holo_green_light</item>
-        <item>@android:color/holo_blue_bright</item>
-    </array>
-
-    <array name="pressed_colors">
-        <item>@android:color/holo_red_dark</item>
-        <item>@android:color/holo_red_dark</item>
-        <item>@android:color/holo_red_dark</item>
-        <item>@android:color/holo_red_dark</item>
-        <item>@android:color/holo_red_dark</item>
-    </array>
-
     <!--> Categorie e Sottocategorie <-->
     <array name="main_categories">
         <item>Categoria 1</item>
@@ -33,7 +17,14 @@
         <item>Categoria 5</item>
     </array>
 
-    <!--> Categorie e Sottocategorie <-->
+    <array name="main_colors">
+        <item>#dd2c00</item>
+        <item>#0091ea</item>
+        <item>#ffab00</item>
+        <item>#64dd17</item>
+        <item>#ff6d00</item>
+    </array>
+
     <array name="sub_categories_1">
         <item>Sub 1 Cat 1</item>
         <item>Sub 2 Cat 1</item>
@@ -43,7 +34,14 @@
         <item>Back</item>
     </array>
 
-    <!--> Categorie e Sottocategorie <-->
+    <array name="sub_colors_1">
+        <item>@android:color/holo_blue_bright</item>
+        <item>@android:color/holo_purple</item>
+        <item>@android:color/holo_orange_light</item>
+        <item>@android:color/holo_green_light</item>
+        <item>@android:color/holo_blue_bright</item>
+    </array>
+
     <array name="sub_categories_2">
         <item>Sub 1 Cat 2</item>
         <item>Sub 2 Cat 2</item>
@@ -52,7 +50,14 @@
         <item>Back</item>
     </array>
 
-    <!--> Categorie e Sottocategorie <-->
+    <array name="sub_colors_2">
+        <item>@android:color/holo_blue_bright</item>
+        <item>@android:color/holo_purple</item>
+        <item>@android:color/holo_orange_light</item>
+        <item>@android:color/holo_green_light</item>
+        <item>@android:color/holo_blue_bright</item>
+    </array>
+
     <array name="sub_categories_3">
         <item>Sub 1 Cat 3</item>
         <item>Sub 2 Cat 3</item>
@@ -62,7 +67,14 @@
         <item>Back</item>
     </array>
 
-    <!--> Categorie e Sottocategorie <-->
+    <array name="sub_colors_3">
+        <item>@android:color/holo_blue_bright</item>
+        <item>@android:color/holo_purple</item>
+        <item>@android:color/holo_orange_light</item>
+        <item>@android:color/holo_green_light</item>
+        <item>@android:color/holo_blue_bright</item>
+    </array>
+
     <array name="sub_categories_4">
         <item>Sub 1 Cat 4</item>
         <item>Sub 2 Cat 4</item>
@@ -72,13 +84,28 @@
         <item>Back</item>
     </array>
 
-    <!--> Categorie e Sottocategorie <-->
+    <array name="sub_colors_4">
+        <item>@android:color/holo_blue_bright</item>
+        <item>@android:color/holo_purple</item>
+        <item>@android:color/holo_orange_light</item>
+        <item>@android:color/holo_green_light</item>
+        <item>@android:color/holo_blue_bright</item>
+    </array>
+
     <array name="sub_categories_5">
         <item>Sub 1 Cat 5</item>
         <item>Sub 2 Cat 5</item>
         <item>Sub 4 Cat 5</item>
         <item>Sub 5 Cat 5</item>
         <item>Back</item>
+    </array>
+
+    <array name="sub_colors_5">
+        <item>@android:color/holo_blue_bright</item>
+        <item>@android:color/holo_purple</item>
+        <item>@android:color/holo_orange_light</item>
+        <item>@android:color/holo_green_light</item>
+        <item>@android:color/holo_blue_bright</item>
     </array>
 
 </resources>

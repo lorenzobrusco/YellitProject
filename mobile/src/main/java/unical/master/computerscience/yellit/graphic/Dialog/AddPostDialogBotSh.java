@@ -3,7 +3,6 @@ package unical.master.computerscience.yellit.graphic.Dialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialogFragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +36,7 @@ public class CustomDialogBottomSheet extends BottomSheetDialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.bottom_sheet_modal, container, false);
+        View v = inflater.inflate(R.layout.add_post_modal, container, false);
         TextView tv = (TextView) v.findViewById(R.id.text);
         return v;
     }

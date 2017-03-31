@@ -26,6 +26,7 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.MPPointF;
 
 import java.util.ArrayList;
 
@@ -67,7 +68,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         Log.d("post", "creating AddPostFragment");
 
         mainCategoryLabels = getResources().getStringArray(R.array.main_categories);
-        mainCategoryColors = getResources().getIntArray(R.array.pressed_colors);
+        mainCategoryColors = getResources().getIntArray(R.array.main_colors);
 
         mTfRegular = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Regular.ttf");
         mTfLight = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Light.ttf");
@@ -98,12 +99,12 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                 if(isSubMenu)
                 {
                     mainMenu.setCenterText(mainCategoryLabels[lastSubMenu]);
-                    setData(subCategoryLabels, mainCategoryColors);
+                    setData(subCategoryLabels, subCategoryColors);
                 }
                 else
                 {
                     mainMenu.setCenterText(generateCenterSpannableText());
-                    setData(mainCategoryLabels, ColorTemplate.MATERIAL_COLORS);
+                    setData(mainCategoryLabels, mainCategoryColors);
                 }
 
                 mainMenu.startAnimation(expandOut);
@@ -149,7 +150,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         // add a selection listener
         mainMenu.setOnChartValueSelectedListener(this);
 
-        setData(mainCategoryLabels, ColorTemplate.MATERIAL_COLORS);
+        setData(mainCategoryLabels, mainCategoryColors);
 
         mainMenu.getLegend().setEnabled(false);
 
@@ -179,8 +180,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
             entries.add(
                     new PieEntry(20,
-                            labels[i],
-                            getResources().getDrawable(R.drawable.blui)));
+                            labels[i]));
         }
 
         PieDataSet dataSet = new PieDataSet(entries, "");
@@ -188,7 +188,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         dataSet.setDrawValues(false);
 
         dataSet.setSliceSpace(3f);
-        //dataSet.setsetIconsOffset(new MPPointF(0, 40));
+        //dataSet.setIconsOffset(new MPPointF(0, 40));
         dataSet.setSelectionShift(11f);
 
         ArrayList<Integer> colors = new ArrayList<Integer>();
@@ -254,22 +254,24 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
             switch (index) {
                 case 0:
-                    Log.i("VAL SELECTED",
-                            "Value: " + e.getData() + ", index: " + h.getY()
-                                    + ", DataSet index: " + h.getDataSetIndex());
                     subCategoryLabels = getResources().getStringArray(R.array.sub_categories_1);
+                    subCategoryColors = getResources().getIntArray(R.array.sub_colors_1);
                     break;
                 case 1:
                     subCategoryLabels = getResources().getStringArray(R.array.sub_categories_2);
+                    subCategoryColors = getResources().getIntArray(R.array.sub_colors_2);
                     break;
                 case 2:
                     subCategoryLabels = getResources().getStringArray(R.array.sub_categories_3);
+                    subCategoryColors = getResources().getIntArray(R.array.sub_colors_3);
                     break;
                 case 3:
                     subCategoryLabels = getResources().getStringArray(R.array.sub_categories_4);
+                    subCategoryColors = getResources().getIntArray(R.array.sub_colors_4);
                     break;
                 case 4:
                     subCategoryLabels = getResources().getStringArray(R.array.sub_categories_5);
+                    subCategoryColors = getResources().getIntArray(R.array.sub_colors_5);
                     break;
             }
 

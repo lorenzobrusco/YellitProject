@@ -41,6 +41,8 @@ dependencies {
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
     compile 'com.github.bmarrdev:android-DecoView-charting:v1.2'
     compile 'com.makeramen:roundedimageview:2.3.0'
+    //compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.0'
     compile 'com.daimajia.numberprogressbar:library:1.4'
     compile 'im.dacer:AndroidCharts:1.0.3'
     testCompile 'junit:junit:4.12'
