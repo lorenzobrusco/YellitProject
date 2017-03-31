@@ -28,8 +28,12 @@
     <!-- dots active colors -->
     <color name="dot_light_screen">#808080</color>
 
-    <color name="walk">#FFFF8800</color>
+    <color name="walk">#ff8800</color>
     <color name="running">#9544ff</color>
     <color name="bicycle">#34b44a</color>
+
+    <color name="walk_hor">#225dff</color>
+    <color name="running_hor">#ffd816</color>
+    <color name="bicycle_hor">#ff4949</color>
 
 </resources>

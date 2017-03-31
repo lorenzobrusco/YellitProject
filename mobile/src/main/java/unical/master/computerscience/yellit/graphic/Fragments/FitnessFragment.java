@@ -1,26 +1,23 @@
 package unical.master.computerscience.yellit.graphic.Fragments;
 
 import android.graphics.Color;
-import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnticipateInterpolator;
-import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
-
 import com.hookedonplay.decoviewlib.DecoView;
 import com.hookedonplay.decoviewlib.charts.DecoDrawEffect;
-import com.hookedonplay.decoviewlib.charts.EdgeDetail;
 import com.hookedonplay.decoviewlib.charts.SeriesItem;
-import com.hookedonplay.decoviewlib.charts.SeriesLabel;
 import com.hookedonplay.decoviewlib.events.DecoEvent;
+
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import im.dacer.androidcharts.LineView;
 import unical.master.computerscience.yellit.R;
 
 /**
@@ -42,14 +39,15 @@ public class FitnessFragment extends Fragment {
     TextView textActivity2;
     @Bind(R.id.textActivity3)
     TextView textActivity3;
-
+    @Bind(R.id.chart_repo_lines)
+    LineView lines;
     private int mBackIndex;
     private int mSeries1Index;
     private int mSeries2Index;
     private int mSeries3Index;
 
     private final float mSeriesMax = 50f;
-
+    int randomint = 31;
 
     @Nullable
     @Override
@@ -63,7 +61,50 @@ public class FitnessFragment extends Fragment {
         createDataSeries3();
         // Setup events to be fired on a schedule
         createEvents();
+        initLineView(lines);
+        randomSet(lines);
         return view;
+    }
+
+    private void initLineView(LineView lineView) {
+        ArrayList<String> test = new ArrayList<String>();
+        for (int i=0; i<randomint; i++){
+            test.add(String.valueOf(i+1));
+        }
+        lineView.setBottomTextList(test);
+        lineView.setColorArray(new int[]{Color.parseColor("#F44336"),Color.parseColor("#9C27B0"),Color.parseColor("#2196F3"),Color.parseColor("#009688")});
+        lineView.setDrawDotLine(true);
+        lineView.setShowPopup(LineView.SHOW_POPUPS_NONE);
+
+    }
+
+    private void randomSet( LineView lineViewFloat){
+
+        ArrayList<Float> dataListF = new ArrayList<>();
+        float randomF = (float)(Math.random()*9+1);
+        for (int i=0; i<randomint; i++){
+            dataListF.add((float)(Math.random()*randomF));
+        }
+
+        ArrayList<Float> dataListF2 = new ArrayList<>();
+        randomF = (int)(Math.random()*9+1);
+        for (int i=0; i<randomint; i++){
+            dataListF2.add((float)(Math.random()*randomF));
+        }
+
+        ArrayList<Float> dataListF3 = new ArrayList<>();
+        randomF = (int)(Math.random()*9+1);
+        for (int i=0; i<randomint; i++){
+            dataListF3.add((float)(Math.random()*randomF));
+        }
+
+        ArrayList<ArrayList<Float>> dataListFs = new ArrayList<>();
+        dataListFs.add(dataListF);
+        dataListFs.add(dataListF2);
+        dataListFs.add(dataListF3);
+
+        lineViewFloat.setFloatDataList(dataListFs);
+
     }
 
 
@@ -214,7 +255,7 @@ public class FitnessFragment extends Fragment {
                 .setDelay(6000)
                 .build());
 
-        resetText();
+       // resetText();
     }
 
 
