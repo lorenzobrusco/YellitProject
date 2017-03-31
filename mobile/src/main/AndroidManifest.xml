@@ -13,31 +13,29 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".graphic.Activities.LoadActivity"
-            android:configChanges="orientation|screenSize">
+        <activity android:name=".graphic.Activities.LoadActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".graphic.Activities.WelcomeActivity"
-            android:configChanges="orientation|screenSize" />
+        <activity android:name=".graphic.Activities.WelcomeActivity" />
         <activity
             android:name=".graphic.Activities.LoginActivity"
-            android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".graphic.Activities.SignUpActivity"
-            android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".MainActivity"
-            android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name=".graphic.Activities.SettingActivity" />
+        <activity
+            android:name=".graphic.Activities.GalleryActivity"
+            android:label="@string/title_activity_gallery"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
