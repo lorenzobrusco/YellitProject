@@ -149,6 +149,12 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         ezPhotoPickStorage = new EZPhotoPickStorage(getActivity());
 
         buildButtonsCallback();
+        setupImagePicker();
+
+        return view;
+    }
+
+    private void setupImagePicker(){
         gallery.setAdapter(new ImageAdapter(getActivity()));
         this.gridViewSetting(gallery);
         gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -164,8 +170,6 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
             }
         });
-
-        return view;
     }
 
     private void buildButtonsCallback() {
@@ -510,7 +514,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        setupImagePicker();
         if (resultCode != Activity.RESULT_OK) {
             return;
         }
@@ -562,7 +566,6 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         float density = dm.density;
 
         int totalWidth = (int) (width * size * density);
-        int singleItemWidth = (int) (width * density);
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 totalWidth, LinearLayout.LayoutParams.MATCH_PARENT);

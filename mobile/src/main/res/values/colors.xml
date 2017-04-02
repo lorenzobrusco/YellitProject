@@ -10,6 +10,7 @@
     <color name="colorAccentPressed">#d59368</color>
     <color name="colorFacebook">#3b5998</color>
     <color name="colorGoogle">#d34836</color>
+    <color name="light_blu">#8100cc</color>
 
     <color name="transp">#02000000</color>
     <color name="black">#000000</color>
