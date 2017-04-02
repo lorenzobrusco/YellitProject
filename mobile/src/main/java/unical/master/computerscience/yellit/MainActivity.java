@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,6 +15,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -33,6 +35,7 @@ import unical.master.computerscience.yellit.graphic.Fragments.AddPostFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.FitnessFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.PostFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.ProfileFragment;
+import unical.master.computerscience.yellit.graphic.Fragments.Test;
 import unical.master.computerscience.yellit.utiliies.PermissionCheckUtils;
 
 public class MainActivity extends AppCompatActivity {
@@ -75,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
         currentFragment = new PostFragment();
         MainActivity.this.setFragment(currentFragment);
         this.setupViews();
+
 
     }
 
@@ -305,7 +309,9 @@ public class MainActivity extends AppCompatActivity {
      */
     protected String[] getRequiredPermissions() {
         return new String[]{
-                Manifest.permission.INTERNET
+                Manifest.permission.INTERNET,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
         };
     }
 

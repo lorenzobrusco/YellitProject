@@ -46,6 +46,37 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginTop="6dp"
+                                android:text="Choose your recently pictures:"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                android:textColor="@color/white" />
+
+                            <HorizontalScrollView
+                                android:id="@+id/title_horizontalScrollView"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:fillViewport="false"
+                                android:scrollbars="none">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <GridView
+                                        android:id="@+id/galleryGridView"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center" />
+                                </LinearLayout>
+                            </HorizontalScrollView>
+
+
+                            <TextView
                                 android:id="@+id/settingNotification"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
