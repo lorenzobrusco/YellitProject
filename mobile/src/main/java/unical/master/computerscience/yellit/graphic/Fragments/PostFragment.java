@@ -1,5 +1,7 @@
 package unical.master.computerscience.yellit.graphic.Fragments;
 
+import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -35,7 +37,7 @@ public class PostFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_posts, container, false);
         ButterKnife.bind(this, view);
-        Log.d("post", "create");
+
         final PostAdapter mPostAdapter = new PostAdapter(this.getContext(), initList());
         mPosts.setLayoutManager(new LinearLayoutManager(this.getContext()));
         mPosts.setAdapter(mPostAdapter);

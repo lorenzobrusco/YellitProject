@@ -36,4 +36,32 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="AppTheme.Page1" parent="AppTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/page1</item>
+        <item name="colorPrimaryDark">@color/page1</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.Page2" parent="AppTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/page2</item>
+        <item name="colorPrimaryDark">@color/page2</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="Page3" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/page3</item>
+        <item name="colorPrimaryDark">@color/page3</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.Page4" parent="AppTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/page4</item>
+        <item name="colorPrimaryDark">@color/page4</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
 </resources>

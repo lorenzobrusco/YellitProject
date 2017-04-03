@@ -35,7 +35,6 @@ import unical.master.computerscience.yellit.graphic.Fragments.AddPostFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.FitnessFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.PostFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.ProfileFragment;
-import unical.master.computerscience.yellit.graphic.Fragments.Test;
 import unical.master.computerscience.yellit.utiliies.PermissionCheckUtils;
 
 public class MainActivity extends AppCompatActivity {
@@ -46,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int ADDPOST_FRAG_BUTTON = 3;
     private static final int OTHER_FRAG_BUTTON = 4;
 
-    private int currentItem;
+    private int currentItem = 2;
     private static final int REQUEST_ALL_MISSING_PERMISSIONS = 1;
 
 
@@ -77,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         mSearchView.setQueryHint(" Search ");
         currentFragment = new PostFragment();
         MainActivity.this.setFragment(currentFragment);
+        chooseColor(currentItem);
         this.setupViews();
 
 
@@ -84,11 +84,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void setupViews() {
-        AHBottomNavigationItem itemFitness = new AHBottomNavigationItem(R.string.tab_fitness, R.drawable.ic_fitness_center_black_24, R.color.colorAccent);
-        AHBottomNavigationItem itemProfile = new AHBottomNavigationItem(R.string.tab_profile, R.drawable.ic_person_black_24, R.color.colorGoogle);
-        AHBottomNavigationItem itemHome = new AHBottomNavigationItem(R.string.tab_home, R.drawable.ic_home_black_24dp, R.color.colorFacebook);
-        AHBottomNavigationItem itemAdd = new AHBottomNavigationItem(R.string.tab_add_post, R.drawable.ic_public_black_24, R.color.colorConfirm);
-        AHBottomNavigationItem itemSomeThing = new AHBottomNavigationItem(R.string.tab_something, R.drawable.ic_menu_black_24, R.color.light_blu);
+        AHBottomNavigationItem itemFitness = new AHBottomNavigationItem(R.string.tab_fitness, R.drawable.ic_fitness_center_black_24, R.color.page1);
+        AHBottomNavigationItem itemProfile = new AHBottomNavigationItem(R.string.tab_profile, R.drawable.ic_person_black_24, R.color.page2);
+        AHBottomNavigationItem itemHome = new AHBottomNavigationItem(R.string.tab_home, R.drawable.ic_home_black_24dp, R.color.page3);
+        AHBottomNavigationItem itemAdd = new AHBottomNavigationItem(R.string.tab_add_post, R.drawable.ic_public_black_24, R.color.page4);
+        AHBottomNavigationItem itemSomeThing = new AHBottomNavigationItem(R.string.tab_something, R.drawable.ic_menu_black_24, R.color.page5);
         mBottomNavigation.addItem(itemFitness);
         mBottomNavigation.addItem(itemProfile);
         mBottomNavigation.addItem(itemHome);
@@ -116,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                         if (currentItem != position) {
                             currentItem = position;
+                            chooseColor(currentItem);
                             removeFragment(currentFragment);
                             currentFragment = new FitnessFragment();
                             setFragment(currentFragment);
@@ -127,7 +128,9 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         if (currentItem != position) {
+                            getWindow().setStatusBarColor(getResources().getColor(R.color.page2));
                             currentItem = position;
+                            chooseColor(currentItem);
                             removeFragment(currentFragment);
                             currentFragment = new ProfileFragment();
                             setFragment(currentFragment);
@@ -140,7 +143,9 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         if (currentItem != position) {
+                            getWindow().setStatusBarColor(getResources().getColor(R.color.page3));
                             currentItem = position;
+                            chooseColor(currentItem);
                             removeFragment(currentFragment);
                             currentFragment = new PostFragment();
                             setFragment(currentFragment);
@@ -152,7 +157,9 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         if (currentItem != position) {
+                            getWindow().setStatusBarColor(getResources().getColor(R.color.page4));
                             currentItem = position;
+                            chooseColor(currentItem);
                             removeFragment(currentFragment);
                             currentFragment = new AddPostFragment();
                             setFragment(currentFragment);
@@ -161,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
                     case OTHER_FRAG_BUTTON:
                         if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
                             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                            getWindow().setStatusBarColor(getResources().getColor(R.color.page5));
                         } else {
                             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         }
@@ -179,8 +187,10 @@ public class MainActivity extends AppCompatActivity {
                 } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
 
                 } else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-                    if (mBottomNavigation.getCurrentItem() == 4)
+                    if (mBottomNavigation.getCurrentItem() == 4) {
                         mBottomNavigation.setCurrentItem(currentItem);
+                        chooseColor(currentItem);
+                    }
                 }
             }
 
@@ -202,6 +212,30 @@ public class MainActivity extends AppCompatActivity {
                 buildDialogFilter();
             }
         });
+    }
+
+
+    private void chooseColor(int page){
+
+
+        switch (page){
+            case FITNESS_FRAG_BUTTON:
+                getWindow().setStatusBarColor(getResources().getColor(R.color.page1));
+                break;
+            case PROFILE_FRAG_BUTTON:
+                getWindow().setStatusBarColor(getResources().getColor(R.color.page2));
+                break;
+            case HOME_FRAG_BUTTON:
+                getWindow().setStatusBarColor(getResources().getColor(R.color.page3));
+                break;
+            case ADDPOST_FRAG_BUTTON:
+                getWindow().setStatusBarColor(getResources().getColor(R.color.page4));
+                break;
+            case OTHER_FRAG_BUTTON:
+                getWindow().setStatusBarColor(getResources().getColor(R.color.page5));
+                break;
+        }
+
     }
 
     private void buildDialogFilter(){
