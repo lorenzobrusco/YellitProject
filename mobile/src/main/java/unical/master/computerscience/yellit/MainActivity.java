@@ -269,15 +269,21 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+
         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         } else if (currentItem == 2) {
             super.onBackPressed();
         } else {
             currentItem = 2;
+            chooseColor(currentItem);
+            removeFragment(currentFragment);
+            currentFragment = new PostFragment();
+            setFragment(currentFragment);
             mBottomNavigation.setCurrentItem(currentItem);
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         }
+
     }
 
     protected void setFragment(Fragment fragment) {
