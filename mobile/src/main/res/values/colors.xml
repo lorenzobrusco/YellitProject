@@ -30,17 +30,19 @@
     <color name="dot_light_screen">#808080</color>
 
     <color name="walk">#ff8800</color>
-    <color name="running">#9544ff</color>
-    <color name="bicycle">#34b44a</color>
+    <color name="running">#803cda</color>
+    <color name="bicycle">#01ce24</color>
 
-    <color name="walk_hor">#225dff</color>
-    <color name="running_hor">#ffd816</color>
-    <color name="bicycle_hor">#ff4949</color>
+    <color name="walk_hor">#1d4dd0</color>
+    <color name="running_hor">#cfaf12</color>
+    <color name="bicycle_hor">#d40000</color>
 
     <color name="page1">#47983b</color>
-    <color name="page2">#ff8800</color>
+    <color name="page2">#db7500</color>
     <color name="page3">#3b5998</color>
-    <color name="page4">#4f3b98</color>
-    <color name="page5">#d34836</color>
+    <color name="page4">#cb362f</color>
+    <color name="page5">#4f3b98</color>
 
+
+    <color name="test">#009688</color>
 </resources>
