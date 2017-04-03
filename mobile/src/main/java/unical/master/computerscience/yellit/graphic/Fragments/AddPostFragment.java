@@ -13,7 +13,9 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
@@ -21,6 +23,7 @@ import android.text.style.StyleSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -92,7 +95,13 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
     private int lastSubMenu;
 
     @Bind(R.id.addpost_bottomsheet)
-    View bottomSheet;
+    View mBottomSheetAddPost;
+
+    //@Bind(R.id.addpost_bottomsheet)
+    //NestedScrollView mBottomSheetAddPost;
+
+    @Bind(R.id.comment_post_add)
+    TextInputEditText mCommentText;
 
     @Bind(R.id.galleryGridView)
     protected GridView gallery;
@@ -117,7 +126,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
         buildAnimationStuff();
 
-        mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetAddPost);
         mBottomSheetBehavior.setHideable(true);
         mBottomSheetBehavior.setPeekHeight(1000);
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
@@ -152,8 +161,31 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
         buildButtonsCallback();
         setupImagePicker();
+        changePriorityOfScroll();
 
         return view;
+    }
+
+    private void changePriorityOfScroll(){
+        mBottomSheetAddPost.setOnTouchListener(new View.OnTouchListener()
+        {
+            public boolean onTouch(View p_v, MotionEvent p_event)
+            {
+                mCommentText.getParent().requestDisallowInterceptTouchEvent(false);
+                //  We will have to follow above for all scrollable contents
+                return false;
+            }
+        });
+
+        mCommentText.setOnTouchListener(new View.OnTouchListener()
+        {
+            public boolean onTouch(View p_v, MotionEvent p_event)
+            {
+                p_v.getParent().requestDisallowInterceptTouchEvent(true);
+                //  We will have to follow above for all scrollable contents
+                return false;
+            }
+        });
     }
 
     private void setupImagePicker() {
