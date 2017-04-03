@@ -34,6 +34,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
@@ -155,7 +156,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         return view;
     }
 
-    private void setupImagePicker(){
+    private void setupImagePicker() {
         gallery.setAdapter(new ImageAdapter(getActivity()));
         this.gridViewSetting(gallery);
         gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -515,7 +516,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        setupImagePicker();
+
         if (resultCode != Activity.RESULT_OK) {
             return;
         }
@@ -549,6 +550,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                 imageLoaded.setScaleType(ImageView.ScaleType.FIT_CENTER);
 
                 imageLoaded.setVisibility(View.VISIBLE);
+                setupImagePicker();
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -572,7 +574,6 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                 totalWidth, LinearLayout.LayoutParams.MATCH_PARENT);
 
         gridview.setLayoutParams(params);
-        gridview.setHorizontalSpacing(2);
         gridview.setStretchMode(GridView.STRETCH_SPACING);
         gridview.setNumColumns(size);
     }
@@ -624,6 +625,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
             Glide.with(context).load(images.get(position))
                     .centerCrop()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(picturesView);
 
             return picturesView;
