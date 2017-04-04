@@ -29,7 +29,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/page4"
+                    android:background="#ffab91"
                     android:orientation="vertical"
                     android:paddingBottom="16dp"
                     android:paddingTop="16dp">
@@ -142,11 +142,16 @@
                                 android:layout_marginTop="15dp"
                                 android:text="Comment"
                                 android:textAppearance="?android:attr/textAppearanceSmall"
-                                android:textColor="@color/colorAccent" />
+                                android:textColor="@color/white" />
 
                             <android.support.design.widget.TextInputEditText
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:textColor="@color/white"
+                                android:background="#ff7043"
+                                android:layout_marginLeft="2dp"
+                                android:layout_marginRight="2dp"
+                                android:lines="3"
                                 android:hint="What do you think?" />
 
                             <View
@@ -162,7 +167,7 @@
                                 android:layout_marginTop="15dp"
                                 android:text="Location"
                                 android:textAppearance="?android:attr/textAppearanceSmall"
-                                android:textColor="@color/colorAccent" />
+                                android:textColor="@color/white" />
 
                             <View
                                 android:layout_width="match_parent"

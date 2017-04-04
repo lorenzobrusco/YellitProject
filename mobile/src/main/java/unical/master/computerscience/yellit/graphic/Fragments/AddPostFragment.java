@@ -1,6 +1,7 @@
 package unical.master.computerscience.yellit.graphic.Fragments;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -23,6 +24,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -436,8 +438,12 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                 break;
 
             case 1:
+                showAddDialog();
+                break;
+
             case 2:
             case 3:
+            case 4:
 
                 CustomDialogBottomSheet c = CustomDialogBottomSheet.newInstance("");
                 c.show(getFragmentManager().beginTransaction(), "");
@@ -508,6 +514,46 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         }
     }
 
+    protected GridView dialogGallery;
+
+    private void showAddDialog(){
+
+        final Dialog dialog = new Dialog(this.getContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_add_post);
+
+        GridView dialogGallery = (GridView) dialog.findViewById(R.id.addpost_gallery);
+
+        dialogGallery.setAdapter(new ImageAdapter(getActivity()));
+        this.gridViewSetting(dialogGallery);
+        dialogGallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1,
+                                    int position, long arg3) {
+                if (null != images && !images.isEmpty())
+
+                    Glide.with(getContext()).load(images.get(position))
+                            .centerCrop()
+                            .into(imageLoaded);
+
+            }
+        });
+
+        /*
+        Button dialogButton = (Button) dialog.findViewById(R.id.delete);
+        dialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        */
+
+        dialog.show();
+
+    }
     @Override
     public void onNothingSelected() {
         Log.i("PieChart", "nothing selected");

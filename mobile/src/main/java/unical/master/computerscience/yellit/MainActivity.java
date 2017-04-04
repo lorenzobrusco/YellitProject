@@ -239,6 +239,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void buildDialogFilter(){
+
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
