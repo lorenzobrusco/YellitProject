@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -13,8 +12,17 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
             <include layout="@layout/card_info_profile" />
-            <include layout="@layout/fragment_posts" />
+            <include layout="@layout/card_statistic_profile"
+                android:layout_height="300dp"
+                android:layout_width="match_parent" />
+            <include layout="@layout/card_friends_profile"
+                android:layout_height="50dp"
+                android:layout_width="match_parent"/>
+
         </LinearLayout>
+
+
     </ScrollView>
+
 
 </LinearLayout>

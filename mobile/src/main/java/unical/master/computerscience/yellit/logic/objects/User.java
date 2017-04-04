@@ -10,11 +10,11 @@ import java.util.List;
 
 public class User {
 
-    @SerializedName("surname")
-    private String surname;
+    @SerializedName("nickname")
+    private String nickname;
 
-    @SerializedName("name")
-    private String name;
+    @SerializedName("fullname")
+    private String fullname;
 
     @SerializedName("email")
     private String email;
@@ -25,32 +25,32 @@ public class User {
     @SerializedName("friends")
     private Friend[] friends;
 
-    public User(String name, String surname, String email, String pathImg) {
-        this.name = name;
-        this.surname = surname;
+    public User(String nickname, String fullname, String email, String pathImg) {
+        this.nickname = nickname;
+        this.fullname = fullname;
         this.email = email;
         this.pathImg = pathImg;
     }
 
-    public User(String name) {
-        this.name = name;
+    public User(String nickname) {
+        this.nickname = nickname;
     }
 
 
-    public String getName() {
-        return name;
+    public String getNickname() {
+        return nickname;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
-    public String getSurname() {
-        return surname;
+    public String getFullname() {
+        return fullname;
     }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
     }
 
     public String getEmail() {

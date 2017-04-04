@@ -3,23 +3,20 @@ package unical.master.computerscience.yellit.graphic.Activities;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
 
-import android.app.ProgressDialog;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import javax.xml.transform.TransformerConfigurationException;
 
 import butterknife.ButterKnife;
 import butterknife.Bind;
@@ -28,12 +25,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import unical.master.computerscience.yellit.MainActivity;
 import unical.master.computerscience.yellit.R;
+import unical.master.computerscience.yellit.connection.LoginService;
+import unical.master.computerscience.yellit.logic.InfoManager;
+import unical.master.computerscience.yellit.logic.objects.User;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
-    private static final String BASEURL = "http://10.0.2.2:8080/HobbiesServer/";
+    private static final String BASEURL = "http://10.0.2.2:8080/YellitServer/";
     private static final int REQUEST_SIGNUP = 0;
 
     @Bind(R.id.input_email)
@@ -75,10 +74,10 @@ public class LoginActivity extends AppCompatActivity {
     public void login() {
         Log.d(TAG, "Login");
 
-        /*if (!validate()) {
+        if (!validate()) {
             onLoginFailed();
             return;
-        }*/
+        }
 
         _loginButton.setEnabled(false);
 
@@ -90,8 +89,8 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Authenticating...");
         progressDialog.show();*/
-       // this.login(email, password);
-         onLoginSuccess();
+        this.login(email, password);
+         //onLoginSuccess();
     }
 
 
@@ -153,26 +152,28 @@ public class LoginActivity extends AppCompatActivity {
                 .baseUrl(BASEURL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-      /*  LoginService loginService = retrofit.create(LoginService.class);
+        LoginService loginService = retrofit.create(LoginService.class);
         Call<User> call = loginService.getProfile(email, password);
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
 
                 User profile = response.body();
+                InfoManager.getInstance().setUser(profile);
                 if(profile.getEmail() == null){
                     LoginActivity.this.buildErrorDialog();
                     Log.d("retrofit","email o password errati");
                 }else {
+                    Log.d("nick", profile.getNickname());
                     onLoginSuccess();
                 }
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                Log.d("retrofit", "cazzo");
+                Log.d("retrofit", "errore di log");
             }
-        });*/
+        });
     }
 
     private void buildErrorDialog(){

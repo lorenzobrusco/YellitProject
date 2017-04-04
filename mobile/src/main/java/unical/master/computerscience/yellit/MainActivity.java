@@ -35,6 +35,7 @@ import unical.master.computerscience.yellit.graphic.Fragments.AddPostFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.FitnessFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.PostFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.ProfileFragment;
+import unical.master.computerscience.yellit.utiliies.BuilderFile;
 import unical.master.computerscience.yellit.utiliies.PermissionCheckUtils;
 
 public class MainActivity extends AppCompatActivity {
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        //BuilderFile.getInstance().newXMLFile(this,"test");
         getSupportActionBar().hide();
         mSearchView.setFocusable(false);
         mSearchView.onActionViewExpanded();
