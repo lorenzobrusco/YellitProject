@@ -55,7 +55,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //TODO replace this code with login();
-                login();
+               // login();
+                onLoginSuccess();
             }
         });
 

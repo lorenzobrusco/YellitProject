@@ -23,6 +23,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import im.dacer.androidcharts.LineView;
 import unical.master.computerscience.yellit.R;
+import unical.master.computerscience.yellit.utiliies.BaseURL;
 import unical.master.computerscience.yellit.utiliies.BuilderFile;
 import unical.master.computerscience.yellit.utiliies.ReadFile;
 import unical.master.computerscience.yellit.utiliies.WriteFile;
@@ -61,19 +62,14 @@ public class FitnessFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_fitness, container, false);
         ButterKnife.bind(this, view);
-
-        // Create required data series on the DecoView
         createBackSeries();
         createDataSeries1();
         createDataSeries2();
         createDataSeries3();
-        // Setup events to be fired on a schedule
-        Log.d("readXML", ReadFile.getInstance().readXMLFile(getContext(), "test"));
-        WriteFile.getInstance().writeOnXMLFile(getContext(), "test");
-        Log.d("readXML", ReadFile.getInstance().readXMLFile(getContext(), "test"));
         createEvents();
         initLineView(lines);
         randomSet(lines);
+        Log.d("xmlParser", ReadFile.getInstance().readXMLFile(getContext(), BaseURL.FILENAME));
         return view;
     }
 

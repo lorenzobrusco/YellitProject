@@ -1,13 +1,18 @@
 package unical.master.computerscience.yellit.utiliies;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -26,8 +31,6 @@ import javax.xml.transform.stream.StreamResult;
 public class WriteFile {
 
     private static WriteFile mWriteFile;
-    private static final String ROOT = "info";
-    private static final String POST = "post";
     private static final String NTOT = "ntot";
     private static final String TOKEN = "token";
     private static final String FOODANDDRIK = "food_and_drink";
@@ -35,8 +38,6 @@ public class WriteFile {
     private static final String TRAVEL = "travel";
     private static final String INSIDE = "inside";
     private static final String OUTSIDE = "outside";
-
-
 
     private WriteFile() {
 
@@ -49,82 +50,59 @@ public class WriteFile {
         return mWriteFile;
     }
 
-    public void writeOnXMLFile(final Context context, String name) {
+    private void modifyTag(final Context context, String name, String tag, String value) {
         try {
             name += ".xml";
             final File file = new File(context.getFilesDir(), name);
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = null;
             docBuilder = docFactory.newDocumentBuilder();
-            Document doc = docBuilder.newDocument();
-
-            Element rootElement = doc.createElement(ROOT);
-            doc.appendChild(rootElement);
-
-            Element token = doc.createElement(TOKEN);
-            token.appendChild(doc.createTextNode("0"));
-            rootElement.appendChild(token);
-
-            Element post = doc.createElement(POST);
-            rootElement.appendChild(post);
-
-            Element nTot = doc.createElement(NTOT);
-            nTot.appendChild(doc.createTextNode("0"));
-            post.appendChild(nTot);
-
-            // firstname elements
-            Element fd = doc.createElement(FOODANDDRIK);
-            fd.appendChild(doc.createTextNode("0"));
-            post.appendChild(fd);
-
-            // firstname elements
-            Element travel = doc.createElement(TRAVEL);
-            travel.appendChild(doc.createTextNode("0"));
-            post.appendChild(travel);
-
-
-            // firstname elements
-            Element inside = doc.createElement(INSIDE);
-            inside.appendChild(doc.createTextNode("0"));
-            post.appendChild(inside);
-
-            // firstname elements
-            Element outide = doc.createElement(OUTSIDE);
-            outide.appendChild(doc.createTextNode("0"));
-            post.appendChild(outide);
-
-            // firstname elements
-            Element fitness = doc.createElement(FITNESS);
-            fitness.appendChild(doc.createTextNode("0"));
-            post.appendChild(fitness);
-
-            // lastname elements
-
-
-            // write the content into xml file
+            Document doc = docBuilder.parse(file);
+            Element element = doc.getDocumentElement();
+            Log.d("xmlParser", element + "");
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = null;
-
             transformer = transformerFactory.newTransformer();
-
             DOMSource source = new DOMSource(doc);
             StreamResult result = new StreamResult(file);
-
-            // Output to console for testing
-            // StreamResult result = new StreamResult(System.out);
-
             transformer.transform(source, result);
-
-            System.out.println("File saved!");
-        } catch (TransformerConfigurationException e) {
-            e.printStackTrace();
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
-
         } catch (TransformerException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    public void writeToken(final Context context, String name, String value) {
+        this.modifyTag(context, name, TOKEN, value);
+    }
+
+    public void writenTot(final Context context, String name, String value) {
+        this.modifyTag(context, name, NTOT, value);
+    }
+
+    public void writeFoodAndDrink(final Context context, String name, String value) {
+        this.modifyTag(context, name, FOODANDDRIK, value);
+    }
+
+    public void writefitness(final Context context, String name, String value) {
+        this.modifyTag(context, name, FITNESS, value);
+    }
+
+    public void writeTravel(final Context context, String name, String value) {
+        this.modifyTag(context, name, TRAVEL, value);
+    }
+
+    public void writeInside(final Context context, String name, String value) {
+        this.modifyTag(context, name, INSIDE, value);
+    }
+
+    public void writeOutside(final Context context, String name, String value) {
+        this.modifyTag(context, name, OUTSIDE, value);
+    }
 
 }

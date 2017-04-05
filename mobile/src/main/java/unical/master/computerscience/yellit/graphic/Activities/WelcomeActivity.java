@@ -20,8 +20,13 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import java.io.File;
+
 import unical.master.computerscience.yellit.MainActivity;
 import unical.master.computerscience.yellit.R;
+import unical.master.computerscience.yellit.utiliies.BaseURL;
+import unical.master.computerscience.yellit.utiliies.BuilderFile;
 import unical.master.computerscience.yellit.utiliies.PrefManager;
 
 public class WelcomeActivity extends AppCompatActivity {
@@ -40,8 +45,9 @@ public class WelcomeActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         prefManager = new PrefManager(WelcomeActivity.this);
         initActivity();
-
     }
+
+
 
     private void initActivity() {
 

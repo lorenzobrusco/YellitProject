@@ -31,12 +31,6 @@ public class ReadFile {
         return mReadFile;
     }
 
-    public File readXMLFILE(final Context context, String name, boolean a) {
-        name += ".xml";
-        File file = new File(context.getFilesDir(), name);
-        return file;
-    }
-
     public String readXMLFile(final Context context, String name) {
         String filename = name + ".xml";
         try {
@@ -50,13 +44,10 @@ public class ReadFile {
             }
             return sb.toString();
         } catch (FileNotFoundException e) {
-            BuilderFile.getInstance().newXMLFile(context, name);
             return EMPTY;
         } catch (UnsupportedEncodingException e) {
-            BuilderFile.getInstance().newXMLFile(context, name);
             return EMPTY;
         } catch (IOException e) {
-            BuilderFile.getInstance().newXMLFile(context, name);
             return EMPTY;
         }
     }

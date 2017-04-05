@@ -35,8 +35,10 @@ import unical.master.computerscience.yellit.graphic.Fragments.AddPostFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.FitnessFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.PostFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.ProfileFragment;
+import unical.master.computerscience.yellit.utiliies.BaseURL;
 import unical.master.computerscience.yellit.utiliies.BuilderFile;
 import unical.master.computerscience.yellit.utiliies.PermissionCheckUtils;
+import unical.master.computerscience.yellit.utiliies.ReadFile;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
     private static final int HOME_FRAG_BUTTON = 2;
     private static final int ADDPOST_FRAG_BUTTON = 3;
     private static final int OTHER_FRAG_BUTTON = 4;
-
     private int currentItem = 2;
     private static final int REQUEST_ALL_MISSING_PERMISSIONS = 1;
 
@@ -69,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        //BuilderFile.getInstance().newXMLFile(this,"test");
         getSupportActionBar().hide();
         mSearchView.setFocusable(false);
         mSearchView.onActionViewExpanded();
@@ -80,8 +80,7 @@ public class MainActivity extends AppCompatActivity {
         MainActivity.this.setFragment(currentFragment);
         chooseColor(currentItem);
         this.setupViews();
-
-
+        Log.d("xmlParser", ReadFile.getInstance().readXMLFile(this, BaseURL.FILENAME));
     }
 
 
