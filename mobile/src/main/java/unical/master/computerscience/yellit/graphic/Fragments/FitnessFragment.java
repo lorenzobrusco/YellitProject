@@ -74,7 +74,7 @@ public class FitnessFragment extends Fragment {
             test.add(String.valueOf(i+1));
         }
         lineView.setBottomTextList(test);
-        lineView.setColorArray(new int[]{Color.parseColor("#F44336"),Color.parseColor("#9C27B0"),Color.parseColor("#2196F3"),Color.parseColor("#009688")});
+        lineView.setColorArray(new int[]{R.color.walk,R.color.running,R.color.bicycle});
         lineView.setDrawDotLine(true);
         lineView.setShowPopup(LineView.SHOW_POPUPS_NONE);
 

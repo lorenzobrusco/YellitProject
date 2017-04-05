@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activityCatalogSearchContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -13,7 +14,6 @@
 
 
     <LinearLayout
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
@@ -27,156 +27,105 @@
             android:textColor="@color/black"
             android:textSize="20dp" />
 
-
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_margin="8dp"
+            android:orientation="vertical">
 
-
-            <com.makeramen.roundedimageview.RoundedImageView
-                android:id="@+id/walk_horizontal_progress_bar_icon"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/walk_hor"
-                android:scaleType="fitCenter"
-                android:src="@mipmap/ic_walking"
-                app:riv_mutate_background="true"
-                app:riv_oval="true"
-                app:riv_tile_mode="repeat" />
+                android:orientation="horizontal">
+
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:background="@color/walk"
+                    android:src="@mipmap/ic_walking" />
+
+                <com.daimajia.numberprogressbar.NumberProgressBar
+                    android:id="@+id/walk_horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:outlineProvider="none"
+                    custom:progress_current="60"
+                    custom:progress_max="100"
+                    custom:progress_reached_bar_height="25dp"
+                    custom:progress_reached_color="@color/walk"
+                    custom:progress_text_color="@color/aluminum"
+                    custom:progress_text_offset="5dp"
+                    custom:progress_text_size="20sp"
+                    custom:progress_text_visibility="visible"
+                    custom:progress_unreached_bar_height="0dp"
+                    custom:progress_unreached_color="#CCCCCC" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:background="@color/running"
+                    android:src="@mipmap/ic_running" />
+
+
+                <com.daimajia.numberprogressbar.NumberProgressBar
+                    android:id="@+id/run_horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:outlineProvider="none"
+                    custom:progress_current="30"
+                    custom:progress_max="100"
+                    custom:progress_reached_bar_height="25dp"
+                    custom:progress_reached_color="@color/running"
+                    custom:progress_text_color="@color/aluminum"
+                    custom:progress_text_offset="5dp"
+                    custom:progress_text_size="20sp"
+                    custom:progress_text_visibility="visible"
+                    custom:progress_unreached_bar_height="0dp"
+                    custom:progress_unreached_color="#CCCCCC" />
+
+            </LinearLayout>
 
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="4dp"
-                android:layout_toEndOf="@+id/walk_horizontal_progress_bar_icon"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginRight="4dp"
-                    android:text="10.0 km"
-                    android:textColor="@color/black"
-                    android:textSize="16dp" />
-
-
-                <ProgressBar
-                    android:id="@+id/walk_horizontal_progress_bar"
-                    style="@android:style/Widget.ProgressBar.Horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="4dp"
-                    android:outlineProvider="paddedBounds"
-                    android:progress="60"
-                    android:progressBackgroundTint="@color/white"
-                    android:progressTint="@color/walk_hor" />
-            </LinearLayout>
-
-        </RelativeLayout>
-
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:orientation="horizontal">
-
-
-            <com.makeramen.roundedimageview.RoundedImageView
-                android:id="@+id/run_horizontal_progress_bar_icon"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/running_hor"
-                android:scaleType="fitCenter"
-                android:src="@mipmap/ic_running"
-                app:riv_mutate_background="true"
-                app:riv_oval="true"
-                app:riv_tile_mode="repeat" />
+                android:layout_height="wrap_content">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="4dp"
-                android:layout_toEndOf="@+id/run_horizontal_progress_bar_icon"
-                android:orientation="horizontal">
 
-                <TextView
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:background="@color/bicycle"
+                    android:src="@mipmap/ic_bicycle" />
+
+                <com.daimajia.numberprogressbar.NumberProgressBar
+                    android:id="@+id/bicycle_horizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginRight="4dp"
-                    android:text="5.0 km"
-                    android:textColor="@color/black"
-                    android:textSize="16dp" />
-
-                <ProgressBar
-                    android:id="@+id/run_horizontal_progress_bar"
-                    style="@android:style/Widget.ProgressBar.Horizontal"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="4dp"
-                    android:progress="40"
-                    android:progressBackgroundTint="@color/white"
-                    android:progressTint="@color/running_hor" />
+                    android:layout_marginBottom="16dp"
+                    android:outlineProvider="none"
+                    custom:progress_current="10"
+                    custom:progress_max="100"
+                    custom:progress_reached_bar_height="25dp"
+                    custom:progress_reached_color="@color/bicycle"
+                    custom:progress_text_color="@color/aluminum"
+                    custom:progress_text_offset="5dp"
+                    custom:progress_text_size="20sp"
+                    custom:progress_text_visibility="visible"
+                    custom:progress_unreached_bar_height="0dp"
+                    custom:progress_unreached_color="#CCCCCC" />
 
             </LinearLayout>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:orientation="horizontal">
-
-
-            <com.makeramen.roundedimageview.RoundedImageView
-                android:id="@+id/bicycle_horizontal_progress_bar_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/bicycle_hor"
-                android:scaleType="fitCenter"
-                android:src="@mipmap/ic_bicycle"
-                app:riv_mutate_background="true"
-                app:riv_oval="true"
-                app:riv_tile_mode="repeat" />
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="4dp"
-                android:layout_toEndOf="@+id/bicycle_horizontal_progress_bar_icon"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginRight="4dp"
-                    android:text="2.0 km"
-                    android:textColor="@color/black"
-                    android:textSize="16dp" />
-
-                <ProgressBar
-                    android:id="@+id/bicycle_horizontal_progress_bar"
-                    style="@android:style/Widget.ProgressBar.Horizontal"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="4dp"
-                    android:progress="20"
-                    android:progressBackgroundTint="@color/white"
-                    android:progressTint="@color/bicycle_hor" />
-            </LinearLayout>
-
-        </RelativeLayout>
-
+        </LinearLayout>
     </LinearLayout>
-
 
 </android.support.v7.widget.CardView>
