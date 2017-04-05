@@ -58,8 +58,8 @@ public class WriteFile {
             DocumentBuilder docBuilder = null;
             docBuilder = docFactory.newDocumentBuilder();
             Document doc = docBuilder.parse(file);
-            Element element = doc.getDocumentElement();
-            Log.d("xmlParser", element + "");
+            doc.getElementsByTagName(tag).item(0).setTextContent(value);
+            Log.d("xmlParser",  doc.getElementsByTagName(tag).item(0).getNodeName() + "");
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = null;
             transformer = transformerFactory.newTransformer();
