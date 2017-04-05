@@ -5,21 +5,28 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.hookedonplay.decoviewlib.DecoView;
 import com.hookedonplay.decoviewlib.charts.DecoDrawEffect;
 import com.hookedonplay.decoviewlib.charts.SeriesItem;
 import com.hookedonplay.decoviewlib.events.DecoEvent;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import im.dacer.androidcharts.LineView;
 import unical.master.computerscience.yellit.R;
+import unical.master.computerscience.yellit.utiliies.BaseURL;
+import unical.master.computerscience.yellit.utiliies.BuilderFile;
+import unical.master.computerscience.yellit.utiliies.ReadFile;
+import unical.master.computerscience.yellit.utiliies.WriteFile;
 
 /**
  * Created by Lorenzo on 14/03/2017.
@@ -55,49 +62,47 @@ public class FitnessFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_fitness, container, false);
         ButterKnife.bind(this, view);
-
-        // Create required data series on the DecoView
         createBackSeries();
         createDataSeries1();
         createDataSeries2();
         createDataSeries3();
-        // Setup events to be fired on a schedule
         createEvents();
         initLineView(lines);
         randomSet(lines);
+        Log.d("xmlParser", ReadFile.getInstance().readXMLFile(getContext(), BaseURL.FILENAME));
         return view;
     }
 
     private void initLineView(LineView lineView) {
         ArrayList<String> test = new ArrayList<String>();
-        for (int i=0; i<randomint; i++){
-            test.add(String.valueOf(i+1));
+        for (int i = 0; i < randomint; i++) {
+            test.add(String.valueOf(i + 1));
         }
         lineView.setBottomTextList(test);
-        lineView.setColorArray(new int[]{R.color.walk,R.color.running,R.color.bicycle});
+        lineView.setColorArray(new int[]{R.color.walk, R.color.running, R.color.bicycle});
         lineView.setDrawDotLine(true);
         lineView.setShowPopup(LineView.SHOW_POPUPS_NONE);
 
     }
 
-    private void randomSet( LineView lineViewFloat){
+    private void randomSet(LineView lineViewFloat) {
 
         ArrayList<Float> dataListF = new ArrayList<>();
-        float randomF = (float)(Math.random()*9+1);
-        for (int i=0; i<randomint; i++){
-            dataListF.add((float)(Math.random()*randomF));
+        float randomF = (float) (Math.random() * 9 + 1);
+        for (int i = 0; i < randomint; i++) {
+            dataListF.add((float) (Math.random() * randomF));
         }
 
         ArrayList<Float> dataListF2 = new ArrayList<>();
-        randomF = (int)(Math.random()*9+1);
-        for (int i=0; i<randomint; i++){
-            dataListF2.add((float)(Math.random()*randomF));
+        randomF = (int) (Math.random() * 9 + 1);
+        for (int i = 0; i < randomint; i++) {
+            dataListF2.add((float) (Math.random() * randomF));
         }
 
         ArrayList<Float> dataListF3 = new ArrayList<>();
-        randomF = (int)(Math.random()*9+1);
-        for (int i=0; i<randomint; i++){
-            dataListF3.add((float)(Math.random()*randomF));
+        randomF = (int) (Math.random() * 9 + 1);
+        for (int i = 0; i < randomint; i++) {
+            dataListF3.add((float) (Math.random() * randomF));
         }
 
         ArrayList<ArrayList<Float>> dataListFs = new ArrayList<>();
@@ -257,7 +262,7 @@ public class FitnessFragment extends Fragment {
                 .setDelay(6000)
                 .build());
 
-       // resetText();
+        // resetText();
     }
 
 

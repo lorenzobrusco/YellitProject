@@ -10,6 +10,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,31 +32,81 @@ import unical.master.computerscience.yellit.logic.objects.User;
 
 public class ProfileFragment extends Fragment {
 
-    @Bind(R.id.recycleview_posts)
-    RecyclerView mPosts;
+    @Bind(R.id.expand_fitness_button)
+    protected Button mFitnessButton;
+
+    @Bind(R.id.expand_info_button)
+    protected Button mInfoButton;
+
+    @Bind(R.id.expand_more_info_button)
+    protected Button mMoreInfoButton;
+
+    @Bind(R.id.fitness_info_layout_profile)
+    protected LinearLayout mLayoutFitnessInfo;
+
+    @Bind(R.id.info_layout_profile)
+    protected LinearLayout mLayoutInfo;
+
+    @Bind(R.id.more_info_layout_profile)
+    protected LinearLayout mLayoutMoreInfo;
+
+    private Animation mAnimationDown;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         ButterKnife.bind(this, view);
-
-        Log.d("post", "create");
-        final PostAdapter mPostAdapter = new PostAdapter(this.getContext(), initList());
-        mPosts.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        mPosts.setAdapter(mPostAdapter);
+        mAnimationDown = AnimationUtils.loadAnimation(ProfileFragment.this.getContext(), R.anim.slide_down);
+        setupButtonExpandLayout();
         return view;
     }
 
-    private List<Post> initList() {
-        final List<Post> posts = new ArrayList<>();
-        posts.add(new Post("Lorenzo Brusco"));
-        posts.add(new Post("Salvatore Isabella"));
-        posts.add(new Post("Francesco Cosco"));
-        posts.add(new Post("Francesca Tassoni"));
-        posts.add(new Post("Eliana Cannella"));
-        posts.add(new Post("Paola Arcuri"));
-        return posts;
+    private void setupButtonExpandLayout() {
+
+        mFitnessButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                mAnimationDown.reset();
+                mLayoutFitnessInfo.clearAnimation();
+                mLayoutFitnessInfo.startAnimation(mAnimationDown);
+                mLayoutFitnessInfo.setVisibility(mLayoutFitnessInfo.isShown()
+                        ? View.GONE : View.VISIBLE);
+                mLayoutInfo.setVisibility(View.GONE);
+                mLayoutMoreInfo.setVisibility(View.GONE);
+
+            }
+        });
+        mInfoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                mAnimationDown.reset();
+                mLayoutInfo.clearAnimation();
+                mLayoutInfo.startAnimation(mAnimationDown);
+                mLayoutInfo.setVisibility(mLayoutInfo.isShown()
+                        ? View.GONE : View.VISIBLE);
+                mLayoutFitnessInfo.setVisibility(View.GONE);
+                mLayoutMoreInfo.setVisibility(View.GONE);
+
+            }
+        });
+        mMoreInfoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                mAnimationDown.reset();
+                mLayoutMoreInfo.clearAnimation();
+                mLayoutMoreInfo.startAnimation(mAnimationDown);
+                mLayoutMoreInfo.setVisibility(mLayoutMoreInfo.isShown()
+                        ? View.GONE : View.VISIBLE);
+                mLayoutFitnessInfo.setVisibility(View.GONE);
+                mLayoutInfo.setVisibility(View.GONE);
+
+            }
+        });
+
     }
 
 }

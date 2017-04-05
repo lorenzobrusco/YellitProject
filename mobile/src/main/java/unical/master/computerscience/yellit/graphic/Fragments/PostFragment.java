@@ -37,7 +37,6 @@ public class PostFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_posts, container, false);
         ButterKnife.bind(this, view);
-
         final PostAdapter mPostAdapter = new PostAdapter(this.getContext(), initList());
         mPosts.setLayoutManager(new LinearLayoutManager(this.getContext()));
         mPosts.setAdapter(mPostAdapter);

@@ -6,6 +6,7 @@ package unical.master.computerscience.yellit.utiliies;
 
 public class BaseURL {
 
-    public static final String URL = "http://192.168.43.55:8080/HobbiesServer/";
+    public static final String URL = "http://192.168.43.55:8080/YellitServer/";
+    public static final String FILENAME = "info";
 
 }

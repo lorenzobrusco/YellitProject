@@ -33,10 +33,6 @@
     <color name="running">#803cda</color>
     <color name="bicycle">#01ce24</color>
 
-    <color name="walk_hor">#1d4dd0</color>
-    <color name="running_hor">#cfaf12</color>
-    <color name="bicycle_hor">#d40000</color>
-
     <color name="page1">#47983b</color>
     <color name="page2">#db7500</color>
     <color name="page3">#3b5998</color>

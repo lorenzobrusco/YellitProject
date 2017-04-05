@@ -42,6 +42,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import unical.master.computerscience.yellit.logic.objects.Post;
 import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.utiliies.BaseURL;
+import unical.master.computerscience.yellit.utiliies.WriteFile;
 
 import static android.R.attr.animateFirstView;
 import static android.R.attr.pivotX;
@@ -188,7 +189,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
                         @Override
                         public void onAnimationEnd(Animator animator) {
-                            //like.setImageDrawable(mContext.getResources().getDrawable(R.mipmap.ic_like));
+                            like.setImageDrawable(mContext.getResources().getDrawable(R.mipmap.ic_like));
+                            WriteFile.getInstance().writenTot(mContext,BaseURL.FILENAME,"1");
                         }
 
                         @Override

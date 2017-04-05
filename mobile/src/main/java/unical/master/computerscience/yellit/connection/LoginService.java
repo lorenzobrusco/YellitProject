@@ -15,5 +15,5 @@ import unical.master.computerscience.yellit.logic.objects.User;
 public interface LoginService {
 
     @GET("Login")
-    Call<User> getProfile(@Query("nick") String email, @Query("password") String password);
+    Call<User> getProfile(@Query("email") String email, @Query("password") String password);
 }
