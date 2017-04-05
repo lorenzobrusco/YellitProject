@@ -33,11 +33,11 @@
     <color name="running">#803cda</color>
     <color name="bicycle">#01ce24</color>
 
-    <color name="page1">#47983b</color>
-    <color name="page2">#db7500</color>
-    <color name="page3">#3b5998</color>
-    <color name="page4">#cb362f</color>
-    <color name="page5">#4f3b98</color>
+    <color name="page1">#3a7e30</color>
+    <color name="page2">#b36000</color>
+    <color name="page3">#30487b</color>
+    <color name="page4">#a62925</color>
+    <color name="page5">#3c2d75</color>
 
 
     <color name="test">#009688</color>

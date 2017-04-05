@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -15,13 +14,14 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.NestedScrollView;
+import android.support.v4.view.GestureDetectorCompat;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -34,6 +34,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -60,6 +61,7 @@ import siclo.com.ezphotopicker.api.models.PhotoSource;
 import siclo.com.ezphotopicker.models.PhotoIntentException;
 import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.graphic.Dialog.CustomDialogBottomSheet;
+import unical.master.computerscience.yellit.graphic.custom.SelectorImageView;
 
 
 /**
@@ -69,6 +71,9 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
     private static final String DEMO_PHOTO_PATH = "MyDemoPhotoDir";
     private ArrayList<String> images;
+    private String currentPath = "";
+    private boolean locked = false;
+    private int currentPosition = 0;
 
     @Bind(R.id.pie_menu)
     protected PieChart mainMenu;
@@ -97,9 +102,6 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
     @Bind(R.id.addpost_bottomsheet)
     View mBottomSheetAddPost;
 
-    //@Bind(R.id.addpost_bottomsheet)
-    //NestedScrollView mBottomSheetAddPost;
-
     @Bind(R.id.comment_post_add)
     TextInputEditText mCommentText;
 
@@ -108,6 +110,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
     private BottomSheetBehavior mBottomSheetBehavior;
     private EZPhotoPickStorage ezPhotoPickStorage;
+
 
     @Nullable
     @Override
@@ -166,21 +169,17 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         return view;
     }
 
-    private void changePriorityOfScroll(){
-        mBottomSheetAddPost.setOnTouchListener(new View.OnTouchListener()
-        {
-            public boolean onTouch(View p_v, MotionEvent p_event)
-            {
+    private void changePriorityOfScroll() {
+        mBottomSheetAddPost.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View p_v, MotionEvent p_event) {
                 mCommentText.getParent().requestDisallowInterceptTouchEvent(false);
                 //  We will have to follow above for all scrollable contents
                 return false;
             }
         });
 
-        mCommentText.setOnTouchListener(new View.OnTouchListener()
-        {
-            public boolean onTouch(View p_v, MotionEvent p_event)
-            {
+        mCommentText.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View p_v, MotionEvent p_event) {
                 p_v.getParent().requestDisallowInterceptTouchEvent(true);
                 //  We will have to follow above for all scrollable contents
                 return false;
@@ -196,13 +195,14 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1,
                                     int position, long arg3) {
-                if (null != images && !images.isEmpty())
-
+                if (images != null && !images.isEmpty()) {
                     Glide.with(getContext()).load(images.get(position))
                             .centerCrop()
                             .into(imageLoaded);
-
+                    arg1.performClick();
+                }
             }
+
         });
     }
 
@@ -642,25 +642,47 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
             return position;
         }
 
-        public View getView(final int position, View convertView,
-                            ViewGroup parent) {
-            ImageView picturesView;
-            if (convertView == null) {
-                picturesView = new ImageView(context);
-                picturesView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                picturesView
-                        .setLayoutParams(new GridView.LayoutParams(270, 270));
-
-            } else {
-                picturesView = (ImageView) convertView;
-            }
-
+        public View getView(final int position, final View convertView,
+                            final ViewGroup parent) {
+            final RelativeLayout layout = new RelativeLayout(context);
+            final ImageView selectorImage = new ImageView(context);
+            selectorImage.setBackground(getResources().getDrawable(R.drawable.unselected_image));
+            final SelectorImageView picturesView = new SelectorImageView(context);
+            selectorImage.setScaleX(0.6f);
+            selectorImage.setScaleY(0.6f);
+            picturesView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            layout.setLayoutParams(new GridView.LayoutParams(270, 270));
+            picturesView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             Glide.with(context).load(images.get(position))
                     .centerCrop()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(picturesView);
-
-            return picturesView;
+            layout.addView(picturesView);
+            layout.addView(selectorImage);
+            layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (position == currentPosition && locked) {
+                        picturesView.setmSelected();
+                        if (!picturesView.ismSelected()) {
+                            selectorImage.setBackground(getResources().getDrawable(R.drawable.unselected_image));
+                            picturesView.setColorFilter(Color.argb(0, 0, 0, 0));
+                            currentPath = "";
+                            locked = false;
+                        }
+                    } else if (!locked) {
+                        picturesView.setmSelected();
+                        if (picturesView.ismSelected()) {
+                            picturesView.setColorFilter(Color.argb(80, 0, 0, 0));
+                            selectorImage.setBackground(getResources().getDrawable(R.drawable.selected_image));
+                            currentPath = images.get(position);
+                            locked = true;
+                            currentPosition = position;
+                        }
+                    }
+                }
+            });
+            return layout;
         }
 
         /**
@@ -697,4 +719,6 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
             return listOfAllImages;
         }
     }
+
+
 }
