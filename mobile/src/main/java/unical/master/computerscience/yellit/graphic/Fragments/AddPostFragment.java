@@ -70,7 +70,7 @@ import unical.master.computerscience.yellit.graphic.custom.SelectorImageView;
 public class AddPostFragment extends Fragment implements OnChartValueSelectedListener {
 
     private static final String DEMO_PHOTO_PATH = "MyDemoPhotoDir";
-    private ArrayList<String> images;
+    private ArrayList<String> mImages;
     private String currentPath = "";
     private boolean locked = false;
     private int currentPosition = 0;
@@ -79,8 +79,6 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
     protected PieChart mainMenu;
     @Bind(R.id.addpost_floating_button)
     protected FloatingActionButton floatingButton;
-    @Bind(R.id.addpost_img)
-    protected ImageView imageLoaded;
     @Bind(R.id.addpost_cam_button)
     protected Button camButton;
     @Bind(R.id.addpost_gall_button)
@@ -163,7 +161,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         ezPhotoPickStorage = new EZPhotoPickStorage(getActivity());
 
         buildButtonsCallback();
-        setupImagePicker();
+        setupImagePicker(null);
         changePriorityOfScroll();
 
         return view;
@@ -187,23 +185,30 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         });
     }
 
-    private void setupImagePicker() {
-        gallery.setAdapter(new ImageAdapter(getActivity()));
-        this.gridViewSetting(gallery);
-        gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    private void setupImagePicker(final String path) {
+        if (path == null) {
+            gallery.setAdapter(new ImageAdapter(getActivity()));
+        } else {
+            mImages.add(0, path);
+            gallery.setAdapter(new ImageAdapter(getActivity(), mImages));
+        }
 
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1,
-                                    int position, long arg3) {
-                if (images != null && !images.isEmpty()) {
-                    Glide.with(getContext()).load(images.get(position))
-                            .centerCrop()
-                            .into(imageLoaded);
-                    arg1.performClick();
+        this.gridViewSetting(gallery);
+
+        if (path != null) {
+            final int numVisibleChildren = gallery.getChildCount();
+            final int firstVisiblePosition = gallery.getFirstVisiblePosition();
+
+            for ( int i = 0; i < numVisibleChildren; i++ ) {
+                int positionOfView = firstVisiblePosition + i;
+
+                if (positionOfView == 0) {
+                    final View view = gallery.getChildAt(i);
+                    view.performClick();
                 }
             }
+        }
 
-        });
     }
 
     private void buildButtonsCallback() {
@@ -557,16 +562,11 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
             try {
                 ArrayList<String> pickedPhotoNames = data.getStringArrayListExtra(EZPhotoPick.PICKED_PHOTO_NAMES_KEY);
-
                 for (String photoName : pickedPhotoNames) {
                     Bitmap pickedPhoto = ezPhotoPickStorage.loadStoredPhotoBitmap(DEMO_PHOTO_PATH, photoName, 300);
 
-                    imageLoaded.setBackground(null);
 
-                    imageLoaded.setImageBitmap(pickedPhoto);
-                    imageLoaded.setScaleType(ImageView.ScaleType.FIT_CENTER);
-
-                    imageLoaded.setVisibility(View.VISIBLE);
+                    setupImagePicker(ezPhotoPickStorage.getAbsolutePathOfStoredPhoto(DEMO_PHOTO_PATH, photoName));
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -575,14 +575,9 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         } else if (requestCode == EZPhotoPick.PHOTO_PICK_CAMERA_REQUEST_CODE) {
 
             try {
-
+                ArrayList<String> pickedPhotoNames = data.getStringArrayListExtra(EZPhotoPick.PICKED_PHOTO_NAMES_KEY);
                 Bitmap pickedPhoto = ezPhotoPickStorage.loadLatestStoredPhotoBitmap(300);
-
-                imageLoaded.setImageBitmap(pickedPhoto);
-                imageLoaded.setScaleType(ImageView.ScaleType.FIT_CENTER);
-
-                imageLoaded.setVisibility(View.VISIBLE);
-                setupImagePicker();
+                setupImagePicker(ezPhotoPickStorage.getAbsolutePathOfStoredPhoto(DEMO_PHOTO_PATH, pickedPhotoNames.get(0)));
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -627,11 +622,16 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
          */
         public ImageAdapter(Activity localContext) {
             context = localContext;
-            images = getAllShownImagesPath(context);
+            mImages = getAllShownImagesPath(context);
+        }
+
+        public ImageAdapter(Activity localContext, ArrayList<String> images) {
+            context = localContext;
+            mImages = images;
         }
 
         public int getCount() {
-            return images.size();
+            return mImages.size();
         }
 
         public Object getItem(int position) {
@@ -653,7 +653,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
             picturesView.setScaleType(ImageView.ScaleType.FIT_CENTER);
             layout.setLayoutParams(new GridView.LayoutParams(270, 270));
             picturesView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-            Glide.with(context).load(images.get(position))
+            Glide.with(context).load(mImages.get(position))
                     .centerCrop()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(picturesView);
@@ -675,10 +675,12 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                         if (picturesView.ismSelected()) {
                             picturesView.setColorFilter(Color.argb(80, 0, 0, 0));
                             selectorImage.setBackground(getResources().getDrawable(R.drawable.selected_image));
-                            currentPath = images.get(position);
+                            currentPath = mImages.get(position);
                             locked = true;
                             currentPosition = position;
                         }
+                    } else {
+                        Toast.makeText(getContext(), "Non puoi selezionare altre immagini", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
