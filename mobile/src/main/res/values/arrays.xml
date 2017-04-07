@@ -18,11 +18,11 @@
     </array>
 
     <array name="main_colors">
-        <item>#dd2c00</item>
-        <item>#0091ea</item>
-        <item>#ffab00</item>
-        <item>#64dd17</item>
-        <item>#ff6d00</item>
+        <item>#b0120a</item> <!--red_900-->
+        <item>#f57f17</item> <!--yellow_900-->
+        <item>#ff6f00</item> <!--amber_900-->
+        <item>#e65100</item> <!--orange_900-->
+        <item>#bf360c</item> <!--deep_orange_900-->
     </array>
 
     <array name="sub_categories_1">
