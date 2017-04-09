@@ -16,17 +16,28 @@
         app:cardCornerRadius="4dp"
         app:cardElevation="8dp">
 
-        <LinearLayout
+        <HorizontalScrollView
+            android:id="@+id/title_horizontalScrollView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:orientation="vertical">
+            android:layout_margin="8dp"
+            android:fillViewport="false"
+            android:scrollbars="none">
 
-            <com.github.mikephil.charting.charts.RadarChart
-                android:id="@+id/radar_chart_profile"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="350dp" />
-        </LinearLayout>
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <GridView
+                    android:id="@+id/friendsGridView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
+            </LinearLayout>
+        </HorizontalScrollView>
+
+
     </android.support.v7.widget.CardView>
 
 </LinearLayout>

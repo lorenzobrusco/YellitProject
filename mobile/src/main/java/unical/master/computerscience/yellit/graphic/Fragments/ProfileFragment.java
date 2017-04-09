@@ -1,34 +1,32 @@
 package unical.master.computerscience.yellit.graphic.Fragments;
 
+import android.app.Activity;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.VideoView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.RadarData;
@@ -45,10 +43,10 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import unical.master.computerscience.yellit.R;
-import unical.master.computerscience.yellit.graphic.Adapters.PostAdapter;
 import unical.master.computerscience.yellit.graphic.Adapters.PostProfileAdapter;
+import unical.master.computerscience.yellit.graphic.custom.SelectorImageView;
+import unical.master.computerscience.yellit.logic.objects.Friend;
 import unical.master.computerscience.yellit.logic.objects.Post;
-import unical.master.computerscience.yellit.logic.objects.User;
 
 /**
  * Created by Lorenzo on 16/03/2017.
@@ -80,6 +78,11 @@ public class ProfileFragment extends Fragment {
     @Bind(R.id.radar_chart_profile)
     RadarChart mRadarInfo;
 
+    @Bind(R.id.friendsGridView)
+    GridView mFriendsGridView;
+
+    private List<Friend> mFriends;
+
     private Animation mAnimationDown;
 
     @Nullable
@@ -93,6 +96,7 @@ public class ProfileFragment extends Fragment {
         mPosts.setAdapter(mAdapter);
         mPosts.setExpanded(true);
         this.setupRadar();
+        this.setupFriendGridView();
         return view;
     }
 
@@ -141,6 +145,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+
     }
 
     private List<Post> initList() {
@@ -152,6 +157,35 @@ public class ProfileFragment extends Fragment {
         posts.add(new Post("Eliana Cannella"));
         posts.add(new Post("Paola Arcuri"));
         return posts;
+    }
+
+    private List<Friend> initFriends() {
+        final List<Friend> friends = new ArrayList<>();
+        friends.add(new Friend("Lorenzo Brusco", ""));
+        friends.add(new Friend("Salvatore Isabella", ""));
+        friends.add(new Friend("Francesco Cosco", ""));
+        friends.add(new Friend("Francesca Tassoni", ""));
+        friends.add(new Friend("Eliana Cannella", ""));
+        friends.add(new Friend("Paola Arcuri", ""));
+        friends.add(new Friend("Lorenzo Brusco", ""));
+        friends.add(new Friend("Salvatore Isabella", ""));
+        friends.add(new Friend("Francesco Cosco", ""));
+        friends.add(new Friend("Francesca Tassoni", ""));
+        friends.add(new Friend("Eliana Cannella", ""));
+        friends.add(new Friend("Paola Arcuri", ""));
+        friends.add(new Friend("Lorenzo Brusco", ""));
+        friends.add(new Friend("Salvatore Isabella", ""));
+        friends.add(new Friend("Francesco Cosco", ""));
+        friends.add(new Friend("Francesca Tassoni", ""));
+        friends.add(new Friend("Eliana Cannella", ""));
+        friends.add(new Friend("Paola Arcuri", ""));
+        friends.add(new Friend("Lorenzo Brusco", ""));
+        friends.add(new Friend("Salvatore Isabella", ""));
+        friends.add(new Friend("Francesco Cosco", ""));
+        friends.add(new Friend("Francesca Tassoni", ""));
+        friends.add(new Friend("Eliana Cannella", ""));
+        friends.add(new Friend("Paola Arcuri", ""));
+        return friends;
     }
 
     private void setupRadar() {
@@ -179,7 +213,7 @@ public class ProfileFragment extends Fragment {
         xAxis.setXOffset(0f);
         xAxis.setValueFormatter(new IAxisValueFormatter() {
 
-            private String[] mActivities = new String[]{"Fitness", "Inside", "Outside", "Travel", "Food&Drink"};
+            private String[] mActivities = new String[]{"FITNESS", "INSIDE", "OUTSIDE", "TRAVEL", "FOOD&DRINK"};
 
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
@@ -200,6 +234,7 @@ public class ProfileFragment extends Fragment {
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
         l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
         l.setDrawInside(false);
+        l.setEnabled(false);
         l.setTextColor(Color.BLACK);
     }
 
@@ -222,7 +257,7 @@ public class ProfileFragment extends Fragment {
             entries2.add(new RadarEntry(val2));
         }
 
-        RadarDataSet set1 = new RadarDataSet(entries1, "Last Week");
+        RadarDataSet set1 = new RadarDataSet(entries1, "THIS WEEK");
         set1.setColor(Color.rgb(103, 110, 129));
         set1.setFillColor(Color.rgb(103, 110, 129));
         set1.setDrawFilled(true);
@@ -231,18 +266,8 @@ public class ProfileFragment extends Fragment {
         set1.setDrawHighlightCircleEnabled(true);
         set1.setDrawHighlightIndicators(true);
 
-        RadarDataSet set2 = new RadarDataSet(entries2, "This Week");
-        set2.setColor(Color.rgb(121, 162, 175));
-        set2.setFillColor(Color.rgb(121, 162, 175));
-        set2.setDrawFilled(true);
-        set2.setFillAlpha(180);
-        set2.setLineWidth(2f);
-        set2.setDrawHighlightCircleEnabled(true);
-        set2.setDrawHighlightIndicators(true);
-
         ArrayList<IRadarDataSet> sets = new ArrayList<IRadarDataSet>();
         sets.add(set1);
-        sets.add(set2);
 
         RadarData data = new RadarData(sets);
         data.setValueTextSize(8f);
@@ -252,6 +277,93 @@ public class ProfileFragment extends Fragment {
         mRadarInfo.setData(data);
         mRadarInfo.invalidate();
 
+    }
+
+
+    private void setupFriendGridView() {
+        this.mFriends = this.initFriends();
+        mFriendsGridView.setAdapter(new ImageAdapter(getActivity()));
+        this.gridViewSetting(this.mFriendsGridView);
+    }
+
+    private void gridViewSetting(GridView gridview) {
+
+        int size = mFriends.size();
+        // Calculated single Item Layout Width for each grid element ....
+        int width = 70;
+
+        DisplayMetrics dm = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+        float density = dm.density;
+
+        int totalWidth = (int) (width * size * density);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                totalWidth, LinearLayout.LayoutParams.MATCH_PARENT);
+
+        gridview.setLayoutParams(params);
+        gridview.setStretchMode(GridView.STRETCH_SPACING);
+        gridview.setNumColumns(size);
+    }
+
+    /**
+     * The Class ImageAdapter.
+     */
+    private class ImageAdapter extends BaseAdapter {
+
+        /**
+         * The context.
+         */
+        private Activity context;
+
+        /**
+         * Instantiates a new image adapter.
+         *
+         * @param localContext the local context
+         */
+        public ImageAdapter(Activity localContext) {
+            context = localContext;
+        }
+
+        public int getCount() {
+            return mFriends.size();
+        }
+
+        public Object getItem(int position) {
+            return position;
+        }
+
+        public long getItemId(int position) {
+            return position;
+        }
+
+        public View getView(final int position, final View convertView,
+                            final ViewGroup parent) {
+            String nameFriend = mFriends.get(position).getEmail();
+            if (nameFriend.length() > 20)
+                nameFriend = nameFriend.substring(0, 13) + "...";
+            final LinearLayout layout = new LinearLayout(context);
+            layout.setOrientation(LinearLayout.VERTICAL);
+            final CircleImageView picturesView = new CircleImageView(context);
+            final TextView name = new TextView(context);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            lp.gravity = Gravity.CENTER_HORIZONTAL;
+            name.setLayoutParams(lp);
+            name.setText(nameFriend);
+            name.setTextSize(9f);
+            name.setTextColor(getResources().getColor(R.color.black));
+            layout.setLayoutParams(new GridView.LayoutParams(200, 200));
+            final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            picturesView.setLayoutParams(layoutParams);
+            Glide.with(context).load(mFriends.get(position).getPath())
+                    .centerCrop()
+                    .error(getResources().getDrawable(R.mipmap.ic_launcher))
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(picturesView);
+            layout.addView(picturesView);
+            layout.addView(name);
+            return layout;
+        }
     }
 
 

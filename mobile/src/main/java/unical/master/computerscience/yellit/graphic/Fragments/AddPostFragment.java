@@ -194,21 +194,6 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         }
 
         this.gridViewSetting(gallery);
-
-        if (path != null) {
-            final int numVisibleChildren = gallery.getChildCount();
-            final int firstVisiblePosition = gallery.getFirstVisiblePosition();
-
-            for ( int i = 0; i < numVisibleChildren; i++ ) {
-                int positionOfView = firstVisiblePosition + i;
-
-                if (positionOfView == 0) {
-                    final View view = gallery.getChildAt(i);
-                    view.performClick();
-                }
-            }
-        }
-
     }
 
     private void buildButtonsCallback() {
