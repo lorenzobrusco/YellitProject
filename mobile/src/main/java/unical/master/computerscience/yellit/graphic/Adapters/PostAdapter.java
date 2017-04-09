@@ -112,7 +112,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             super(itemView);
             ButterKnife.bind(this, itemView);
             Glide.with(mContext)
-                    .load(BaseURL.URL + "Images/user.jpg")
+                        .load(BaseURL.URL + "Images/user.jpg")
                     .listener(new RequestListener<String, GlideDrawable>() {
                         @Override
                         public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {

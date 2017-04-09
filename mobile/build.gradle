@@ -49,5 +49,6 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'im.dacer:AndroidCharts:1.0.3'
     compile 'com.daimajia.numberprogressbar:library:1.4@aar'
+    compile 'com.github.paolorotolo:expandableheightlistview:1.0.0'
     testCompile 'junit:junit:4.12'
 }
