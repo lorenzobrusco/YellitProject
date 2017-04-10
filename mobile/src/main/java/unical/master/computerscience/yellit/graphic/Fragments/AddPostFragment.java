@@ -1,7 +1,6 @@
 package unical.master.computerscience.yellit.graphic.Fragments;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -12,25 +11,20 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.GestureDetectorCompat;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
@@ -41,6 +35,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.github.clans.fab.FloatingActionButton;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
@@ -100,10 +95,10 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
     private int lastSubMenu;
 
     @Bind(R.id.addpost_bottomsheet)
-    View mBottomSheetAddPost;
+    protected View mBottomSheetAddPost;
 
     @Bind(R.id.comment_post_add)
-    TextInputEditText mCommentText;
+    protected TextInputEditText mCommentText;
 
     @Bind(R.id.galleryGridView)
     protected GridView gallery;
@@ -111,6 +106,8 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
     private BottomSheetBehavior mBottomSheetBehavior;
     private EZPhotoPickStorage ezPhotoPickStorage;
 
+    @Bind(R.id.addpost_transp_layer)
+    protected ImageView transparentLayer;
 
     @Nullable
     @Override
@@ -148,6 +145,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                 } else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
 
                     floatingButton.setVisibility(View.INVISIBLE);
+                    transparentLayer.setVisibility(View.GONE);
                     //.animate().scaleX(0).scaleY(0).setDuration(300).start();
 
                 }
@@ -156,6 +154,12 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
             @Override
             public void onSlide(View bottomSheet, float slideOffset) {
             }
+        });
+
+
+        transparentLayer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {}
         });
 
         buildMainMenu();
@@ -170,6 +174,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
     }
 
     private void changePriorityOfScroll() {
+
         mBottomSheetAddPost.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View p_v, MotionEvent p_event) {
                 mCommentText.getParent().requestDisallowInterceptTouchEvent(false);
@@ -472,15 +477,13 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
             case 0:
                 mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                transparentLayer.setVisibility(View.VISIBLE);
+                mainMenu.highlightValues(null);
                 break;
 
             case 1:
-                showAddDialog();
-                break;
-
             case 2:
             case 3:
-            case 4:
 
                 CustomDialogBottomSheet c = CustomDialogBottomSheet.newInstance("");
                 c.show(getFragmentManager().beginTransaction(), "");
@@ -551,46 +554,6 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         }
     }
 
-    protected GridView dialogGallery;
-
-    private void showAddDialog(){
-
-        final Dialog dialog = new Dialog(this.getContext());
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.dialog_add_post);
-
-        GridView dialogGallery = (GridView) dialog.findViewById(R.id.addpost_gallery);
-
-        dialogGallery.setAdapter(new ImageAdapter(getActivity()));
-        this.gridViewSetting(dialogGallery);
-        dialogGallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1,
-                                    int position, long arg3) {
-                if (null != images && !images.isEmpty())
-
-                    Glide.with(getContext()).load(images.get(position))
-                            .centerCrop()
-                            .into(imageLoaded);
-
-            }
-        });
-
-        /*
-        Button dialogButton = (Button) dialog.findViewById(R.id.delete);
-        dialogButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        */
-
-        dialog.show();
-
-    }
     @Override
     public void onNothingSelected() {
         Log.i("PieChart", "nothing selected");

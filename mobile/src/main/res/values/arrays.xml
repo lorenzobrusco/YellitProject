@@ -18,12 +18,24 @@
     </array>
 
     <array name="main_colors">
-        <item>#b0120a</item> <!--red_900-->
-        <item>#f57f17</item> <!--yellow_900-->
-        <item>#ff6f00</item> <!--amber_900-->
-        <item>#e65100</item> <!--orange_900-->
-        <item>#bf360c</item> <!--deep_orange_900-->
+        <item>#b0120a</item>
+        <item>#f57f17</item>
+        <item>#ff6f00</item>
+        <item>#e65100</item>
+        <item>#bf360c</item>
     </array>
+
+    <color name="pagea">#7e57c2</color>
+    <color name="paged">#738ffe</color>
+    <color name="pagef">#5c6bc0</color>
+    <color name="pageg">#29b6f6</color>
+    <color name="pagev">#26c6da</color>
+
+    <color name="pageq">#ff9800</color>
+    <color name="pagew">#f9a825</color>
+    <color name="pagee">#ff5722</color>
+    <color name="pager">#e84e40</color>
+    <color name="page5t">#ffc107</color>
 
     <array name="sub_categories_1">
         <item>Sub 1 Cat 1</item>

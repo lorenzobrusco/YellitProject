@@ -32,9 +32,6 @@ import unical.master.computerscience.yellit.graphic.Adapters.PostAdapter;
 
 public class PostFragment extends Fragment {
 
-    @Bind(R.id.blanky)
-    ImageView blanky;
-
     @Bind(R.id.recycleview_posts)
     RecyclerView mPosts;
 
@@ -47,11 +44,6 @@ public class PostFragment extends Fragment {
         mPosts.setLayoutManager(new LinearLayoutManager(this.getContext()));
         mPosts.setAdapter(mPostAdapter);
         mPosts.addItemDecoration( new PaddingItemDecoration(170));
-
-        blanky.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {}
-        });
 
         return view;
     }

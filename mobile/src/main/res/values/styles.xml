@@ -64,4 +64,7 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="SwitchColor">
+        <item name="colorControlActivated">@color/page4</item>
+    </style>
 </resources>
