@@ -11,11 +11,13 @@ public class Friend {
     @SerializedName("friend")
     private String email;
 
-    public Friend(String email) {
-        this.email = email;
-    }
+    @SerializedName("path")
+    private String path;
 
-    public Friend(){}
+    public Friend(String email, String path) {
+        this.email = email;
+        this.path = path;
+    }
 
     public String getEmail() {
         return email;
@@ -23,6 +25,14 @@ public class Friend {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }
 

@@ -29,7 +29,7 @@ dependencies {
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
     //compile 'com.github.PhilJay:MPAndroidChart:v3.0.0'
     // PhotoPicker
-    compile 'com.google.android.gms:play-services-wearable:10.0.1'
+    compile 'com.google.android.gms:play-services-wearable:10.2.0'
     compile 'com.android.support:appcompat-v7:25.3.0'
     compile 'com.android.support:design:25.3.0'
     compile 'com.jakewharton:butterknife:7.0.1'
@@ -50,5 +50,7 @@ dependencies {
     compile 'im.dacer:AndroidCharts:1.0.3'
     compile 'com.daimajia.numberprogressbar:library:1.4@aar'
     compile 'com.github.clans:fab:1.6.4'
+    compile 'com.github.paolorotolo:expandableheightlistview:1.0.0'
+    compile 'com.google.android.gms:play-services-fitness:10.2.0'
     testCompile 'junit:junit:4.12'
 }
