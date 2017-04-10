@@ -349,7 +349,8 @@ public class MainActivity extends AppCompatActivity {
         return new String[]{
                 Manifest.permission.INTERNET,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.BODY_SENSORS
         };
     }
 
