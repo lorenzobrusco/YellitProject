@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -16,13 +15,14 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.NestedScrollView;
+import android.support.v4.view.GestureDetectorCompat;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -36,6 +36,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -62,6 +63,7 @@ import siclo.com.ezphotopicker.api.models.PhotoSource;
 import siclo.com.ezphotopicker.models.PhotoIntentException;
 import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.graphic.Dialog.CustomDialogBottomSheet;
+import unical.master.computerscience.yellit.graphic.custom.SelectorImageView;
 
 
 /**
@@ -70,14 +72,15 @@ import unical.master.computerscience.yellit.graphic.Dialog.CustomDialogBottomShe
 public class AddPostFragment extends Fragment implements OnChartValueSelectedListener {
 
     private static final String DEMO_PHOTO_PATH = "MyDemoPhotoDir";
-    private ArrayList<String> images;
+    private ArrayList<String> mImages;
+    private String currentPath = "";
+    private boolean locked = false;
+    private int currentPosition = 0;
 
     @Bind(R.id.pie_menu)
     protected PieChart mainMenu;
     @Bind(R.id.addpost_floating_button)
     protected FloatingActionButton floatingButton;
-    @Bind(R.id.addpost_img)
-    protected ImageView imageLoaded;
     @Bind(R.id.addpost_cam_button)
     protected Button camButton;
     @Bind(R.id.addpost_gall_button)
@@ -99,9 +102,6 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
     @Bind(R.id.addpost_bottomsheet)
     View mBottomSheetAddPost;
 
-    //@Bind(R.id.addpost_bottomsheet)
-    //NestedScrollView mBottomSheetAddPost;
-
     @Bind(R.id.comment_post_add)
     TextInputEditText mCommentText;
 
@@ -110,6 +110,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
     private BottomSheetBehavior mBottomSheetBehavior;
     private EZPhotoPickStorage ezPhotoPickStorage;
+
 
     @Nullable
     @Override
@@ -162,27 +163,23 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         ezPhotoPickStorage = new EZPhotoPickStorage(getActivity());
 
         buildButtonsCallback();
-        setupImagePicker();
+        setupImagePicker(null);
         changePriorityOfScroll();
 
         return view;
     }
 
-    private void changePriorityOfScroll(){
-        mBottomSheetAddPost.setOnTouchListener(new View.OnTouchListener()
-        {
-            public boolean onTouch(View p_v, MotionEvent p_event)
-            {
+    private void changePriorityOfScroll() {
+        mBottomSheetAddPost.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View p_v, MotionEvent p_event) {
                 mCommentText.getParent().requestDisallowInterceptTouchEvent(false);
                 //  We will have to follow above for all scrollable contents
                 return false;
             }
         });
 
-        mCommentText.setOnTouchListener(new View.OnTouchListener()
-        {
-            public boolean onTouch(View p_v, MotionEvent p_event)
-            {
+        mCommentText.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View p_v, MotionEvent p_event) {
                 p_v.getParent().requestDisallowInterceptTouchEvent(true);
                 //  We will have to follow above for all scrollable contents
                 return false;
@@ -190,22 +187,30 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         });
     }
 
-    private void setupImagePicker() {
-        gallery.setAdapter(new ImageAdapter(getActivity()));
+    private void setupImagePicker(final String path) {
+        if (path == null) {
+            gallery.setAdapter(new ImageAdapter(getActivity()));
+        } else {
+            mImages.add(0, path);
+            gallery.setAdapter(new ImageAdapter(getActivity(), mImages));
+        }
+
         this.gridViewSetting(gallery);
-        gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1,
-                                    int position, long arg3) {
-                if (null != images && !images.isEmpty())
+        if (path != null) {
+            final int numVisibleChildren = gallery.getChildCount();
+            final int firstVisiblePosition = gallery.getFirstVisiblePosition();
 
-                    Glide.with(getContext()).load(images.get(position))
-                            .centerCrop()
-                            .into(imageLoaded);
+            for ( int i = 0; i < numVisibleChildren; i++ ) {
+                int positionOfView = firstVisiblePosition + i;
 
+                if (positionOfView == 0) {
+                    final View view = gallery.getChildAt(i);
+                    view.performClick();
+                }
             }
-        });
+        }
+
     }
 
     private void buildButtonsCallback() {
@@ -603,16 +608,11 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
             try {
                 ArrayList<String> pickedPhotoNames = data.getStringArrayListExtra(EZPhotoPick.PICKED_PHOTO_NAMES_KEY);
-
                 for (String photoName : pickedPhotoNames) {
                     Bitmap pickedPhoto = ezPhotoPickStorage.loadStoredPhotoBitmap(DEMO_PHOTO_PATH, photoName, 300);
 
-                    imageLoaded.setBackground(null);
 
-                    imageLoaded.setImageBitmap(pickedPhoto);
-                    imageLoaded.setScaleType(ImageView.ScaleType.FIT_CENTER);
-
-                    imageLoaded.setVisibility(View.VISIBLE);
+                    setupImagePicker(ezPhotoPickStorage.getAbsolutePathOfStoredPhoto(DEMO_PHOTO_PATH, photoName));
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -621,14 +621,9 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         } else if (requestCode == EZPhotoPick.PHOTO_PICK_CAMERA_REQUEST_CODE) {
 
             try {
-
+                ArrayList<String> pickedPhotoNames = data.getStringArrayListExtra(EZPhotoPick.PICKED_PHOTO_NAMES_KEY);
                 Bitmap pickedPhoto = ezPhotoPickStorage.loadLatestStoredPhotoBitmap(300);
-
-                imageLoaded.setImageBitmap(pickedPhoto);
-                imageLoaded.setScaleType(ImageView.ScaleType.FIT_CENTER);
-
-                imageLoaded.setVisibility(View.VISIBLE);
-                setupImagePicker();
+                setupImagePicker(ezPhotoPickStorage.getAbsolutePathOfStoredPhoto(DEMO_PHOTO_PATH, pickedPhotoNames.get(0)));
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -673,11 +668,16 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
          */
         public ImageAdapter(Activity localContext) {
             context = localContext;
-            images = getAllShownImagesPath(context);
+            mImages = getAllShownImagesPath(context);
+        }
+
+        public ImageAdapter(Activity localContext, ArrayList<String> images) {
+            context = localContext;
+            mImages = images;
         }
 
         public int getCount() {
-            return images.size();
+            return mImages.size();
         }
 
         public Object getItem(int position) {
@@ -688,25 +688,49 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
             return position;
         }
 
-        public View getView(final int position, View convertView,
-                            ViewGroup parent) {
-            ImageView picturesView;
-            if (convertView == null) {
-                picturesView = new ImageView(context);
-                picturesView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                picturesView
-                        .setLayoutParams(new GridView.LayoutParams(270, 270));
-
-            } else {
-                picturesView = (ImageView) convertView;
-            }
-
-            Glide.with(context).load(images.get(position))
+        public View getView(final int position, final View convertView,
+                            final ViewGroup parent) {
+            final RelativeLayout layout = new RelativeLayout(context);
+            final ImageView selectorImage = new ImageView(context);
+            selectorImage.setBackground(getResources().getDrawable(R.drawable.unselected_image));
+            final SelectorImageView picturesView = new SelectorImageView(context);
+            selectorImage.setScaleX(0.6f);
+            selectorImage.setScaleY(0.6f);
+            picturesView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            layout.setLayoutParams(new GridView.LayoutParams(270, 270));
+            picturesView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            Glide.with(context).load(mImages.get(position))
                     .centerCrop()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(picturesView);
-
-            return picturesView;
+            layout.addView(picturesView);
+            layout.addView(selectorImage);
+            layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (position == currentPosition && locked) {
+                        picturesView.setmSelected();
+                        if (!picturesView.ismSelected()) {
+                            selectorImage.setBackground(getResources().getDrawable(R.drawable.unselected_image));
+                            picturesView.setColorFilter(Color.argb(0, 0, 0, 0));
+                            currentPath = "";
+                            locked = false;
+                        }
+                    } else if (!locked) {
+                        picturesView.setmSelected();
+                        if (picturesView.ismSelected()) {
+                            picturesView.setColorFilter(Color.argb(80, 0, 0, 0));
+                            selectorImage.setBackground(getResources().getDrawable(R.drawable.selected_image));
+                            currentPath = mImages.get(position);
+                            locked = true;
+                            currentPosition = position;
+                        }
+                    } else {
+                        Toast.makeText(getContext(), "Non puoi selezionare altre immagini", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+            return layout;
         }
 
         /**
@@ -743,4 +767,6 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
             return listOfAllImages;
         }
     }
+
+
 }

@@ -174,10 +174,11 @@ public class MainActivity extends AppCompatActivity {
                         }
                         break;
                 }
-
+                filterImage.setVisibility(currentItem == HOME_FRAG_BUTTON ? View.VISIBLE : View.INVISIBLE);
                 return true;
             }
         });
+
 
         mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
