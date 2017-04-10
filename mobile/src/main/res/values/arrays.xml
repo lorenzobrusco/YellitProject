@@ -17,13 +17,12 @@
         <item>Categoria 5</item>
     </array>
 
-    <array name="main_colors">
-        <item>#b0120a</item>
-        <item>#f57f17</item>
-        <item>#ff6f00</item>
-        <item>#e65100</item>
-        <item>#bf360c</item>
-    </array>
+
+    <color name="ppp">#b0120a</color>
+    <color name="pp">#f57f17</color>
+    <color name="ppep">#ff6f00</color>
+    <color name="pppq">#e65100</color>
+    <color name="pppe">#bf360c</color>
 
     <color name="pagea">#7e57c2</color>
     <color name="paged">#738ffe</color>
@@ -37,21 +36,28 @@
     <color name="pager">#e84e40</color>
     <color name="page5t">#ffc107</color>
 
+    <array name="main_colors">
+        <item>@color/green_700</item>
+        <item>@color/blue_700</item>
+        <item>@color/amber_700</item>
+        <item>@color/lime_700</item>
+        <item>@color/cyan_700</item>
+    </array>
+
     <array name="sub_categories_1">
         <item>Sub 1 Cat 1</item>
         <item>Sub 2 Cat 1</item>
         <item>Sub 3 Cat 1</item>
         <item>Sub 4 Cat 1</item>
-        <item>Sub 5 Cat 1</item>
         <item>Back</item>
     </array>
 
     <array name="sub_colors_1">
-        <item>@android:color/holo_blue_bright</item>
-        <item>@android:color/holo_purple</item>
-        <item>@android:color/holo_orange_light</item>
-        <item>@android:color/holo_green_light</item>
-        <item>@android:color/holo_blue_bright</item>
+        <item>@color/green_800</item>
+        <item>@color/green_900</item>
+        <item>@color/green_600</item>
+        <item>@color/green_500</item>
+        <item>@color/page4</item>
     </array>
 
     <array name="sub_categories_2">
@@ -63,11 +69,11 @@
     </array>
 
     <array name="sub_colors_2">
-        <item>@android:color/holo_blue_bright</item>
-        <item>@android:color/holo_purple</item>
-        <item>@android:color/holo_orange_light</item>
-        <item>@android:color/holo_green_light</item>
-        <item>@android:color/holo_blue_bright</item>
+        <item>@color/blue_800</item>
+        <item>@color/blue_900</item>
+        <item>@color/blue_600</item>
+        <item>@color/blue_500</item>
+        <item>@color/page4</item>
     </array>
 
     <array name="sub_categories_3">
@@ -75,16 +81,15 @@
         <item>Sub 2 Cat 3</item>
         <item>Sub 3 Cat 3</item>
         <item>Sub 4 Cat 3</item>
-        <item>Sub 5 Cat 3</item>
         <item>Back</item>
     </array>
 
     <array name="sub_colors_3">
-        <item>@android:color/holo_blue_bright</item>
-        <item>@android:color/holo_purple</item>
-        <item>@android:color/holo_orange_light</item>
-        <item>@android:color/holo_green_light</item>
-        <item>@android:color/holo_blue_bright</item>
+        <item>@color/amber_800</item>
+        <item>@color/amber_900</item>
+        <item>@color/amber_600</item>
+        <item>@color/amber_500</item>
+        <item>@color/page4</item>
     </array>
 
     <array name="sub_categories_4">
@@ -92,32 +97,31 @@
         <item>Sub 2 Cat 4</item>
         <item>Sub 3 Cat 4</item>
         <item>Sub 4 Cat 4</item>
-        <item>Sub 5 Cat 4</item>
         <item>Back</item>
     </array>
 
     <array name="sub_colors_4">
-        <item>@android:color/holo_blue_bright</item>
-        <item>@android:color/holo_purple</item>
-        <item>@android:color/holo_orange_light</item>
-        <item>@android:color/holo_green_light</item>
-        <item>@android:color/holo_blue_bright</item>
+        <item>@color/lime_600</item>
+        <item>@color/lime_500</item>
+        <item>@color/lime_800</item>
+        <item>@color/lime_900</item>
+        <item>@color/page4</item>
     </array>
 
     <array name="sub_categories_5">
         <item>Sub 1 Cat 5</item>
         <item>Sub 2 Cat 5</item>
+        <item>Sub 3 Cat 5</item>
         <item>Sub 4 Cat 5</item>
-        <item>Sub 5 Cat 5</item>
         <item>Back</item>
     </array>
 
     <array name="sub_colors_5">
-        <item>@android:color/holo_blue_bright</item>
-        <item>@android:color/holo_purple</item>
-        <item>@android:color/holo_orange_light</item>
-        <item>@android:color/holo_green_light</item>
-        <item>@android:color/holo_blue_bright</item>
+        <item>@color/cyan_600</item>
+        <item>@color/cyan_500</item>
+        <item>@color/cyan_800</item>
+        <item>@color/cyan_900</item>
+        <item>@color/page4</item>
     </array>
 
 </resources>
