@@ -39,7 +39,6 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
     private com.google.android.gms.common.api.GoogleApiClient mClientFitness;
     private com.google.android.gms.common.api.GoogleApiClient mClientPlace;
     private com.google.android.gms.common.api.GoogleApiClient mClientLocation;
-    private Context mContext;
 
     private GoogleApiClient(final Context context) {
         mClientFitness = new com.google.android.gms.common.api.GoogleApiClient.Builder(context)
@@ -66,7 +65,6 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
         mClientFitness.connect();
         mClientPlace.connect();
         mClientLocation.connect();
-        this.mContext = context;
     }
 
 
@@ -93,9 +91,7 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
 
 
     /**
-     *
      *  disconnect all GoogleApiClient
-     *
      */
     public void disconnect() {
         if (mClientFitness.isConnected() && mClientPlace.isConnected() && mClientLocation.isConnected()) {
@@ -111,10 +107,11 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
 
 
     /**
+     * @param context context of activity
      * @return all place
      */
-    public PendingResult<PlaceLikelihoodBuffer> getPlaceDetection() {
-        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+    public PendingResult<PlaceLikelihoodBuffer> getPlaceDetection(final Context context) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return null;
         }
         PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi.getCurrentPlace(mClientPlace, null);
@@ -130,22 +127,22 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
             }
         });
         return result;
-
     }
 
     /**
+     * @param context context of activity
      * @return get current location
      */
-    public String getLocation() {
-        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+    public String getLocation(final Context context) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return null;
         }
         Location mLocation = LocationServices.FusedLocationApi.getLastLocation(mClientLocation);
         Log.i(TAG, mLocation + "");
         String location = null;
         if (mLocation != null) {
-            location = this.getAddress(mContext, mLocation.getLatitude(), mLocation.getLongitude());
+            location = this.getAddress(context, mLocation.getLatitude(), mLocation.getLongitude());
         }
         return location;
     }
@@ -156,7 +153,7 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
      * @param lon longitute
      * @return city and address
      */
-    private String getAddress(Context mContext, double lat, double lon) {
+    private String getAddress(final Context mContext, double lat, double lon) {
         try {
             Geocoder geocoder;
             String addressTMP = "";

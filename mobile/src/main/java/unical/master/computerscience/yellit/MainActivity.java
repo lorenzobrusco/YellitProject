@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         MainActivity.this.setFragment(currentFragment);
         chooseColor(currentItem);
         GoogleApiClient.getInstance(this);
-        Toast.makeText(this,GoogleApiClient.getInstance(this).getPlaceDetection()+"",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this,GoogleApiClient.getInstance(this).getPlaceDetection(this)+"",Toast.LENGTH_SHORT).show();
         this.setupViews();
     }
 
