@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
     private int currentItem = 2;
     private static final int REQUEST_ALL_MISSING_PERMISSIONS = 1;
 
-
     @Bind(R.id.bottom_navigation_view)
     AHBottomNavigation mBottomNavigation;
     @Bind(R.id.bottom_sheet1)
@@ -226,10 +225,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void chooseColor(int page){
+    private void chooseColor(int page) {
 
 
-        switch (page){
+        switch (page) {
             case FITNESS_FRAG_BUTTON:
                 getWindow().setStatusBarColor(getResources().getColor(R.color.page1));
                 break;
@@ -249,7 +248,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void buildDialogFilter(){
+    private void buildDialogFilter() {
+
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
@@ -380,6 +380,10 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return true;
+    }
+
+    public void patata() {
+        Toast.makeText(MainActivity.this.getApplicationContext(), "cicici", Toast.LENGTH_SHORT);
     }
 }
 

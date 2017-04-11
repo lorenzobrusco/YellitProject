@@ -11,24 +11,20 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.GestureDetectorCompat;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
@@ -39,6 +35,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.github.clans.fab.FloatingActionButton;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
@@ -54,14 +51,26 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import siclo.com.ezphotopicker.api.EZPhotoPick;
 import siclo.com.ezphotopicker.api.EZPhotoPickStorage;
 import siclo.com.ezphotopicker.api.models.EZPhotoPickConfig;
 import siclo.com.ezphotopicker.api.models.PhotoSource;
 import siclo.com.ezphotopicker.models.PhotoIntentException;
 import unical.master.computerscience.yellit.R;
+import unical.master.computerscience.yellit.connection.LoginService;
+import unical.master.computerscience.yellit.connection.PostGestureService;
+import unical.master.computerscience.yellit.graphic.Activities.LoginActivity;
 import unical.master.computerscience.yellit.graphic.Dialog.CustomDialogBottomSheet;
 import unical.master.computerscience.yellit.graphic.custom.SelectorImageView;
+import unical.master.computerscience.yellit.logic.InfoManager;
+import unical.master.computerscience.yellit.logic.objects.Post;
+import unical.master.computerscience.yellit.logic.objects.User;
+import unical.master.computerscience.yellit.utiliies.BaseURL;
 
 
 /**
@@ -98,10 +107,10 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
     private int lastSubMenu;
 
     @Bind(R.id.addpost_bottomsheet)
-    View mBottomSheetAddPost;
+    protected View mBottomSheetAddPost;
 
     @Bind(R.id.comment_post_add)
-    TextInputEditText mCommentText;
+    protected TextInputEditText mCommentText;
 
     @Bind(R.id.galleryGridView)
     protected GridView gallery;
@@ -109,12 +118,29 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
     private BottomSheetBehavior mBottomSheetBehavior;
     private EZPhotoPickStorage ezPhotoPickStorage;
 
+    @Bind(R.id.addpost_transp_layer)
+    protected ImageView transparentLayer;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_post, container, false);
         ButterKnife.bind(this, view);
+
+        buildVariousStuff();
+
+        buildMainMenu();
+
+        ezPhotoPickStorage = new EZPhotoPickStorage(getActivity());
+        buildButtonsCallback();
+
+        setupImagePicker(null);
+        changePriorityOfScroll();
+
+        return view;
+    }
+
+    private void buildVariousStuff() {
 
         mainCategoryLabels = getResources().getStringArray(R.array.main_categories);
         mainCategoryColors = getResources().getIntArray(R.array.main_colors);
@@ -146,6 +172,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                 } else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
 
                     floatingButton.setVisibility(View.INVISIBLE);
+                    transparentLayer.setVisibility(View.GONE);
                     //.animate().scaleX(0).scaleY(0).setDuration(300).start();
 
                 }
@@ -156,22 +183,18 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
             }
         });
 
-        buildMainMenu();
 
-        ezPhotoPickStorage = new EZPhotoPickStorage(getActivity());
-
-        buildButtonsCallback();
-        setupImagePicker(null);
-        changePriorityOfScroll();
-
-        return view;
+        transparentLayer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {}
+        });
     }
 
     private void changePriorityOfScroll() {
+
         mBottomSheetAddPost.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View p_v, MotionEvent p_event) {
                 mCommentText.getParent().requestDisallowInterceptTouchEvent(false);
-                //  We will have to follow above for all scrollable contents
                 return false;
             }
         });
@@ -179,7 +202,6 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         mCommentText.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View p_v, MotionEvent p_event) {
                 p_v.getParent().requestDisallowInterceptTouchEvent(true);
-                //  We will have to follow above for all scrollable contents
                 return false;
             }
         });
@@ -201,7 +223,42 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         floatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+
+                Post po = new Post("Paola Arcuri");
+
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(BaseURL.URL)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+
+                PostGestureService postService = retrofit.create(PostGestureService.class);
+                Call<String> call = postService.sendNewPost("provami");
+                call.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+
+                        Log.e("CI SONO", "MARONNA RO CARMN");
+                        /*
+                        User profile = response.body();
+                        InfoManager.getInstance().setUser(profile);
+
+                        if(profile.getEmail() == null){
+                            LoginActivity.this.buildErrorDialog();
+                            Log.d("retrofit","email o password errati");
+                        }else {
+                            Log.d("nick", profile.getNickname());
+                            onLoginSuccess();
+                        } */
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        Log.d("retrofit", t.getMessage());
+                    }
+                });
+
+
+                //mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
             }
         });
 
@@ -268,11 +325,15 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
             public void onAnimationEnd(Animation animation) {
 
                 if (isSubMenu) {
+
                     mainMenu.setCenterText(mainCategoryLabels[lastSubMenu]);
-                    setData(subCategoryLabels, subCategoryColors);
+                    setPieMenuData(subCategoryLabels, subCategoryColors);
+
                 } else {
+
                     mainMenu.setCenterText(generateCenterSpannableText());
-                    setData(mainCategoryLabels, mainCategoryColors);
+                    setPieMenuData(mainCategoryLabels, mainCategoryColors);
+
                 }
 
                 mainMenu.startAnimation(expandOut);
@@ -314,7 +375,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         // add a selection listener
         mainMenu.setOnChartValueSelectedListener(this);
 
-        setData(mainCategoryLabels, mainCategoryColors);
+        setPieMenuData(mainCategoryLabels, mainCategoryColors);
 
         mainMenu.getLegend().setEnabled(false);
 
@@ -326,17 +387,20 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
     private SpannableString generateCenterSpannableText() {
 
-        SpannableString s = new SpannableString("What are you doing?\npowered by Yellit");
-        s.setSpan(new RelativeSizeSpan(1.7f), 0, 17, 0);
-        s.setSpan(new StyleSpan(Typeface.NORMAL), 17, s.length() - 18, 0);
-        s.setSpan(new ForegroundColorSpan(Color.GRAY), 17, s.length() - 18, 0);
-        s.setSpan(new RelativeSizeSpan(.8f), 17, s.length() - 17, 0);
-        s.setSpan(new StyleSpan(Typeface.ITALIC), s.length() - 17, s.length(), 0);
-        s.setSpan(new ForegroundColorSpan(ColorTemplate.getHoloBlue()), s.length() - 17, s.length(), 0);
+        SpannableString s = new SpannableString("Yellit!\nWhat's up today?");
+
+
+        s.setSpan(new RelativeSizeSpan(2.2f), 0, 7, 0);
+        s.setSpan(new StyleSpan(Typeface.NORMAL), 0, 7, 0);
+        s.setSpan(new ForegroundColorSpan(Color.GRAY), 0, 7, 0);
+
+        s.setSpan(new RelativeSizeSpan(1.1f), 8, s.length(), 0);
+        s.setSpan(new StyleSpan(Typeface.ITALIC), 8, s.length(), 0);
+        s.setSpan(new ForegroundColorSpan(ColorTemplate.getHoloBlue()), 8, s.length(), 0);
         return s;
     }
 
-    private void setData(String[] labels, int[] colorz) {
+    private void setPieMenuData(String[] labels, int[] colorz) {
 
         ArrayList<PieEntry> entries = new ArrayList<PieEntry>();
 
@@ -410,9 +474,6 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
         } else {
 
-            // Vibrator v = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
-            // v.vibrate(80); // milliseconds
-
             int index = (int) h.getX();
 
             switch (index) {
@@ -455,14 +516,11 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
             case 0:
                 mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                break;
-
+                transparentLayer.setVisibility(View.VISIBLE);
+                mainMenu.highlightValues(null);
             case 1:
             case 2:
             case 3:
-
-                CustomDialogBottomSheet c = CustomDialogBottomSheet.newInstance("");
-                c.show(getFragmentManager().beginTransaction(), "");
 
                 break;
 
@@ -548,8 +606,8 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
             try {
                 ArrayList<String> pickedPhotoNames = data.getStringArrayListExtra(EZPhotoPick.PICKED_PHOTO_NAMES_KEY);
                 for (String photoName : pickedPhotoNames) {
-                    Bitmap pickedPhoto = ezPhotoPickStorage.loadStoredPhotoBitmap(DEMO_PHOTO_PATH, photoName, 300);
 
+                    Bitmap pickedPhoto = ezPhotoPickStorage.loadStoredPhotoBitmap(DEMO_PHOTO_PATH, photoName, 300);
 
                     setupImagePicker(ezPhotoPickStorage.getAbsolutePathOfStoredPhoto(DEMO_PHOTO_PATH, photoName));
                 }
@@ -562,6 +620,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
             try {
                 ArrayList<String> pickedPhotoNames = data.getStringArrayListExtra(EZPhotoPick.PICKED_PHOTO_NAMES_KEY);
                 Bitmap pickedPhoto = ezPhotoPickStorage.loadLatestStoredPhotoBitmap(300);
+
                 setupImagePicker(ezPhotoPickStorage.getAbsolutePathOfStoredPhoto(DEMO_PHOTO_PATH, pickedPhotoNames.get(0)));
 
             } catch (IOException e) {
@@ -629,6 +688,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
         public View getView(final int position, final View convertView,
                             final ViewGroup parent) {
+
             final RelativeLayout layout = new RelativeLayout(context);
             final ImageView selectorImage = new ImageView(context);
             selectorImage.setBackground(getResources().getDrawable(R.drawable.unselected_image));
@@ -649,14 +709,17 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                 public void onClick(View view) {
                     if (position == currentPosition && locked) {
                         picturesView.setmSelected();
+
                         if (!picturesView.ismSelected()) {
                             selectorImage.setBackground(getResources().getDrawable(R.drawable.unselected_image));
                             picturesView.setColorFilter(Color.argb(0, 0, 0, 0));
                             currentPath = "";
                             locked = false;
                         }
+
                     } else if (!locked) {
                         picturesView.setmSelected();
+
                         if (picturesView.ismSelected()) {
                             picturesView.setColorFilter(Color.argb(80, 0, 0, 0));
                             selectorImage.setBackground(getResources().getDrawable(R.drawable.selected_image));
@@ -664,7 +727,9 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                             locked = true;
                             currentPosition = position;
                         }
+
                     } else {
+
                         Toast.makeText(getContext(), "Non puoi selezionare altre immagini", Toast.LENGTH_SHORT).show();
                     }
                 }

@@ -42,6 +42,12 @@ import unical.master.computerscience.yellit.graphic.Fragments.Test;
 
 public class CustomDialogBottomSheet extends BottomSheetDialogFragment {
 
+    /*
+        Esempio di utilizzo
+
+        CustomDialogBottomSheet c = CustomDialogBottomSheet.newInstance("");
+                c.show(getFragmentManager().beginTransaction(), "");
+    */
     private static final String DEMO_PHOTO_PATH = "MyDemoPhotoDir";
     private ArrayList<String> images;
 

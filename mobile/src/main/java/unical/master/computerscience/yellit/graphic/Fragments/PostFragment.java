@@ -11,12 +11,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import unical.master.computerscience.yellit.MainActivity;
 import unical.master.computerscience.yellit.graphic.custom.PaddingItemDecoration;
 import unical.master.computerscience.yellit.logic.objects.Post;
 import unical.master.computerscience.yellit.logic.objects.User;
@@ -41,6 +44,7 @@ public class PostFragment extends Fragment {
         mPosts.setLayoutManager(new LinearLayoutManager(this.getContext()));
         mPosts.setAdapter(mPostAdapter);
         mPosts.addItemDecoration( new PaddingItemDecoration(170));
+
         return view;
     }
 

@@ -3,8 +3,6 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
-
-
     defaultConfig {
         applicationId "unical.master.computerscience.yellit"
         minSdkVersion 21
@@ -19,7 +17,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
 }
 
 
@@ -52,6 +49,7 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'im.dacer:AndroidCharts:1.0.3'
     compile 'com.daimajia.numberprogressbar:library:1.4@aar'
+    compile 'com.github.clans:fab:1.6.4'
     compile 'com.github.paolorotolo:expandableheightlistview:1.0.0'
     compile 'com.google.android.gms:play-services-fitness:10.2.0'
     compile 'com.google.android.gms:play-services-places:10.2.0'
