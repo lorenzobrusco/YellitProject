@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -25,6 +26,8 @@ import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 
 import java.util.ArrayList;
 
@@ -35,6 +38,7 @@ import unical.master.computerscience.yellit.graphic.Fragments.AddPostFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.FitnessFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.PostFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.ProfileFragment;
+import unical.master.computerscience.yellit.logic.GoogleApiClient;
 import unical.master.computerscience.yellit.utiliies.BaseURL;
 import unical.master.computerscience.yellit.utiliies.BuilderFile;
 import unical.master.computerscience.yellit.utiliies.PermissionCheckUtils;
@@ -79,10 +83,15 @@ public class MainActivity extends AppCompatActivity {
         currentFragment = new PostFragment();
         MainActivity.this.setFragment(currentFragment);
         chooseColor(currentItem);
+        GoogleApiClient.getInstance(this).onConnected(savedInstanceState);
         this.setupViews();
-        Log.d("xmlParser", ReadFile.getInstance().readXMLFile(this, BaseURL.FILENAME));
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        GoogleApiClient.getInstance(this).disconnect();
+    }
 
     private void setupViews() {
         AHBottomNavigationItem itemFitness = new AHBottomNavigationItem(R.string.tab_fitness, R.drawable.ic_fitness_center_black_24, R.color.page1);
@@ -350,6 +359,9 @@ public class MainActivity extends AppCompatActivity {
                 Manifest.permission.INTERNET,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_NETWORK_STATE,
                 Manifest.permission.BODY_SENSORS
         };
     }
