@@ -26,7 +26,11 @@ import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 
 import java.util.ArrayList;
@@ -83,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         MainActivity.this.setFragment(currentFragment);
         chooseColor(currentItem);
         GoogleApiClient.getInstance(this);
-        Toast.makeText(this,GoogleApiClient.getInstance(this).getPlaceDetection(this)+"",Toast.LENGTH_SHORT).show();
+        GoogleApiClient.getInstance(this).readFitnessHistory(this);
         this.setupViews();
     }
 
@@ -361,8 +365,6 @@ public class MainActivity extends AppCompatActivity {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_NETWORK_STATE,
                 Manifest.permission.BODY_SENSORS
         };
     }
