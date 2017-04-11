@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
@@ -22,12 +23,18 @@ import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.fitness.FitnessStatusCodes;
+import com.google.android.gms.fitness.data.Bucket;
+import com.google.android.gms.fitness.data.DataPoint;
+import com.google.android.gms.fitness.data.DataSet;
 import com.google.android.gms.fitness.data.DataSource;
 import com.google.android.gms.fitness.data.DataType;
+import com.google.android.gms.fitness.data.Field;
+import com.google.android.gms.fitness.data.Subscription;
 import com.google.android.gms.fitness.request.DataReadRequest;
 import com.google.android.gms.fitness.request.DataSourcesRequest;
 import com.google.android.gms.fitness.result.DataReadResult;
 import com.google.android.gms.fitness.result.DataSourcesResult;
+import com.google.android.gms.fitness.result.ListSubscriptionsResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
@@ -38,7 +45,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
-
 
 public class GoogleApiClient implements com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener,
         com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks {
@@ -54,7 +60,10 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
                 .addApi(Fitness.SENSORS_API)
                 .addApi(Fitness.RECORDING_API)
                 .addApi(Fitness.HISTORY_API)
-                .addScope(new Scope(Scopes.FITNESS_LOCATION_READ))
+                .addScope(new Scope(Scopes.FITNESS_LOCATION_READ_WRITE))
+                .addScope(new Scope(Scopes.FITNESS_ACTIVITY_READ_WRITE))
+                .addScope(new Scope(Scopes.FITNESS_BODY_READ_WRITE))
+                .addScope(new Scope(Scopes.FITNESS_NUTRITION_READ_WRITE))
                 .addConnectionCallbacks(this)
                 .enableAutoManage(appCompatActivity, 0, new com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener() {
                     @Override
@@ -75,9 +84,10 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
+        mClientFitness.connect();
         mClientPlace.connect();
         mClientLocation.connect();
-        mClientFitness.connect();
+        subscribeFitnessRecor(appCompatActivity);
     }
 
 
@@ -94,8 +104,6 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        Log.i(TAG, "connected!");
-        getRealtimeStepCount();
     }
 
     @Override
@@ -189,13 +197,22 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
      *                subscribe a session to fitness
      */
     private void subscribeFitnessRecor(final Context context) {
-        final PendingResult<Status> pendingResult = Fitness.RecordingApi.subscribe(mClientFitness, DataType.TYPE_ACTIVITY_SAMPLES);
-        final Status status = pendingResult.await();
-        if (status.isSuccess())
-            Log.i(TAG, "subscribe fitness session is complte");
-        else
-            Log.i(TAG, "subscribe fitness session is failed");
-
+        Fitness.RecordingApi.subscribe(mClientFitness, DataType.TYPE_STEP_COUNT_DELTA)
+                .setResultCallback(new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+                        if (status.isSuccess()) {
+                            if (status.getStatusCode()
+                                    == FitnessStatusCodes.SUCCESS_ALREADY_SUBSCRIBED) {
+                                Log.i(TAG, "Existing subscription for activity detected.");
+                            } else {
+                                Log.i(TAG, "Successfully subscribed!");
+                            }
+                        } else {
+                            Log.w(TAG, "There was a problem subscribing.");
+                        }
+                    }
+                });
     }
 
 
@@ -213,37 +230,45 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
         long startTime = endTime - DAY_IN_MS;
 
         final DataReadRequest readRequest = new DataReadRequest.Builder()
-                .aggregate(DataType.TYPE_CALORIES_EXPENDED, DataType.AGGREGATE_CALORIES_EXPENDED)
+                .aggregate(DataType.TYPE_STEP_COUNT_DELTA, DataType.AGGREGATE_STEP_COUNT_DELTA)
                 .bucketByActivityType(1, TimeUnit.SECONDS)
                 .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
                 .build();
+
         final PendingResult<DataReadResult> pendingResult = Fitness.HistoryApi.readData(mClientFitness, readRequest);
         pendingResult.setResultCallback(new ResultCallback<DataReadResult>() {
             @Override
             public void onResult(@NonNull DataReadResult dataReadResult) {
-                Log.i(TAG, dataReadResult.getBuckets().size() + "");
-            }
-        });
-    }
-
-    private void getRealtimeStepCount() {
-
-        Fitness.SensorsApi.findDataSources(mClientFitness, new DataSourcesRequest.Builder()
-                // At least one datatype must be specified.
-                .setDataTypes(DataType.TYPE_STEP_COUNT_CUMULATIVE)
-                // Can specify whether data type is raw or derived.
-                .setDataSourceTypes(DataSource.TYPE_RAW)
-                .build())
-                .setResultCallback(new ResultCallback<DataSourcesResult>() {
-                    @Override
-                    public void onResult(DataSourcesResult dataSourcesResult) {
-                        Log.i(TAG, "Find all data sources result: " + dataSourcesResult.getStatus().toString());
-                        for (DataSource dataSource : dataSourcesResult.getDataSources()) {
-                            Log.i(TAG, "Data source found: " + dataSource.toString());
-                            Log.i(TAG, "Data Source type: " + dataSource.getDataType().getName());
+                if (dataReadResult.getBuckets().size() > 0) {
+                    for (Bucket bucket : dataReadResult.getBuckets()) {
+                        List<DataSet> dataSets = bucket.getDataSets();
+                        for (DataSet dataSet : dataSets) {
+                            processDataSet(context, dataSet);
                         }
                     }
-                });
+                }
+            }
+        });
+
+    }
+
+    /**
+     * @param dataSet show the data point
+     */
+    private void processDataSet(final Context context, final DataSet dataSet) {
+        for (DataPoint dataPoint : dataSet.getDataPoints()) {
+            long dataPointStart = dataPoint.getStartTime(TimeUnit.MINUTES) / 1000000;
+            long dataPointEnd = dataPoint.getEndTime(TimeUnit.MINUTES) / 1000000;
+            Log.i(TAG, "Data Point");
+            Log.i(TAG, "\tType: " + dataPoint.getDataType().getName());
+            Log.i(TAG, "\tStart: " + dataPointStart);
+            Log.i(TAG, "\tEnd: " + dataPointEnd);
+            for (Field field : dataPoint.getDataType().getFields()) {
+                Toast.makeText(context, "\tField: " + field.getName() + "\tValue: " + dataPoint.getValue(field), Toast.LENGTH_SHORT).show();
+                Log.i(TAG, "\tField: " + field.getName());
+                Log.i(TAG, "\tValue: " + dataPoint.getValue(field));
+            }
+        }
 
     }
 
