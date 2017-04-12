@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.PendingResult;
@@ -25,13 +26,18 @@ import com.google.android.gms.fitness.data.DataPoint;
 import com.google.android.gms.fitness.data.DataSet;
 import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.data.Field;
+import com.google.android.gms.fitness.data.Goal;
 import com.google.android.gms.fitness.request.DataReadRequest;
+import com.google.android.gms.fitness.request.GoalsReadRequest;
 import com.google.android.gms.fitness.result.DataReadResult;
+import com.google.android.gms.fitness.result.GoalsResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
+
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -57,15 +63,15 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
                 .addApi(Fitness.RECORDING_API)
                 .addApi(Fitness.HISTORY_API)
                 .addApi(Fitness.GOALS_API)
-                .addScope(new Scope(Scopes.FITNESS_LOCATION_READ_WRITE))
-                .addScope(new Scope(Scopes.FITNESS_ACTIVITY_READ_WRITE))
-                .addScope(new Scope(Scopes.FITNESS_BODY_READ_WRITE))
-                .addScope(new Scope(Scopes.FITNESS_NUTRITION_READ_WRITE))
+                .addScope(new Scope(Scopes.FITNESS_LOCATION_READ))
+                .addScope(new Scope(Scopes.FITNESS_ACTIVITY_READ))
+                .addScope(new Scope(Scopes.FITNESS_BODY_READ))
+                .addScope(new Scope(Scopes.FITNESS_NUTRITION_READ))
                 .addConnectionCallbacks(new com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks() {
                     @Override
                     public void onConnected(@Nullable Bundle bundle) {
-                        if(new PrefManager(appCompatActivity).isFirstTimeLaunch())
-                        subscribeAllFitnessRecord(appCompatActivity);
+                        if (new PrefManager(appCompatActivity).isFirstTimeLaunch())
+                            subscribeAllFitnessRecord(appCompatActivity);
                     }
 
                     @Override
@@ -308,22 +314,71 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
     }
 
     /**
+     * @param context
+     */
+
+    public void readFitnessGoal(final Context context) {
+        PendingResult<GoalsResult> pendingResult = Fitness.GoalsApi.readCurrentGoals(mClientFitness,
+                new GoalsReadRequest.Builder()
+                        .addDataType(DataType.TYPE_STEP_COUNT_DELTA)
+                        .build());
+        pendingResult.setResultCallback(new ResultCallback<GoalsResult>() {
+            @Override
+            public void onResult(@NonNull GoalsResult goalsResult) {
+                List<Goal> goals = goalsResult.getGoals();
+                for(Goal goal : goals){
+                    processGoal(goal);
+                }
+            }
+        });
+    }
+
+
+    /**
      * @param dataSet show the data point
+     *                set the information about user in the infoManager class
      */
     private void processDataSet(final Context context, final DataSet dataSet) {
         for (DataPoint dataPoint : dataSet.getDataPoints()) {
             for (Field field : dataPoint.getDataType().getFields()) {
-                if(field.getName().contains(STEPS))
-                        InfoManager.getInstance().getmFitnessSessionData().steps = Integer.parseInt(dataPoint.getValue(field) + "");
-                if(field.getName().contains(CALORIES))
-                        InfoManager.getInstance().getmFitnessSessionData().calories = Float.parseFloat(dataPoint.getValue(field) + "");
-                if(field.getName().contains(SPEED) && !(dataPoint.getValue(field)+"").equals("NaN") )
+                if (field.getName().contains(STEPS))
+                    InfoManager.getInstance().getmFitnessSessionData().steps = Integer.parseInt(dataPoint.getValue(field) + "");
+                if (field.getName().contains(CALORIES))
+                    InfoManager.getInstance().getmFitnessSessionData().calories = Float.parseFloat(dataPoint.getValue(field) + "");
+                if (field.getName().contains(SPEED) && !(dataPoint.getValue(field) + "").equals("NaN"))
                     InfoManager.getInstance().getmFitnessSessionData().speed = Float.parseFloat(dataPoint.getValue(field) + "");
                 Log.i(TAG, "\tField: " + field.getName());
                 Log.i(TAG, "\tValue: " + dataPoint.getValue(field));
             }
         }
+    }
 
+    /**
+     *
+     * @param goal
+     */
+    private void processGoal(final Goal goal) {
+        Calendar current = Calendar.getInstance();
+        PendingResult<DataReadResult> pendingResult = Fitness.HistoryApi.readData(mClientFitness,
+                new DataReadRequest.Builder()
+                        .read(DataType.TYPE_STEP_COUNT_DELTA)
+                        .setTimeRange(
+                                goal.getStartTime(current, TimeUnit.NANOSECONDS),
+                                goal.getEndTime(current, TimeUnit.NANOSECONDS),
+                                TimeUnit.NANOSECONDS)
+                        .build());
+        DataReadResult stepReadResult = pendingResult.await();
+        List<DataPoint> dataPoints =
+                stepReadResult.getDataSet(DataType.TYPE_STEP_COUNT_DELTA).getDataPoints();
+
+        int total = 0;
+        for (DataPoint dataPoint : dataPoints) {
+            Field field = dataPoint.getDataType().getFields().get(0);
+            total += Integer.parseInt(dataPoint.getValue(field)+"");
+            Log.i(TAG, "\tField: " + field.getName());
+        }
+        double progress = total / goal.getMetricObjective().getValue();
+        Log.i(TAG, "\tField: " + progress);
     }
 
 }
