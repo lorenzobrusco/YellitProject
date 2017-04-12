@@ -160,7 +160,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<User> call, Response<User> response) {
 
                 User profile = response.body();
-                InfoManager.getInstance().setUser(profile);
+                InfoManager.getInstance().setmUser(profile);
                 if(profile.getEmail() == null){
                     LoginActivity.this.buildErrorDialog();
                     Log.d("retrofit","email o password errati");

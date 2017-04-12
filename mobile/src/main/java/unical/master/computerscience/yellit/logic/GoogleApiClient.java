@@ -1,7 +1,6 @@
 package unical.master.computerscience.yellit.logic;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -13,8 +12,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.Toast;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.PendingResult;
@@ -26,30 +23,29 @@ import com.google.android.gms.fitness.FitnessStatusCodes;
 import com.google.android.gms.fitness.data.Bucket;
 import com.google.android.gms.fitness.data.DataPoint;
 import com.google.android.gms.fitness.data.DataSet;
-import com.google.android.gms.fitness.data.DataSource;
 import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.data.Field;
-import com.google.android.gms.fitness.data.Subscription;
 import com.google.android.gms.fitness.request.DataReadRequest;
-import com.google.android.gms.fitness.request.DataSourcesRequest;
 import com.google.android.gms.fitness.result.DataReadResult;
-import com.google.android.gms.fitness.result.DataSourcesResult;
-import com.google.android.gms.fitness.result.ListSubscriptionsResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
-
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import unical.master.computerscience.yellit.utiliies.PrefManager;
+
 public class GoogleApiClient implements com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener,
         com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks {
 
     private static final String TAG = "GoogleApiClient";
+    private static final String STEPS = "step";
+    private static final String CALORIES = "calories";
+    private static final String SPEED = "average";
     private static GoogleApiClient mGoogleApiClient = null;
     private com.google.android.gms.common.api.GoogleApiClient mClientFitness;
     private com.google.android.gms.common.api.GoogleApiClient mClientPlace;
@@ -60,11 +56,23 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
                 .addApi(Fitness.SENSORS_API)
                 .addApi(Fitness.RECORDING_API)
                 .addApi(Fitness.HISTORY_API)
+                .addApi(Fitness.GOALS_API)
                 .addScope(new Scope(Scopes.FITNESS_LOCATION_READ_WRITE))
                 .addScope(new Scope(Scopes.FITNESS_ACTIVITY_READ_WRITE))
                 .addScope(new Scope(Scopes.FITNESS_BODY_READ_WRITE))
                 .addScope(new Scope(Scopes.FITNESS_NUTRITION_READ_WRITE))
-                .addConnectionCallbacks(this)
+                .addConnectionCallbacks(new com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks() {
+                    @Override
+                    public void onConnected(@Nullable Bundle bundle) {
+                        if(new PrefManager(appCompatActivity).isFirstTimeLaunch())
+                        subscribeAllFitnessRecord(appCompatActivity);
+                    }
+
+                    @Override
+                    public void onConnectionSuspended(int i) {
+
+                    }
+                })
                 .enableAutoManage(appCompatActivity, 0, new com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed(ConnectionResult result) {
@@ -87,7 +95,6 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
         mClientFitness.connect();
         mClientPlace.connect();
         mClientLocation.connect();
-        subscribeFitnessRecor(appCompatActivity);
     }
 
 
@@ -104,6 +111,7 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
+
     }
 
     @Override
@@ -194,10 +202,35 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
 
     /**
      * @param context context of activity that call it
-     *                subscribe a session to fitness
+     *                subscribe all datatype for a session to fitness
      */
-    private void subscribeFitnessRecor(final Context context) {
-        Fitness.RecordingApi.subscribe(mClientFitness, DataType.TYPE_STEP_COUNT_DELTA)
+    private void subscribeAllFitnessRecord(final Context context) {
+        if (mClientFitness.isConnected()) {
+            this.subscribeFitnessRecord(context, DataType.TYPE_STEP_COUNT_DELTA);
+            this.subscribeFitnessRecord(context, DataType.TYPE_CALORIES_EXPENDED);
+            this.subscribeFitnessRecord(context, DataType.TYPE_SPEED);
+        }
+    }
+
+    /**
+     * @param context context of activity that call it
+     *                unsubscribe all datatype for a session to fitness
+     */
+    public void unsubscribeAllFitnessRecord(final Context context) {
+        if (mClientFitness.isConnected()) {
+            this.unsubscribeFitnessRecord(context, DataType.TYPE_STEP_COUNT_DELTA);
+            this.unsubscribeFitnessRecord(context, DataType.TYPE_CALORIES_EXPENDED);
+            this.unsubscribeFitnessRecord(context, DataType.TYPE_SPEED);
+        }
+    }
+
+    /**
+     * @param context  context of activity that call it
+     * @param dataType type
+     *                 subscribe a single datatype for a session to fitness
+     */
+    private void subscribeFitnessRecord(final Context context, DataType dataType) {
+        Fitness.RecordingApi.subscribe(mClientFitness, dataType)
                 .setResultCallback(new ResultCallback<Status>() {
                     @Override
                     public void onResult(Status status) {
@@ -217,6 +250,26 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
 
 
     /**
+     * @param context  context of activity that call it
+     * @param dataType type
+     *                 unsubscribe a single datatype for a session to fitness
+     */
+    private void unsubscribeFitnessRecord(final Context context, final DataType dataType) {
+        Fitness.RecordingApi.unsubscribe(mClientFitness, dataType)
+                .setResultCallback(new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+                        if (status.isSuccess()) {
+                            Log.i(TAG, "Successfully unsubscribed for data type: " + dataType.getName().toString());
+                        } else {
+                            // Subscription not removed
+                            Log.i(TAG, "Failed to unsubscribe for data type: " + dataType.getName().toString());
+                        }
+                    }
+                });
+    }
+
+    /**
      * @param context context of activity that call it
      *                show the history inyo google fit
      */
@@ -231,6 +284,8 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
 
         final DataReadRequest readRequest = new DataReadRequest.Builder()
                 .aggregate(DataType.TYPE_STEP_COUNT_DELTA, DataType.AGGREGATE_STEP_COUNT_DELTA)
+                .aggregate(DataType.TYPE_CALORIES_EXPENDED, DataType.AGGREGATE_CALORIES_EXPENDED)
+                .aggregate(DataType.TYPE_SPEED, DataType.AGGREGATE_SPEED_SUMMARY)
                 .bucketByActivityType(1, TimeUnit.SECONDS)
                 .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
                 .build();
@@ -257,14 +312,13 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
      */
     private void processDataSet(final Context context, final DataSet dataSet) {
         for (DataPoint dataPoint : dataSet.getDataPoints()) {
-            long dataPointStart = dataPoint.getStartTime(TimeUnit.MINUTES) / 1000000;
-            long dataPointEnd = dataPoint.getEndTime(TimeUnit.MINUTES) / 1000000;
-            Log.i(TAG, "Data Point");
-            Log.i(TAG, "\tType: " + dataPoint.getDataType().getName());
-            Log.i(TAG, "\tStart: " + dataPointStart);
-            Log.i(TAG, "\tEnd: " + dataPointEnd);
             for (Field field : dataPoint.getDataType().getFields()) {
-                Toast.makeText(context, "\tField: " + field.getName() + "\tValue: " + dataPoint.getValue(field), Toast.LENGTH_SHORT).show();
+                if(field.getName().contains(STEPS))
+                        InfoManager.getInstance().getmFitnessSessionData().steps = Integer.parseInt(dataPoint.getValue(field) + "");
+                if(field.getName().contains(CALORIES))
+                        InfoManager.getInstance().getmFitnessSessionData().calories = Float.parseFloat(dataPoint.getValue(field) + "");
+                if(field.getName().contains(SPEED) && !(dataPoint.getValue(field)+"").equals("NaN") )
+                    InfoManager.getInstance().getmFitnessSessionData().speed = Float.parseFloat(dataPoint.getValue(field) + "");
                 Log.i(TAG, "\tField: " + field.getName());
                 Log.i(TAG, "\tValue: " + dataPoint.getValue(field));
             }

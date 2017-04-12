@@ -6,51 +6,23 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.Scopes;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Scope;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.fitness.Fitness;
-import com.google.android.gms.fitness.FitnessStatusCodes;
-import com.google.android.gms.fitness.data.DataPoint;
-import com.google.android.gms.fitness.data.DataSet;
-import com.google.android.gms.fitness.data.DataSource;
-import com.google.android.gms.fitness.data.DataType;
-import com.google.android.gms.fitness.data.Field;
-import com.google.android.gms.fitness.data.Subscription;
-import com.google.android.gms.fitness.data.Value;
-import com.google.android.gms.fitness.request.DataReadRequest;
-import com.google.android.gms.fitness.request.DataSourcesRequest;
 import com.google.android.gms.fitness.request.OnDataPointListener;
-import com.google.android.gms.fitness.request.SensorRequest;
-import com.google.android.gms.fitness.result.DailyTotalResult;
-import com.google.android.gms.fitness.result.DataReadResult;
-import com.google.android.gms.fitness.result.DataSourcesResult;
-import com.google.android.gms.fitness.result.ListSubscriptionsResult;
 import com.hookedonplay.decoviewlib.DecoView;
 import com.hookedonplay.decoviewlib.charts.DecoDrawEffect;
 import com.hookedonplay.decoviewlib.charts.SeriesItem;
 import com.hookedonplay.decoviewlib.events.DecoEvent;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import im.dacer.androidcharts.LineView;
 import unical.master.computerscience.yellit.R;
+import unical.master.computerscience.yellit.logic.GoogleApiClient;
+import unical.master.computerscience.yellit.logic.InfoManager;
 
 
 public class FitnessFragment extends Fragment {
@@ -76,7 +48,6 @@ public class FitnessFragment extends Fragment {
     private int mSeries1Index;
     private int mSeries2Index;
     private int mSeries3Index;
-    private GoogleApiClient mClient = null;
     private final float mSeriesMax = 50f;
     private OnDataPointListener mListener = null;
     int randomint = 31;
@@ -86,6 +57,7 @@ public class FitnessFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_fitness, container, false);
+        GoogleApiClient.getInstance((AppCompatActivity) getActivity()).readFitnessHistory(getContext());
         ButterKnife.bind(this, view);
         createBackSeries();
         createDataSeries1();
@@ -113,7 +85,7 @@ public class FitnessFragment extends Fragment {
             test.add(String.valueOf(i + 1));
         }
         lineView.setBottomTextList(test);
-        lineView.setColorArray(new int[]{R.color.walk, R.color.running, R.color.bicycle});
+        lineView.setColorArray(new int[]{R.color.walk, R.color.running, R.color.calories});
         lineView.setDrawDotLine(true);
         lineView.setShowPopup(LineView.SHOW_POPUPS_NONE);
 
@@ -190,7 +162,7 @@ public class FitnessFragment extends Fragment {
         seriesItem.addArcSeriesItemListener(new SeriesItem.SeriesItemListener() {
             @Override
             public void onSeriesItemAnimationProgress(float percentComplete, float currentPosition) {
-                textActivity1.setText(String.format("%.0f Km", currentPosition));
+                textActivity1.setText(String.format("%.0f Steps",(float) InfoManager.getInstance().getmFitnessSessionData().steps));
             }
 
             @Override
@@ -203,7 +175,7 @@ public class FitnessFragment extends Fragment {
     }
 
     private void createDataSeries2() {
-        final SeriesItem seriesItem = new SeriesItem.Builder(getResources().getColor(R.color.bicycle))
+        final SeriesItem seriesItem = new SeriesItem.Builder(getResources().getColor(R.color.calories))
                 .setRange(0, mSeriesMax, 0)
                 .setInitialVisibility(false)
                 .build();
@@ -212,7 +184,7 @@ public class FitnessFragment extends Fragment {
         seriesItem.addArcSeriesItemListener(new SeriesItem.SeriesItemListener() {
             @Override
             public void onSeriesItemAnimationProgress(float percentComplete, float currentPosition) {
-                textActivity2.setText(String.format("%.2f Km", currentPosition));
+                textActivity2.setText(String.format("%.2f Kcal",InfoManager.getInstance().getmFitnessSessionData().calories));
             }
 
             @Override
@@ -233,7 +205,7 @@ public class FitnessFragment extends Fragment {
         seriesItem.addArcSeriesItemListener(new SeriesItem.SeriesItemListener() {
             @Override
             public void onSeriesItemAnimationProgress(float percentComplete, float currentPosition) {
-                textActivity3.setText(String.format("%.0f Km", currentPosition));
+                textActivity3.setText(String.format("%.0f Km/h", (float) InfoManager.getInstance().getmFitnessSessionData().speed));
             }
 
             @Override

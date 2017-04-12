@@ -7,12 +7,9 @@ import java.util.Date;
  */
 
 public class FitnessSessionData {
-    public Date start;
-    public Date end;
-    public String name;
-    public String appName;
-    public String activity;
-    public int steps;
-    public int calories;
+
+    public int steps = 0;
+    public float calories = 0;
+    public float speed = 0;
 
 }

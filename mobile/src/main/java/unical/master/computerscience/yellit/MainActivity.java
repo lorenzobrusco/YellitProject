@@ -87,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
         MainActivity.this.setFragment(currentFragment);
         chooseColor(currentItem);
         GoogleApiClient.getInstance(this);
-        GoogleApiClient.getInstance(this).readFitnessHistory(this);
         this.setupViews();
     }
 
