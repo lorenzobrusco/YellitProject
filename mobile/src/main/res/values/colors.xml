@@ -29,9 +29,9 @@
     <!-- dots active colors -->
     <color name="dot_light_screen">#808080</color>
 
-    <color name="walk">#ff8800</color>
-    <color name="running">#803cda</color>
-    <color name="bicycle">#01ce24</color>
+    <color name="walk">#338e12</color>
+    <color name="running">#1e58a7</color>
+    <color name="calories">#af131a</color>
 
     <color name="page1">#3a7e30</color>
     <color name="page2">#b36000</color>

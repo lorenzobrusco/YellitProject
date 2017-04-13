@@ -52,5 +52,6 @@ dependencies {
     compile 'com.github.clans:fab:1.6.4'
     compile 'com.github.paolorotolo:expandableheightlistview:1.0.0'
     compile 'com.google.android.gms:play-services-fitness:10.2.0'
+    compile 'com.google.android.gms:play-services-places:10.2.0'
     testCompile 'junit:junit:4.12'
 }

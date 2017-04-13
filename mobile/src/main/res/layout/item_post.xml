@@ -76,6 +76,8 @@
                         android:layout_height="40dp"
                         android:layout_alignParentEnd="true"
                         android:layout_marginTop="5dp"
+                        android:fillAfter="true"
+                        android:fillEnabled="true"
                         android:src="@mipmap/ic_no_like" />
 
                     <TextView

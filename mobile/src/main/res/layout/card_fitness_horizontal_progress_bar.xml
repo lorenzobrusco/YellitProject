@@ -104,8 +104,8 @@
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:background="@color/bicycle"
-                    android:src="@mipmap/ic_bicycle" />
+                    android:background="@color/calories"
+                    android:src="@mipmap/ic_calories" />
 
                 <com.daimajia.numberprogressbar.NumberProgressBar
                     android:id="@+id/bicycle_horizontal"
@@ -116,7 +116,7 @@
                     custom:progress_current="10"
                     custom:progress_max="100"
                     custom:progress_reached_bar_height="25dp"
-                    custom:progress_reached_color="@color/bicycle"
+                    custom:progress_reached_color="@color/calories"
                     custom:progress_text_color="@color/aluminum"
                     custom:progress_text_offset="5dp"
                     custom:progress_text_size="20sp"

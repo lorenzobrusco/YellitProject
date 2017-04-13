@@ -11,11 +11,15 @@ import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewPropertyAnimator;
 import android.view.Window;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -39,12 +43,14 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
+import unical.master.computerscience.yellit.graphic.custom.Rotate3dAnimation;
 import unical.master.computerscience.yellit.logic.objects.Post;
 import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.utiliies.BaseURL;
 import unical.master.computerscience.yellit.utiliies.WriteFile;
 
 import static android.R.attr.animateFirstView;
+import static android.R.attr.animation;
 import static android.R.attr.pivotX;
 import static android.R.attr.pivotY;
 
@@ -107,12 +113,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         ProgressBar progressBar;
         @Bind(R.id.like_post)
         ImageView like;
+        private boolean isLike = false;
 
         public PostViewHolder(final View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             Glide.with(mContext)
-                        .load(BaseURL.URL + "Images/user.jpg")
+                    .load(BaseURL.URL + "Images/user.jpg")
                     .listener(new RequestListener<String, GlideDrawable>() {
                         @Override
                         public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
@@ -176,38 +183,46 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                     dialog.show();
                 }
             });
-
             like.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
-                    like.animate().setListener(new Animator.AnimatorListener() {
+                }
+
+            });
+            like.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    final float centerX = like.getWidth() / 2.0f;
+                    final float centerY = like.getHeight() / 2.0f;
+                    final Rotate3dAnimation rotation = new Rotate3dAnimation(0, 360, centerX, centerY, 0f, false);
+                    rotation.setDuration(500);
+                    rotation.setFillAfter(false);
+                    rotation.setInterpolator(new AccelerateInterpolator());
+                    rotation.setAnimationListener(new Animation.AnimationListener() {
                         @Override
-                        public void onAnimationStart(Animator animator) {
+                        public void onAnimationStart(Animation animation) {
 
                         }
 
                         @Override
-                        public void onAnimationEnd(Animator animator) {
-                            like.setImageDrawable(mContext.getResources().getDrawable(R.mipmap.ic_like));
-                            WriteFile.getInstance().writenTot(mContext,BaseURL.FILENAME,"1");
+                        public void onAnimationEnd(Animation animation) {
+                                like.setImageDrawable(isLike ? mContext.getResources().getDrawable(R.mipmap.ic_no_like)
+                                        : mContext.getResources().getDrawable(R.mipmap.ic_like));
+                            isLike = !isLike;
+                            //WriteFile.getInstance().writenTot(mContext,BaseURL.FILENAME,"1");
                         }
 
                         @Override
-                        public void onAnimationCancel(Animator animator) {
+                        public void onAnimationRepeat(Animation animation) {
 
                         }
-
-                        @Override
-                        public void onAnimationRepeat(Animator animator) {
-
-                        }
-                    }).rotationY(360f)
-                      .setDuration(500)
-                      .start();
-
+                    });
+                    like.startAnimation(rotation);
+                    return false;
                 }
             });
+
         }
 
     }
