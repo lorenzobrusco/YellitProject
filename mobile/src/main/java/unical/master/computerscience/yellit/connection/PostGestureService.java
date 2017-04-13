@@ -1,6 +1,9 @@
 package unical.master.computerscience.yellit.connection;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.lang.reflect.Array;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -19,6 +22,10 @@ public interface PostGestureService {
 //    @POST("NewPost")
 //    Call<Post> getProfile(@Body JSONObject post);
 
-    @GET("NewPost")
+    @GET("Posts")
     Call<String> sendNewPost(@Query("text") String text);
+
+    @POST("Posts")
+    Call<Post[]> getAllPosts(@Query("email") String email);
+
 }

@@ -14,17 +14,28 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+
+import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import unical.master.computerscience.yellit.MainActivity;
+import unical.master.computerscience.yellit.connection.PostGestureService;
 import unical.master.computerscience.yellit.graphic.custom.PaddingItemDecoration;
 import unical.master.computerscience.yellit.logic.objects.Post;
 import unical.master.computerscience.yellit.logic.objects.User;
 import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.graphic.Adapters.PostAdapter;
+import unical.master.computerscience.yellit.utiliies.BaseURL;
 
 /**
  * Created by Lorenzo on 14/03/2017.
@@ -40,23 +51,63 @@ public class PostFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_posts, container, false);
         ButterKnife.bind(this, view);
-        final PostAdapter mPostAdapter = new PostAdapter(this.getContext(), initList());
+
+        initList();
+        //final PostAdapter mPostAdapter = new PostAdapter(this.getContext(), initList());
         mPosts.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        mPosts.setAdapter(mPostAdapter);
-        mPosts.addItemDecoration( new PaddingItemDecoration(170));
+        //mPosts.setAdapter(mPostAdapter);
+        mPosts.addItemDecoration(new PaddingItemDecoration(170));
 
         return view;
     }
 
 
     private List<Post> initList() {
-        final List<Post> posts = new ArrayList<>();
+
+        final List<Post> postsToShow = new ArrayList<>();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BaseURL.LOCAL_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        PostGestureService postService = retrofit.create(PostGestureService.class);
+        Call<Post[]> call = postService.getAllPosts("aaa");
+        call.enqueue(new Callback<Post[]>() {
+            @Override
+            public void onResponse(Call<Post[]> call, Response<Post[]> response) {
+
+                Post[] posts = response.body();
+
+                for (Post p : posts) {
+                    postsToShow.add(p);
+                }
+
+                final PostAdapter mPostAdapter = new PostAdapter(PostFragment.this.getContext(), postsToShow);
+                mPosts.setAdapter(mPostAdapter);
+
+            }
+
+            @Override
+            public void onFailure(Call<Post[]> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+
+        return postsToShow;
+    }
+
+    private List<Post> FAKE_initList() {
+
+        List<Post> posts = new ArrayList<Post>();
+
         posts.add(new Post("Lorenzo Brusco"));
         posts.add(new Post("Salvatore Isabella"));
         posts.add(new Post("Francesco Cosco"));
         posts.add(new Post("Francesca Tassoni"));
         posts.add(new Post("Eliana Cannella"));
         posts.add(new Post("Paola Arcuri"));
+
         return posts;
     }
 

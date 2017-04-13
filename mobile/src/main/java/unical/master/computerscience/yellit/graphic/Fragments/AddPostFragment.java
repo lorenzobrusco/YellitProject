@@ -227,7 +227,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                 Post po = new Post("Paola Arcuri");
 
                 Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl(BaseURL.URL)
+                        .baseUrl(BaseURL.LOCAL_URL)
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
 
