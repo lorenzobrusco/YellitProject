@@ -56,6 +56,7 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
     private com.google.android.gms.common.api.GoogleApiClient mClientFitness;
     private com.google.android.gms.common.api.GoogleApiClient mClientPlace;
     private com.google.android.gms.common.api.GoogleApiClient mClientLocation;
+    private String mCurrentPlace = "";
 
     private GoogleApiClient(final AppCompatActivity appCompatActivity) {
         mClientFitness = new com.google.android.gms.common.api.GoogleApiClient.Builder(appCompatActivity)
@@ -87,7 +88,6 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
                 })
                 .build();
         mClientPlace = new com.google.android.gms.common.api.GoogleApiClient.Builder(appCompatActivity)
-                .addApi(LocationServices.API)
                 .addApi(Places.GEO_DATA_API)
                 .addApi(Places.PLACE_DETECTION_API)
                 .addConnectionCallbacks(this)
@@ -100,7 +100,7 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
                 .build();
         mClientFitness.connect();
         mClientPlace.connect();
-        mClientLocation.connect();
+//        mClientLocation.connect();
     }
 
 
@@ -146,23 +146,29 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
      * @param context context of activity
      * @return all place
      */
-    public PendingResult<PlaceLikelihoodBuffer> getPlaceDetection(final Context context) {
+    public String getPlaceDetection(final Context context) {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return null;
         }
-        PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi.getCurrentPlace(mClientPlace, null);
+        mCurrentPlace = "";
+        final PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi.getCurrentPlace(mClientPlace, null);
         result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
             @Override
             public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
+                Log.i(TAG, likelyPlaces + "");
+                PlaceLikelihood maxLikelihood = likelyPlaces.get(0);
                 for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-                    Log.i(TAG, String.format("Place '%s' has likelihood: %g",
-                            placeLikelihood.getPlace().getName(),
-                            placeLikelihood.getLikelihood()));
+                    if (maxLikelihood.getLikelihood() < placeLikelihood.getLikelihood())
+                        maxLikelihood = placeLikelihood;
                 }
+                Log.i(TAG, String.format("Place '%s' has likelihood: %g",
+                        maxLikelihood.getPlace().getName(),
+                        maxLikelihood.getLikelihood()));
+                mCurrentPlace = maxLikelihood.getPlace().getName()+"";
                 likelyPlaces.release();
             }
         });
-        return result;
+        return (!mCurrentPlace.equals("") ? mCurrentPlace : null);
     }
 
     /**
@@ -326,7 +332,7 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
             @Override
             public void onResult(@NonNull GoalsResult goalsResult) {
                 List<Goal> goals = goalsResult.getGoals();
-                for(Goal goal : goals){
+                for (Goal goal : goals) {
                     processGoal(goal);
                 }
             }
@@ -354,7 +360,6 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
     }
 
     /**
-     *
      * @param goal
      */
     private void processGoal(final Goal goal) {
@@ -374,7 +379,7 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
         int total = 0;
         for (DataPoint dataPoint : dataPoints) {
             Field field = dataPoint.getDataType().getFields().get(0);
-            total += Integer.parseInt(dataPoint.getValue(field)+"");
+            total += Integer.parseInt(dataPoint.getValue(field) + "");
             Log.i(TAG, "\tField: " + field.getName());
         }
         double progress = total / goal.getMetricObjective().getValue();

@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
@@ -31,6 +32,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -67,6 +69,7 @@ import unical.master.computerscience.yellit.connection.PostGestureService;
 import unical.master.computerscience.yellit.graphic.Activities.LoginActivity;
 import unical.master.computerscience.yellit.graphic.Dialog.CustomDialogBottomSheet;
 import unical.master.computerscience.yellit.graphic.custom.SelectorImageView;
+import unical.master.computerscience.yellit.logic.GoogleApiClient;
 import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.logic.objects.Post;
 import unical.master.computerscience.yellit.logic.objects.User;
@@ -79,10 +82,6 @@ import unical.master.computerscience.yellit.utiliies.BaseURL;
 public class AddPostFragment extends Fragment implements OnChartValueSelectedListener {
 
     private static final String DEMO_PHOTO_PATH = "MyDemoPhotoDir";
-    private ArrayList<String> mImages;
-    private String currentPath = "";
-    private boolean locked = false;
-    private int currentPosition = 0;
 
     @Bind(R.id.pie_menu)
     protected PieChart mainMenu;
@@ -92,6 +91,16 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
     protected Button camButton;
     @Bind(R.id.addpost_gall_button)
     protected Button galButton;
+    @Bind(R.id.addpost_bottomsheet)
+    protected View mBottomSheetAddPost;
+    @Bind(R.id.comment_post_add)
+    protected TextInputEditText mCommentText;
+    @Bind(R.id.galleryGridView)
+    protected GridView gallery;
+    @Bind(R.id.addpost_transp_layer)
+    protected ImageView transparentLayer;
+    @Bind(R.id.tv_location_text)
+    protected TextView mLocationTextView;
 
     private Typeface mTfRegular;
     private Typeface mTfLight;
@@ -106,20 +115,14 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
     private boolean isSubMenu;
     private int lastSubMenu;
 
-    @Bind(R.id.addpost_bottomsheet)
-    protected View mBottomSheetAddPost;
-
-    @Bind(R.id.comment_post_add)
-    protected TextInputEditText mCommentText;
-
-    @Bind(R.id.galleryGridView)
-    protected GridView gallery;
-
     private BottomSheetBehavior mBottomSheetBehavior;
     private EZPhotoPickStorage ezPhotoPickStorage;
 
-    @Bind(R.id.addpost_transp_layer)
-    protected ImageView transparentLayer;
+    private ArrayList<String> mImages;
+    private String currentPath = "";
+    private boolean locked = false;
+    private int currentPosition = 0;
+
 
     @Nullable
     @Override
@@ -186,7 +189,8 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
         transparentLayer.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {}
+            public void onClick(View v) {
+            }
         });
     }
 
@@ -518,6 +522,9 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                 mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 transparentLayer.setVisibility(View.VISIBLE);
                 mainMenu.highlightValues(null);
+                String location = GoogleApiClient.getInstance((AppCompatActivity)getActivity()).getPlaceDetection(getContext());
+                Log.i("AddPostTest",location+"test");
+                mLocationTextView.setText(location != null ? location : "Location not found");
             case 1:
             case 2:
             case 3:
