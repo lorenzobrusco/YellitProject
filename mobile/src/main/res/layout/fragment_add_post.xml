@@ -1,6 +1,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="c"
+    xmlns:fancy="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -20,10 +21,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal|top"
-            android:padding="12dip"
             android:background="#AA000000"
             android:focusable="true"
-            android:visibility="gone"/>
+            android:padding="12dip"
+            android:visibility="gone" />
 
         <android.support.design.widget.CoordinatorLayout
             android:id="@+id/bgLayout"
@@ -40,10 +41,10 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/aluminum"
+                    android:background="@color/white"
                     android:orientation="vertical"
-                    android:paddingBottom="16dp"
-                    android:paddingTop="16dp">
+                    android:paddingBottom="8dp"
+                    android:paddingTop="8dp">
 
                     <ScrollView
                         android:layout_width="match_parent"
@@ -62,10 +63,9 @@
                                 android:layout_marginLeft="10dp"
                                 android:layout_marginTop="6dp"
                                 android:text="Choose your recently pictures:"
-                                android:textSize="16sp"
-                                android:textStyle="bold"
                                 android:textAppearance="?android:attr/textAppearanceSmall"
-                                android:textColor="@color/page4" />
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
 
                             <HorizontalScrollView
                                 android:id="@+id/title_horizontalScrollView"
@@ -84,55 +84,48 @@
                                         android:id="@+id/galleryGridView"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:layout_gravity="center" />
+                                        android:layout_gravity="center"
+                                        android:elevation="2dp" />
                                 </LinearLayout>
                             </HorizontalScrollView>
 
 
-                            <TextView
-                                android:id="@+id/settingNotification"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="10dp"
-                                android:layout_marginTop="15dp"
-                                android:text="Photo"
-                                android:textSize="16sp"
-                                android:textStyle="bold"
-                                android:textAppearance="?android:attr/textAppearanceSmall"
-                                android:textColor="@color/page4" />
-
                             <RelativeLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                >
+                                android:layout_margin="8dp">
 
                                 <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:orientation="horizontal"
                                     android:layout_centerInParent="true"
-                                    android:layout_marginLeft="10dp">
+                                    android:orientation="horizontal">
 
-                                    <Button
+                                    <android.support.v7.widget.AppCompatButton
                                         android:id="@+id/addpost_gall_button"
-                                        android:layout_width="70dp"
-                                        android:layout_height="70dp"
-                                        android:layout_marginBottom="3dp"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
                                         android:layout_marginRight="16dp"
-                                        android:background="@drawable/button_bg_round"
-                                        android:drawableTop="@android:drawable/ic_menu_gallery"
-                                        android:paddingTop="20dp"
-                                        android:textColor="#fff" />
+                                        android:background="@drawable/rounded_image"
+                                        android:backgroundTint="@color/page1"
+                                        android:drawableLeft="@drawable/ic_gallery"
+                                        android:paddingLeft="16dp"
+                                        android:paddingRight="20dp"
+                                        android:text="GALLERY"
+                                        android:textColor="@color/white" />
 
-                                    <Button
+                                    <android.support.v7.widget.AppCompatButton
                                         android:id="@+id/addpost_cam_button"
-                                        android:layout_width="70dp"
-                                        android:layout_height="70dp"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
                                         android:layout_marginLeft="16dp"
-                                        android:background="@drawable/button_bg_round"
-                                        android:drawableTop="@android:drawable/ic_menu_camera"
-                                        android:paddingTop="20dp"
-                                        android:textColor="#fff" />
+                                        android:background="@drawable/rounded_image"
+                                        android:backgroundTint="@color/page3"
+                                        android:drawableLeft="@drawable/ic_camera"
+                                        android:paddingLeft="16dp"
+                                        android:paddingRight="20dp"
+                                        android:text="CAMERA"
+                                        android:textColor="@color/white" />
 
                                 </LinearLayout>
 
@@ -142,35 +135,32 @@
                             <View
                                 android:layout_width="match_parent"
                                 android:layout_height="0.5dp"
-                                android:layout_marginTop="5dp"
                                 android:background="@android:color/darker_gray" />
 
-                            <LinearLayout
+                            <RelativeLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_margin="8dp"
                                 android:orientation="horizontal">
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="10dp"
-                                    android:layout_marginLeft="10dp"
-                                    android:text="Location"
+                                <com.jaredrummler.materialspinner.MaterialSpinner
                                     android:id="@+id/tv_location_text"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/page4"/>
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginRight="80dp"
+                                    android:layout_alignParentTop="true"
+                                    android:layout_alignParentStart="true" />
 
                                 <android.support.v7.widget.SwitchCompat
                                     android:id="@+id/switchButton"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="10dp"
-                                    android:layout_marginLeft="230dp"
-                                    android:theme="@style/SwitchColor"
-                                    android:checked="true"/>
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerInParent="true"
+                                    android:checked="true"
+                                    android:theme="@style/SwitchColor" />
 
-                            </LinearLayout>
+                            </RelativeLayout>
 
                             <View
                                 android:layout_width="match_parent"
@@ -185,18 +175,21 @@
                                 android:layout_marginLeft="10dp"
                                 android:layout_marginTop="15dp"
                                 android:text="Comment"
-                                android:textSize="16sp"
-                                android:textStyle="bold"
                                 android:textAppearance="?android:attr/textAppearanceSmall"
-                                android:textColor="@color/page4" />
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
 
                             <android.support.design.widget.TextInputEditText
+                                android:id="@+id/comment_post_add"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_margin="8dp"
+                                android:background="@drawable/edit_text_box"
+                                android:gravity="top"
+                                android:hint="What do you think?"
                                 android:lines="3"
-                                android:scrollbars="vertical"
-                                android:id="@+id/comment_post_add"
-                                android:hint="What do you think?" />
+                                android:padding="8dp"
+                                android:scrollbars="vertical" />
 
                         </LinearLayout>
 
@@ -207,20 +200,24 @@
 
             </android.support.v4.widget.NestedScrollView>
 
-            <com.github.clans.fab.FloatingActionButton
+
+            <android.support.design.widget.FloatingActionButton
                 android:id="@+id/addpost_floating_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
+                android:layout_margin="@dimen/fab_margin"
+                android:visibility="invisible"
+                app:elevation="4dp"
+                app:fab_colorNormal="@color/page4"
                 app:layout_anchor="@+id/addpost_bottomsheet"
                 app:layout_anchorGravity="top|end"
-                android:src="@mipmap/ic_send"
-                fab:fab_colorNormal="@color/page4"
+                app:srcCompat="@mipmap/ic_send"
+                fab:fabSize="normal"
                 fab:fab_colorPressed="#8f2925"
                 fab:fab_colorRipple="#8f2925"
-                fab:fab_shadowColor="#000"
                 fab:fab_elevationCompat="6dp"
-                android:visibility="invisible"/>
+                fab:fab_shadowColor="#000" />
+
 
         </android.support.design.widget.CoordinatorLayout>
 

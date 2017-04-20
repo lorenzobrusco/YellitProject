@@ -11,9 +11,12 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatButton;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
@@ -37,7 +40,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.github.clans.fab.FloatingActionButton;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
@@ -47,10 +49,10 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import retrofit2.Call;
@@ -64,15 +66,11 @@ import siclo.com.ezphotopicker.api.models.EZPhotoPickConfig;
 import siclo.com.ezphotopicker.api.models.PhotoSource;
 import siclo.com.ezphotopicker.models.PhotoIntentException;
 import unical.master.computerscience.yellit.R;
-import unical.master.computerscience.yellit.connection.LoginService;
 import unical.master.computerscience.yellit.connection.PostGestureService;
-import unical.master.computerscience.yellit.graphic.Activities.LoginActivity;
-import unical.master.computerscience.yellit.graphic.Dialog.CustomDialogBottomSheet;
 import unical.master.computerscience.yellit.graphic.custom.SelectorImageView;
 import unical.master.computerscience.yellit.logic.GoogleApiClient;
 import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.logic.objects.Post;
-import unical.master.computerscience.yellit.logic.objects.User;
 import unical.master.computerscience.yellit.utiliies.BaseURL;
 
 
@@ -88,9 +86,9 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
     @Bind(R.id.addpost_floating_button)
     protected FloatingActionButton floatingButton;
     @Bind(R.id.addpost_cam_button)
-    protected Button camButton;
+    protected AppCompatButton camButton;
     @Bind(R.id.addpost_gall_button)
-    protected Button galButton;
+    protected AppCompatButton galButton;
     @Bind(R.id.addpost_bottomsheet)
     protected View mBottomSheetAddPost;
     @Bind(R.id.comment_post_add)
@@ -100,7 +98,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
     @Bind(R.id.addpost_transp_layer)
     protected ImageView transparentLayer;
     @Bind(R.id.tv_location_text)
-    protected TextView mLocationTextView;
+    protected MaterialSpinner mLocationSpinner;
 
     private Typeface mTfRegular;
     private Typeface mTfLight;
@@ -129,7 +127,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_post, container, false);
         ButterKnife.bind(this, view);
-
+        GoogleApiClient.getInstance((AppCompatActivity) getActivity()).getPlaceDetection(getContext());
         buildVariousStuff();
 
         buildMainMenu();
@@ -262,7 +260,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                 });
 
 
-                //mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
             }
         });
 
@@ -522,9 +520,14 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                 mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 transparentLayer.setVisibility(View.VISIBLE);
                 mainMenu.highlightValues(null);
-                String location = GoogleApiClient.getInstance((AppCompatActivity)getActivity()).getPlaceDetection(getContext());
-                Log.i("AddPostTest",location+"test");
-                mLocationTextView.setText(location != null ? location : "Location not found");
+//                mLocationSpinner.setItems(InfoManager.getInstance().getmPlaceData().place.size() > 0 ? InfoManager.getInstance().getmPlaceData().place : "Location not found");
+                mLocationSpinner.setItems("Ice Cream Sandwich", "Jelly Bean", "KitKat", "Lollipop", "Marshmallow");
+                mLocationSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
+                    @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+                        Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
+                    }
+                });
+
             case 1:
             case 2:
             case 3:

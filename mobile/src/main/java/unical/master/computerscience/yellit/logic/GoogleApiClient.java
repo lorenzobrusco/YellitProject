@@ -37,6 +37,7 @@ import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -56,7 +57,6 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
     private com.google.android.gms.common.api.GoogleApiClient mClientFitness;
     private com.google.android.gms.common.api.GoogleApiClient mClientPlace;
     private com.google.android.gms.common.api.GoogleApiClient mClientLocation;
-    private String mCurrentPlace = "";
 
     private GoogleApiClient(final AppCompatActivity appCompatActivity) {
         mClientFitness = new com.google.android.gms.common.api.GoogleApiClient.Builder(appCompatActivity)
@@ -146,29 +146,26 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
      * @param context context of activity
      * @return all place
      */
-    public String getPlaceDetection(final Context context) {
+    public void getPlaceDetection(final Context context) {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return null;
+            return;
         }
-        mCurrentPlace = "";
         final PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi.getCurrentPlace(mClientPlace, null);
         result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
             @Override
             public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
                 Log.i(TAG, likelyPlaces + "");
-                PlaceLikelihood maxLikelihood = likelyPlaces.get(0);
+                final List<String> places = new ArrayList<>();
                 for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-                    if (maxLikelihood.getLikelihood() < placeLikelihood.getLikelihood())
-                        maxLikelihood = placeLikelihood;
+                    places.add(placeLikelihood.getPlace().getName() + "");
+                    Log.i(TAG, String.format("Place '%s' has likelihood: %g",
+                            placeLikelihood.getPlace().getName(),
+                            placeLikelihood.getLikelihood()));
                 }
-                Log.i(TAG, String.format("Place '%s' has likelihood: %g",
-                        maxLikelihood.getPlace().getName(),
-                        maxLikelihood.getLikelihood()));
-                mCurrentPlace = maxLikelihood.getPlace().getName()+"";
+                InfoManager.getInstance().getmPlaceData().place = places;
                 likelyPlaces.release();
             }
         });
-        return (!mCurrentPlace.equals("") ? mCurrentPlace : null);
     }
 
     /**
