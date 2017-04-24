@@ -1,4 +1,4 @@
-package unical.master.computerscience.yellit.utiliies;
+package unical.master.computerscience.yellit.utilities;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -30,12 +30,10 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -69,9 +67,8 @@ import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.connection.PostGestureService;
 import unical.master.computerscience.yellit.graphic.custom.SelectorImageView;
 import unical.master.computerscience.yellit.logic.GoogleApiClient;
-import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.logic.objects.Post;
-import unical.master.computerscience.yellit.utiliies.BaseURL;
+import unical.master.computerscience.yellit.utilities.BaseURL;
 
 
 /**

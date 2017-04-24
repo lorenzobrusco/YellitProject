@@ -44,7 +44,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import unical.master.computerscience.yellit.utiliies.PrefManager;
+import unical.master.computerscience.yellit.utilities.PrefManager;
 
 public class GoogleApiClient implements com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener,
         com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks {
@@ -154,7 +154,7 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
         result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
             @Override
             public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
-                Log.i(TAG, likelyPlaces + "");
+                Log.i(TAG, likelyPlaces + " banana");
                 final List<String> places = new ArrayList<>();
                 for (PlaceLikelihood placeLikelihood : likelyPlaces) {
                     places.add(placeLikelihood.getPlace().getName() + "");

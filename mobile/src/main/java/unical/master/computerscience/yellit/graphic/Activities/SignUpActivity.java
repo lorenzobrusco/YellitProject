@@ -1,12 +1,16 @@
 package unical.master.computerscience.yellit.graphic.Activities;
 
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -16,12 +20,22 @@ import android.widget.Toast;
 
 import butterknife.ButterKnife;
 import butterknife.Bind;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import unical.master.computerscience.yellit.MainActivity;
 import unical.master.computerscience.yellit.R;
+import unical.master.computerscience.yellit.connection.LoginService;
+import unical.master.computerscience.yellit.connection.SigninService;
+import unical.master.computerscience.yellit.logic.InfoManager;
+import unical.master.computerscience.yellit.logic.objects.User;
 
 public class SignUpActivity extends AppCompatActivity {
 
     private static final String TAG = "SignupActivity";
+    private static final String BASEURL = "http://10.0.2.2:8080/YellitServer/";
     private static final int REQUEST_CODE = 1;
     private static final int TAKE_PICTURE = 1;
 
@@ -94,18 +108,18 @@ public class SignUpActivity extends AppCompatActivity {
     public void signup() {
         Log.d(TAG, "Signup");
 
-        if (!validate()) {
+       /* if (!validate()) {
             onSignupFailed();
             return;
-        }
+        }*/
 
         _signupButton.setEnabled(false);
 
-        final ProgressDialog progressDialog = new ProgressDialog(SignUpActivity.this,
+       /* final ProgressDialog progressDialog = new ProgressDialog(SignUpActivity.this,
                 R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Creating Account...");
-        progressDialog.show();
+        progressDialog.show();*/
 
         String name = _nameText.getText().toString();
         String email = _emailText.getText().toString();
@@ -113,8 +127,13 @@ public class SignUpActivity extends AppCompatActivity {
         String reEnterPassword = _reEnterPasswordText.getText().toString();
 
         // TODO: Implement your own signup logic here.
-
-        new android.os.Handler().postDelayed(
+        if(!password.equals(reEnterPassword))
+        {
+            Log.i("MATCHERROR", "Password not matching");
+            return;
+        }
+        this.signup(name, email, password);
+        /*new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
                         // On complete call either onSignupSuccess or onSignupFailed
@@ -123,10 +142,38 @@ public class SignUpActivity extends AppCompatActivity {
                         // onSignupFailed();
                         progressDialog.dismiss();
                     }
-                }, 3000);
+                }, 3000);*/
     }
 
 
+    private void signup(String name, String email, String password){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASEURL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        SigninService signinService = retrofit.create(SigninService.class);
+        Call<User> call = signinService.createProfile(name, email, password);
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+
+                User profile = response.body();
+                InfoManager.getInstance().setmUser(profile);
+                if(profile.getEmail() == null){
+                    SignUpActivity.this.buildErrorDialog();
+                    Log.d("retrofit","email esiste già");
+                }else {
+                    Log.d("nick", profile.getNickname());
+                    onSignupSuccess();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Log.d("retrofit", "errore di log");
+            }
+        });
+    }
     public void onSignupSuccess() {
         _signupButton.setEnabled(true);
         setResult(RESULT_OK, null);
@@ -187,4 +234,23 @@ public class SignUpActivity extends AppCompatActivity {
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         startActivityForResult(intent, REQUEST_CODE);
     }
+
+    private void buildErrorDialog(){
+        new AlertDialog.Builder(this)
+                .setTitle("Signin failed")
+                .setMessage("email is already used")
+                .setCancelable(false)
+                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .show();
+        this._emailText.setText("");
+        this._passwordText.setText("");
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+
+    }
+
 }
