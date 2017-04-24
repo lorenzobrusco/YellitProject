@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import unical.master.computerscience.yellit.logic.objects.FitnessSessionData;
 import unical.master.computerscience.yellit.logic.objects.PlaceData;
 import unical.master.computerscience.yellit.logic.objects.User;
+import unical.master.computerscience.yellit.utiliies.PrefManager;
 
 /**
  * Created by Francesco on 27/03/2017.
@@ -17,6 +18,7 @@ public class InfoManager {
     private Statistics mStatistics;
     private FitnessSessionData mFitnessSessionData;
     private PlaceData mPlaceData;
+    private boolean isColorMode;
 
     private InfoManager() {
         mFitnessSessionData = new FitnessSessionData();
@@ -76,5 +78,13 @@ public class InfoManager {
 
     public void setmPlaceData(PlaceData mPlaceData) {
         this.mPlaceData = mPlaceData;
+    }
+
+    public boolean isColorMode() {
+        return isColorMode;
+    }
+
+    public void setColorMode(boolean colorMode) {
+        isColorMode = colorMode;
     }
 }

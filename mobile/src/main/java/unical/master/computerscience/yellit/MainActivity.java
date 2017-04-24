@@ -5,13 +5,19 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -21,6 +27,12 @@ import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.Scopes;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.fitness.Fitness;
+import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 
 import java.util.ArrayList;
 
@@ -32,7 +44,11 @@ import unical.master.computerscience.yellit.graphic.Fragments.FitnessFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.PostFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.ProfileFragment;
 import unical.master.computerscience.yellit.logic.GoogleApiClient;
-import unical.master.computerscience.yellit.utilities.PermissionCheckUtils;
+import unical.master.computerscience.yellit.logic.InfoManager;
+import unical.master.computerscience.yellit.utiliies.BaseURL;
+import unical.master.computerscience.yellit.utiliies.BuilderFile;
+import unical.master.computerscience.yellit.utiliies.PermissionCheckUtils;
+import unical.master.computerscience.yellit.utiliies.ReadFile;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -71,10 +87,20 @@ public class MainActivity extends AppCompatActivity {
         mSearchView.setQueryHint(" Search ");
         currentFragment = new PostFragment();
         MainActivity.this.setFragment(currentFragment);
-        chooseColor(currentItem);
+        this.setupViews();
         GoogleApiClient.getInstance(this);
         GoogleApiClient.getInstance(this).getPlaceDetection(this);
-        this.setupViews();
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mBottomNavigation.setColored(InfoManager.getInstance().isColorMode());
+        chooseColor(currentItem);
+        if (!hasAllRequiredPermissions()) {
+            requestAllRequiredPermissions();
+        }
     }
 
     @Override
@@ -82,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         GoogleApiClient.getInstance(this).disconnect();
     }
+
 
     private void setupViews() {
         AHBottomNavigationItem itemFitness = new AHBottomNavigationItem(R.string.tab_fitness, R.drawable.ic_fitness_center_black_24, R.color.page1);
@@ -94,13 +121,15 @@ public class MainActivity extends AppCompatActivity {
         mBottomNavigation.addItem(itemHome);
         mBottomNavigation.addItem(itemAdd);
         mBottomNavigation.addItem(itemSomeThing);
-        mBottomNavigation.setColored(true);
-        mBottomNavigation.setForceTint(true);
+        mBottomNavigation.setAccentColor(getResources().getColor(R.color.active_button_bottom_navitagiont));
+        mBottomNavigation.setInactiveColor(getResources().getColor(R.color.inactive_button_bottom_navitagiont));
+        mBottomNavigation.setBehaviorTranslationEnabled(false);
         mBottomNavigation.setTranslucentNavigationEnabled(true);
         mBottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
         this.currentItem = 2;
         mBottomNavigation.setCurrentItem(currentItem);
-
+        mBottomNavigation.setColored(InfoManager.getInstance().isColorMode());
+        chooseColor(currentItem);
         mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         mBottomSheetBehavior.setHideable(true);
         mBottomSheetBehavior.setPeekHeight(300);
@@ -108,7 +137,6 @@ public class MainActivity extends AppCompatActivity {
         mBottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
             @Override
             public boolean onTabSelected(int position, boolean wasSelected) {
-
                 switch (position) {
                     case FITNESS_FRAG_BUTTON:
                         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
@@ -128,7 +156,6 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         if (currentItem != position) {
-                            getWindow().setStatusBarColor(getResources().getColor(R.color.page2));
                             currentItem = position;
                             chooseColor(currentItem);
                             removeFragment(currentFragment);
@@ -143,7 +170,6 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         if (currentItem != position) {
-                            getWindow().setStatusBarColor(getResources().getColor(R.color.page3));
                             currentItem = position;
                             chooseColor(currentItem);
                             removeFragment(currentFragment);
@@ -157,7 +183,6 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         if (currentItem != position) {
-                            getWindow().setStatusBarColor(getResources().getColor(R.color.page4));
                             currentItem = position;
                             chooseColor(currentItem);
                             removeFragment(currentFragment);
@@ -168,7 +193,6 @@ public class MainActivity extends AppCompatActivity {
                     case OTHER_FRAG_BUTTON:
                         if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
                             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                            getWindow().setStatusBarColor(getResources().getColor(R.color.page5));
                         } else {
                             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         }
@@ -218,25 +242,27 @@ public class MainActivity extends AppCompatActivity {
 
     private void chooseColor(int page) {
 
-
-        switch (page) {
-            case FITNESS_FRAG_BUTTON:
-                getWindow().setStatusBarColor(getResources().getColor(R.color.page1));
-                break;
-            case PROFILE_FRAG_BUTTON:
-                getWindow().setStatusBarColor(getResources().getColor(R.color.page2));
-                break;
-            case HOME_FRAG_BUTTON:
-                getWindow().setStatusBarColor(getResources().getColor(R.color.page3));
-                break;
-            case ADDPOST_FRAG_BUTTON:
-                getWindow().setStatusBarColor(getResources().getColor(R.color.page4));
-                break;
-            case OTHER_FRAG_BUTTON:
-                getWindow().setStatusBarColor(getResources().getColor(R.color.page5));
-                break;
+        if (InfoManager.getInstance().isColorMode()) {
+            switch (page) {
+                case FITNESS_FRAG_BUTTON:
+                    getWindow().setStatusBarColor(getResources().getColor(R.color.page1));
+                    break;
+                case PROFILE_FRAG_BUTTON:
+                    getWindow().setStatusBarColor(getResources().getColor(R.color.page2));
+                    break;
+                case HOME_FRAG_BUTTON:
+                    getWindow().setStatusBarColor(getResources().getColor(R.color.page3));
+                    break;
+                case ADDPOST_FRAG_BUTTON:
+                    getWindow().setStatusBarColor(getResources().getColor(R.color.page4));
+                    break;
+                case OTHER_FRAG_BUTTON:
+                    getWindow().setStatusBarColor(getResources().getColor(R.color.page5));
+                    break;
+            }
+        } else {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
         }
-
     }
 
     private void buildDialogFilter() {
@@ -261,13 +287,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (!hasAllRequiredPermissions()) {
-            requestAllRequiredPermissions();
-        }
-    }
 
     @Override
     public void onBackPressed() {
@@ -371,8 +390,5 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public void patata() {
-        Toast.makeText(MainActivity.this.getApplicationContext(), "cicici", Toast.LENGTH_SHORT);
-    }
 }
 

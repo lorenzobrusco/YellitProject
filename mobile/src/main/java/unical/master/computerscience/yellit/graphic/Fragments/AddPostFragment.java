@@ -153,7 +153,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetAddPost);
         mBottomSheetBehavior.setHideable(true);
-        mBottomSheetBehavior.setPeekHeight(1000);
+        mBottomSheetBehavior.setPeekHeight(450);
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
         mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
@@ -517,8 +517,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                 mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 transparentLayer.setVisibility(View.VISIBLE);
                 mainMenu.highlightValues(null);
-//                mLocationSpinner.setItems(InfoManager.getInstance().getmPlaceData().place.size() > 0 ? InfoManager.getInstance().getmPlaceData().place : "Location not found");
-                mLocationSpinner.setItems("Ice Cream Sandwich", "Jelly Bean", "KitKat", "Lollipop", "Marshmallow");
+                mLocationSpinner.setItems(InfoManager.getInstance().getmPlaceData().place);
                 mLocationSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
                     @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
                         Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
