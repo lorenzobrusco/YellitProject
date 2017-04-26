@@ -1,4 +1,4 @@
-package unical.master.computerscience.yellit.utiliies;
+package unical.master.computerscience.yellit.utilities;
 
 /**
  * Created by Lorenzo on 17/03/2017.

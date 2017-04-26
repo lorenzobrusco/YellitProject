@@ -1,9 +1,8 @@
-package unical.master.computerscience.yellit.utiliies;
+package unical.master.computerscience.yellit.utilities;
 
 import android.content.Context;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;

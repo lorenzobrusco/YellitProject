@@ -1,11 +1,7 @@
 package unical.master.computerscience.yellit.graphic.Adapters;
 
-import android.animation.Animator;
-import android.animation.StateListAnimator;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.CardView;
@@ -14,21 +10,13 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewPropertyAnimator;
-import android.view.Window;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.RotateAnimation;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
@@ -46,13 +34,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import unical.master.computerscience.yellit.graphic.custom.Rotate3dAnimation;
 import unical.master.computerscience.yellit.logic.objects.Post;
 import unical.master.computerscience.yellit.R;
-import unical.master.computerscience.yellit.utiliies.BaseURL;
-import unical.master.computerscience.yellit.utiliies.WriteFile;
-
-import static android.R.attr.animateFirstView;
-import static android.R.attr.animation;
-import static android.R.attr.pivotX;
-import static android.R.attr.pivotY;
+import unical.master.computerscience.yellit.utilities.BaseURL;
 
 /**
  * Created by Lorenzo on 14/03/2017.
