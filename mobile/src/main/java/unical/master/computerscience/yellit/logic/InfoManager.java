@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import unical.master.computerscience.yellit.logic.objects.FitnessSessionData;
 import unical.master.computerscience.yellit.logic.objects.PlaceData;
 import unical.master.computerscience.yellit.logic.objects.User;
-import unical.master.computerscience.yellit.utiliies.PrefManager;
 
 /**
  * Created by Francesco on 27/03/2017.

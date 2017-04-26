@@ -67,6 +67,7 @@ import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.connection.PostGestureService;
 import unical.master.computerscience.yellit.graphic.custom.SelectorImageView;
 import unical.master.computerscience.yellit.logic.GoogleApiClient;
+import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.logic.objects.Post;
 import unical.master.computerscience.yellit.utilities.BaseURL;
 

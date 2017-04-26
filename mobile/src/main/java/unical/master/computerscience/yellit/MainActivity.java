@@ -47,10 +47,7 @@ import unical.master.computerscience.yellit.graphic.Fragments.PostFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.ProfileFragment;
 import unical.master.computerscience.yellit.logic.GoogleApiClient;
 import unical.master.computerscience.yellit.logic.InfoManager;
-import unical.master.computerscience.yellit.utiliies.BaseURL;
-import unical.master.computerscience.yellit.utiliies.BuilderFile;
-import unical.master.computerscience.yellit.utiliies.PermissionCheckUtils;
-import unical.master.computerscience.yellit.utiliies.ReadFile;
+import unical.master.computerscience.yellit.utilities.PermissionCheckUtils;
 
 public class MainActivity extends AppCompatActivity {
 

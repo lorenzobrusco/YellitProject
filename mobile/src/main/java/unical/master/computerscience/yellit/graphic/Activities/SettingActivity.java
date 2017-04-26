@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
 import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.graphic.Dialog.CustomDialogPrivacy;
 import unical.master.computerscience.yellit.logic.InfoManager;
-import unical.master.computerscience.yellit.utiliies.PrefManager;
+import unical.master.computerscience.yellit.utilities.PrefManager;
 
 /**
  * Created by Lorenzo on 07/09/2016.
