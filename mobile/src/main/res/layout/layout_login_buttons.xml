@@ -96,6 +96,7 @@
             android:layout_marginBottom="16dp"
             android:background="@drawable/rounded_image"
             android:backgroundTint="@color/colorConfirm"
+            android:elevation="2dp"
             android:text="Login"
             android:textColor="@color/white" />
 
@@ -113,6 +114,7 @@
                 android:background="@drawable/rounded_image"
                 android:backgroundTint="@color/colorFacebook"
                 android:drawableLeft="@drawable/ic_gallery"
+                android:elevation="2dp"
                 android:paddingLeft="36dp"
                 android:paddingRight="36dp"
                 android:text="Facebook"
@@ -126,6 +128,7 @@
                 android:background="@drawable/rounded_image"
                 android:backgroundTint="@color/colorGoogle"
                 android:drawableLeft="@drawable/ic_camera"
+                android:elevation="2dp"
                 android:paddingLeft="36dp"
                 android:paddingRight="36dp"
                 android:text="GOOGLE+"

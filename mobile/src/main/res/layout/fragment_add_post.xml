@@ -6,22 +6,14 @@
     android:layout_height="match_parent"
     tools:context="unical.master.computerscience.yellit.graphic.Fragments.AddPostFragment">
 
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
-
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="64dp"
-            android:paddingBottom="32dp">
+            android:layout_height="match_parent">
 
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/pie_menu"
                 android:layout_width="fill_parent"
-                android:layout_height="400dp"
+                android:layout_height="match_parent"
                 android:layout_centerInParent="true" />
 
             <ImageView
@@ -230,7 +222,6 @@
             </android.support.design.widget.CoordinatorLayout>
 
         </RelativeLayout>
-    </ScrollView>
 
 </FrameLayout>
 

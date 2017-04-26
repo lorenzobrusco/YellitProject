@@ -151,12 +151,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .error(mContext.getResources().getDrawable(R.mipmap.ic_launcher))
                     .into(imagePost);
-            final ImagePopup imagePopup = new ImagePopup(mContext);
+           /* final ImagePopup imagePopup = new ImagePopup(mContext);
             imagePopup.setBackgroundColor(Color.TRANSPARENT);
             imagePost.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    /** Initiate Popup view **/
+                    *//** Initiate Popup view **//*
                     final Dialog dialog = new Dialog(mContext);
                     dialog.setContentView(R.layout.dialog_image_popup);
                     ImageView imageView = (ImageView) dialog.findViewById(R.id.image_popup);
@@ -164,7 +164,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                     dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     dialog.show();
                 }
-            });
+            });*/
             like.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
