@@ -28,10 +28,7 @@
         </activity>
         <activity android:name=".graphic.Activities.WelcomeActivity" />
         <activity
-            android:name=".graphic.Activities.LoginActivity"
-            android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity
-            android:name=".graphic.Activities.SignUpActivity"
+            android:name=".graphic.Activities.LoginSignupActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".MainActivity"

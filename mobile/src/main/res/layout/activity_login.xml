@@ -2,13 +2,12 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:paddingBottom="16dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="24dp"
-        android:paddingRight="24dp"
         android:paddingTop="32dp">
 
         <LinearLayout
@@ -21,14 +20,14 @@
 
             <ImageView
                 android:id="@+id/profile_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:layout_gravity="center"
-                android:src="@mipmap/ic_launcher" />
+                android:src="@drawable/ic_profile" />
 
         </LinearLayout>
 
-         <include layout="@layout/layout_login_buttons"/>
+        <include layout="@layout/layout_login_buttons" />
 
     </RelativeLayout>
 </ScrollView>

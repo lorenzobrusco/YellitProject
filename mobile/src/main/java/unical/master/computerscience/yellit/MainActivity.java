@@ -14,6 +14,7 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -27,6 +28,7 @@ import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import com.aurelhubert.ahbottomnavigation.notification.AHNotification;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.ResultCallback;
@@ -130,10 +132,16 @@ public class MainActivity extends AppCompatActivity {
         mBottomNavigation.setCurrentItem(currentItem);
         mBottomNavigation.setColored(InfoManager.getInstance().isColorMode());
         chooseColor(currentItem);
+        mBottomNavigation.setNotificationBackgroundColor(ContextCompat.getColor(this, R.color.color_notification_back));
+
+        // Add or remove notification for each item
+        mBottomNavigation.setNotification("1", PROFILE_FRAG_BUTTON);
+
         mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         mBottomSheetBehavior.setHideable(true);
         mBottomSheetBehavior.setPeekHeight(300);
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+
         mBottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
             @Override
             public boolean onTabSelected(int position, boolean wasSelected) {
@@ -199,6 +207,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                 }
                 filterImage.setVisibility(currentItem == HOME_FRAG_BUTTON ? View.VISIBLE : View.INVISIBLE);
+                mBottomNavigation.setNotification("", currentItem);
                 return true;
             }
         });

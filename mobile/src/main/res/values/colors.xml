@@ -54,4 +54,5 @@
     <color name="page5">#ffc107</color>  -->
 
     <color name="test">#009688</color>
+    <color name="color_notification_back">#d34836</color>
 </resources>

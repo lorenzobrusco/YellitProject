@@ -39,7 +39,7 @@ public class LoadActivity extends AppCompatActivity {
                 /**
                  * load the first 10 posts and also others stuff
                  */
-                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                startActivity(new Intent(getApplicationContext(), LoginSignupActivity.class));
                 overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
                 finish();
             }
