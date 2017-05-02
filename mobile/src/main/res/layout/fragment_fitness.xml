@@ -13,9 +13,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/fitness" />
+
             <include layout="@layout/card_fitness_circle_progress_bar" />
-            <include layout="@layout/card_fitness_horizontal_progress_bar"/>
-            <include layout="@layout/card_fitness_repo_monthly"/>
+
+            <include layout="@layout/card_fitness_horizontal_progress_bar" />
+
+            <include layout="@layout/card_fitness_repo_monthly" />
         </LinearLayout>
     </ScrollView>
 

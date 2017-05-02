@@ -1,6 +1,7 @@
 package unical.master.computerscience.yellit.graphic.Activities;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,8 @@ import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.utilities.BaseURL;
 import unical.master.computerscience.yellit.utilities.BuilderFile;
 
+import static unical.master.computerscience.yellit.utilities.SystemUI.setSystemBarTheme;
+
 /**
  * Created by Lorenzo on 18/03/2017.
  */
@@ -31,6 +34,9 @@ public class LoadActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_load);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            setSystemBarTheme(this, false);
+        }
         initXMLFile();
         final Handler handler = new Handler();
         final Runnable runnable = new Runnable() {
@@ -43,7 +49,7 @@ public class LoadActivity extends AppCompatActivity {
                 finish();
             }
         };
-        handler.postDelayed(runnable, 1000);
+        handler.postDelayed(runnable, 3000);
     }
 
     private void initXMLFile() {

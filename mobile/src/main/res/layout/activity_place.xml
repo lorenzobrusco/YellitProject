@@ -83,17 +83,49 @@
 
             <GridLayout
                 android:layout_width="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center">
+                android:columnCount="2">
 
-                <ImageView
-                    android:layout_marginRight="16dp"
-                    android:src="@mipmap/ic_internet" />
+                <LinearLayout
+                    android:layout_gravity="left"
+                    android:paddingLeft="32dp"
+                    android:paddingRight="32dp"
+                    android:orientation="vertical">
 
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@mipmap/ic_internet" />
 
-                <ImageView
-                    android:layout_marginLeft="16dp"
-                    android:src="@mipmap/ic_call" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Open page"
+                        android:textColor="@color/page3" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:paddingLeft="32dp"
+                    android:paddingRight="32dp"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@mipmap/ic_call" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Call it"
+                        android:textColor="@color/page3" />
+                </LinearLayout>
+
 
             </GridLayout>
 

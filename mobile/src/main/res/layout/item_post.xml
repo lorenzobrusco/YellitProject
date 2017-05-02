@@ -149,7 +149,6 @@
 
                 <ImageView
                     android:id="@+id/image_value_post"
-                    android:scaleType="fitXY"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
