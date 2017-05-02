@@ -53,9 +53,7 @@ public class PostFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         initList();
-        //final PostAdapter mPostAdapter = new PostAdapter(this.getContext(), initList());
         mPosts.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        //mPosts.setAdapter(mPostAdapter);
         mPosts.addItemDecoration(new PaddingItemDecoration(170));
 
         return view;
@@ -90,6 +88,8 @@ public class PostFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Post[]> call, Throwable t) {
+
+                Log.e("On failure", "Post looking for");
                 t.printStackTrace();
             }
         });

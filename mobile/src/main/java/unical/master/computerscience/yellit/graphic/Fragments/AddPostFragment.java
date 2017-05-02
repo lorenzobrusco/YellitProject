@@ -62,14 +62,9 @@ import siclo.com.ezphotopicker.api.models.EZPhotoPickConfig;
 import siclo.com.ezphotopicker.api.models.PhotoSource;
 import siclo.com.ezphotopicker.models.PhotoIntentException;
 import unical.master.computerscience.yellit.R;
-import unical.master.computerscience.yellit.connection.LoginService;
 import unical.master.computerscience.yellit.connection.PostGestureService;
-import unical.master.computerscience.yellit.graphic.Activities.LoginActivity;
-import unical.master.computerscience.yellit.graphic.Dialog.CustomDialogBottomSheet;
 import unical.master.computerscience.yellit.graphic.custom.SelectorImageView;
-import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.logic.objects.Post;
-import unical.master.computerscience.yellit.logic.objects.User;
 import unical.master.computerscience.yellit.utiliies.BaseURL;
 
 
@@ -87,7 +82,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
     @Bind(R.id.pie_menu)
     protected PieChart mainMenu;
     @Bind(R.id.addpost_floating_button)
-    protected FloatingActionButton floatingButton;
+    protected FloatingActionButton sendPostFloatButton;
     @Bind(R.id.addpost_cam_button)
     protected Button camButton;
     @Bind(R.id.addpost_gall_button)
@@ -165,13 +160,13 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
                 } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
 
-                    floatingButton.setVisibility(View.VISIBLE);
+                    sendPostFloatButton.setVisibility(View.VISIBLE);
                     //animate().scaleX(1).scaleY(1).setDuration(300).start();
 
 
                 } else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
 
-                    floatingButton.setVisibility(View.INVISIBLE);
+                    sendPostFloatButton.setVisibility(View.INVISIBLE);
                     transparentLayer.setVisibility(View.GONE);
                     //.animate().scaleX(0).scaleY(0).setDuration(300).start();
 
@@ -220,7 +215,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
     private void buildButtonsCallback() {
 
-        floatingButton.setOnClickListener(new View.OnClickListener() {
+        sendPostFloatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
