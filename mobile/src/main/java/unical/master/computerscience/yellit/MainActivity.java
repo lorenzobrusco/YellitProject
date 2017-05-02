@@ -23,11 +23,13 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 
 import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import unical.master.computerscience.yellit.graphic.Activities.LoginSignupActivity;
 import unical.master.computerscience.yellit.graphic.Activities.SettingActivity;
 import unical.master.computerscience.yellit.graphic.Fragments.AddPostFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.FitnessFragment;
@@ -39,6 +41,7 @@ import unical.master.computerscience.yellit.utilities.PermissionCheckUtils;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int PLACE_PICKER_REQUEST = 5;
     private static final int FITNESS_FRAG_BUTTON = 0;
     private static final int PROFILE_FRAG_BUTTON = 1;
     private static final int HOME_FRAG_BUTTON = 2;
@@ -55,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout mSettingLayout;
     @Bind(R.id.map_buttom_menu)
     LinearLayout mMapLayout;
+    @Bind(R.id.logout_buttom_menu)
+    LinearLayout mLogoutLayout;
     @Bind(R.id.custom_search_view)
     SearchView mSearchView;
     @Bind(R.id.post_filter)
@@ -236,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
         this.mMapLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int PLACE_PICKER_REQUEST = 1;
+
                 PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
 
                 try {
@@ -246,6 +251,15 @@ public class MainActivity extends AppCompatActivity {
                 } catch (GooglePlayServicesNotAvailableException e) {
                     e.printStackTrace();
                 }
+            }
+        });
+        this.mLogoutLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InfoManager.getInstance().destroy();
+                startActivity(new Intent(getBaseContext(), LoginSignupActivity.class));
+                finish();
+
             }
         });
     }
@@ -316,6 +330,16 @@ public class MainActivity extends AppCompatActivity {
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         }
 
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlacePicker.getPlace(data, this);
+                String toastMsg = String.format("Place: %s", place.getName());
+                Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     protected void setFragment(Fragment fragment) {

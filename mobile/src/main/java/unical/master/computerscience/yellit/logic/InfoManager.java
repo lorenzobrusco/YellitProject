@@ -31,6 +31,10 @@ public class InfoManager {
         return mInfoManager;
     }
 
+    public void destroy(){
+        mInfoManager = null;
+    }
+
     public String getmToken() {
         return mToken;
     }
