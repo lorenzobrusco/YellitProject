@@ -21,6 +21,10 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.ui.PlacePicker;
+
 import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -49,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
     View bottomSheet;
     @Bind(R.id.setting_buttom_menu)
     LinearLayout mSettingLayout;
+    @Bind(R.id.map_buttom_menu)
+    LinearLayout mMapLayout;
     @Bind(R.id.custom_search_view)
     SearchView mSearchView;
     @Bind(R.id.post_filter)
@@ -225,6 +231,21 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 buildDialogFilter();
+            }
+        });
+        this.mMapLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int PLACE_PICKER_REQUEST = 1;
+                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+
+                try {
+                    startActivityForResult(builder.build(MainActivity.this), PLACE_PICKER_REQUEST);
+                } catch (GooglePlayServicesRepairableException e) {
+                    e.printStackTrace();
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

@@ -86,13 +86,14 @@
                             android:id="@+id/setting_buttom_menu"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
                             android:orientation="horizontal">
 
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="16dp"
-                                android:src="@mipmap/ic_launcher" />
+                                android:src="@drawable/settings" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -102,41 +103,62 @@
                                 android:text="Settings"
                                 android:textColor="@color/page5"
                                 android:textSize="20dp" />
+
                         </LinearLayout>
 
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.3dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginRight="12dp"
+                            android:background="@android:color/darker_gray" />
+
                         <LinearLayout
-                            android:id="@+id/friends_buttom_menu"
+                            android:id="@+id/notifications_buttom_menu"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+
                             android:orientation="horizontal">
 
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="16dp"
-                                android:src="@mipmap/ic_launcher" />
+                                android:src="@drawable/database" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:layout_marginLeft="16dp"
-                                android:text="Friends"
+                                android:text="Notifications"
                                 android:textColor="@color/page5"
                                 android:textSize="20dp" />
                         </LinearLayout>
+
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.3dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginRight="12dp"
+                            android:background="@android:color/darker_gray" />
 
                         <LinearLayout
                             android:id="@+id/map_buttom_menu"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
                             android:orientation="horizontal">
 
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="16dp"
-                                android:src="@mipmap/ic_launcher" />
+                                android:src="@drawable/map" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -148,8 +170,16 @@
                                 android:textSize="20dp" />
                         </LinearLayout>
 
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.3dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginRight="12dp"
+                            android:background="@android:color/darker_gray" />
+
                         <LinearLayout
-                            android:id="@+id/something_buttom_menu"
+                            android:id="@+id/logout_buttom_menu"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
@@ -158,14 +188,14 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="16dp"
-                                android:src="@mipmap/ic_launcher" />
+                                android:src="@drawable/logout" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:layout_marginLeft="16dp"
-                                android:text="Something"
+                                android:text="Logout"
                                 android:textColor="@color/page5"
                                 android:textSize="20dp" />
                         </LinearLayout>

@@ -39,8 +39,7 @@
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/image_profile_post"
                         android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:src="@mipmap/ic_launcher" />
+                        android:layout_height="60dp" />
 
                     <TextView
                         android:id="@+id/full_name_post"
@@ -70,15 +69,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <ImageView
+                    <com.like.LikeButton
                         android:id="@+id/like_post"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        app:icon_type="heart"
+                        app:icon_size="25dp"
                         android:layout_alignParentEnd="true"
                         android:layout_marginTop="5dp"
-                        android:fillAfter="true"
-                        android:fillEnabled="true"
-                        android:src="@mipmap/ic_no_like" />
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"/>
+
+                    <!--<ImageView-->
+                       <!---->
+                        <!--android:layout_width="40dp"-->
+                        <!--android:layout_height="40dp"-->
+                        <!--android:layout_alignParentEnd="true"-->
+                        <!--android:layout_marginTop="5dp"-->
+                        <!--android:fillAfter="true"-->
+                        <!--android:fillEnabled="true"-->
+                        <!--android:src="@mipmap/ic_no_like" />-->
 
                     <TextView
 
@@ -86,7 +94,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_below="@+id/like_post"
-                        android:paddingRight="6dp"
+                        android:paddingRight="8dp"
                         android:text="0 like" />
 
                 </RelativeLayout>

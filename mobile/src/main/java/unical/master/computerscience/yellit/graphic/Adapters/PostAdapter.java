@@ -93,15 +93,16 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         VideoView videoPost;
         @Bind(R.id.load_post)
         ProgressBar progressBar;
-        @Bind(R.id.like_post)
-        ImageView like;
+//        @Bind(R.id.like_post)
+//        ImageView like;
         private boolean isLike = false;
 
         public PostViewHolder(final View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             Glide.with(mContext)
-                    .load(BaseURL.URL + "Images/user.jpg")
+//                    .load(BaseURL.URL + "Images/user.jpg")
+                    .load("http://static.wixstatic.com/media/9ee4ab_b0c4a4d968c64d74b20415843218d895.png")
                     .listener(new RequestListener<String, GlideDrawable>() {
                         @Override
                         public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
@@ -124,10 +125,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                     })
                     .fitCenter()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .error(mContext.getResources().getDrawable(R.mipmap.ic_launcher))
+//                    .error(mContext.getResources().getDrawable(R.mipmap.ic_launcher))
                     .into(userImage);
             Glide.with(mContext)
-                    .load(BaseURL.URL + "Images/pizza.jpg")
+//                    .load(BaseURL.URL + "Images/pizza.jpg")
+                    .load("https://upload.wikimedia.org/wikipedia/commons/a/a3/Eq_it-na_pizza-margherita_sep2005_sml.jpg")
                     .listener(new RequestListener<String, GlideDrawable>() {
                         @Override
                         public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
@@ -165,45 +167,45 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                     dialog.show();
                 }
             });*/
-            like.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                }
-
-            });
-            like.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View view, MotionEvent motionEvent) {
-                    final float centerX = like.getWidth() / 2.0f;
-                    final float centerY = like.getHeight() / 2.0f;
-                    final Rotate3dAnimation rotation = new Rotate3dAnimation(0, 360, centerX, centerY, 0f, false);
-                    rotation.setDuration(500);
-                    rotation.setFillAfter(false);
-                    rotation.setInterpolator(new AccelerateInterpolator());
-                    rotation.setAnimationListener(new Animation.AnimationListener() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                                like.setImageDrawable(isLike ? mContext.getResources().getDrawable(R.mipmap.ic_no_like)
-                                        : mContext.getResources().getDrawable(R.mipmap.ic_like));
-                            isLike = !isLike;
-                            //WriteFile.getInstance().writenTot(mContext,BaseURL.FILENAME,"1");
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {
-
-                        }
-                    });
-                    like.startAnimation(rotation);
-                    return false;
-                }
-            });
+//            like.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//
+//                }
+//
+//            });
+//            like.setOnTouchListener(new View.OnTouchListener() {
+//                @Override
+//                public boolean onTouch(View view, MotionEvent motionEvent) {
+//                    final float centerX = like.getWidth() / 2.0f;
+//                    final float centerY = like.getHeight() / 2.0f;
+//                    final Rotate3dAnimation rotation = new Rotate3dAnimation(0, 360, centerX, centerY, 0f, false);
+//                    rotation.setDuration(500);
+//                    rotation.setFillAfter(false);
+//                    rotation.setInterpolator(new AccelerateInterpolator());
+//                    rotation.setAnimationListener(new Animation.AnimationListener() {
+//                        @Override
+//                        public void onAnimationStart(Animation animation) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onAnimationEnd(Animation animation) {
+//                                like.setImageDrawable(isLike ? mContext.getResources().getDrawable(R.mipmap.ic_no_like)
+//                                        : mContext.getResources().getDrawable(R.mipmap.ic_like));
+//                            isLike = !isLike;
+//                            //WriteFile.getInstance().writenTot(mContext,BaseURL.FILENAME,"1");
+//                        }
+//
+//                        @Override
+//                        public void onAnimationRepeat(Animation animation) {
+//
+//                        }
+//                    });
+//                    like.startAnimation(rotation);
+//                    return false;
+//                }
+//            });
 
         }
 

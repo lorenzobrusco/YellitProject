@@ -25,12 +25,26 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
+            <GridLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Range:"
-                android:textSize="18dp" />
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/radar" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Range:"
+                    android:textSize="18dp" />
+
+            </GridLayout>
 
             <RadioGroup
                 android:layout_width="match_parent"
@@ -66,18 +80,31 @@
                 android:layout_marginTop="5dp"
                 android:background="@android:color/darker_gray" />
 
-            <TextView
+            <GridLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
-                android:text="Category:"
-                android:textSize="18dp" />
+                android:layout_marginTop="8dp">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/filter" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Category:"
+                    android:textSize="18dp" />
+            </GridLayout>
 
             <GridLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:columnCount="3"
+                android:columnCount="2"
                 android:rowCount="2">
 
                 <CheckBox
