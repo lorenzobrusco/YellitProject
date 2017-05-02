@@ -1,6 +1,7 @@
 package unical.master.computerscience.yellit.graphic.Activities;
 
 import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -13,6 +14,8 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import unical.master.computerscience.yellit.R;
+
+import static unical.master.computerscience.yellit.utilities.SystemUI.setSystemBarTheme;
 
 /**
  * Created by Lorenzo on 02/05/2017.
@@ -31,9 +34,25 @@ public class PlaceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_place);
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
+        final ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+            setSystemBarTheme(this, false);
+        }
         mCollapsingToolbarLayout.setTitle("McDonald's");
         mCollapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ExpandedAppBar);
         mCollapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.CollapsedAppBar);
     }
 
- }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+}

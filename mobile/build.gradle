@@ -55,5 +55,6 @@ dependencies {
     compile 'com.google.android.gms:play-services-places:10.2.0'
     compile 'com.jaredrummler:material-spinner:1.1.0'
     compile 'com.github.jd-alexander:LikeButton:0.2.0'
+    compile 'com.github.lawloretienne:discreteslider:0.0.9'
     testCompile 'junit:junit:4.12'
 }
