@@ -3,6 +3,7 @@ package unical.master.computerscience.yellit.logic;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -34,6 +35,9 @@ import com.google.android.gms.fitness.result.GoalsResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
+import com.google.android.gms.location.places.PlacePhotoMetadata;
+import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
+import com.google.android.gms.location.places.PlacePhotoMetadataResult;
 import com.google.android.gms.location.places.Places;
 
 import java.io.IOException;
@@ -207,6 +211,25 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
             e.printStackTrace();
             return null;
         }
+    }
+
+    /**
+     * @param context
+     * @param placeId
+     * @return
+     */
+    public Bitmap getPhotosPlace(final Context context, final String placeId) {
+        PlacePhotoMetadataResult result = Places.GeoDataApi
+                .getPlacePhotos(mClientPlace, placeId).await();
+        if (result != null && result.getStatus().isSuccess()) {
+            PlacePhotoMetadataBuffer photoMetadataBuffer = result.getPhotoMetadata();
+            PlacePhotoMetadata photo = photoMetadataBuffer.get(0);
+            Bitmap image = photo.getPhoto(mClientPlace).await()
+                    .getBitmap();
+            return image;
+        }
+
+        return null;
     }
 
     /**

@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -30,6 +31,8 @@ public class SettingActivity extends AppCompatActivity {
     private static final String IS_FIRST_TIME_LAUNCH = "IsFirstTimeLaunch";
     private static final String PREF_NAME = "androidhive-welcome";
 
+    @Bind (R.id.toolbar)
+    protected Toolbar mToolbar;
     @Bind(R.id.privacy)
     LinearLayout privacy;
     @Bind(R.id.welcomePage)
@@ -37,11 +40,13 @@ public class SettingActivity extends AppCompatActivity {
     @Bind(R.id.EnableColorDisplay)
     Switch mColorModeSwitch;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         ButterKnife.bind(this);
+        setSupportActionBar(mToolbar);
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);

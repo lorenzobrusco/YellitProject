@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import unical.master.computerscience.yellit.graphic.Activities.LoginSignupActivity;
+import unical.master.computerscience.yellit.graphic.Activities.PlaceActivity;
 import unical.master.computerscience.yellit.graphic.Activities.SettingActivity;
 import unical.master.computerscience.yellit.graphic.Fragments.AddPostFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.FitnessFragment;
@@ -336,8 +337,8 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(data, this);
-                String toastMsg = String.format("Place: %s", place.getName());
-                Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
+                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                startActivity(new Intent(getBaseContext(), PlaceActivity.class));
             }
         }
     }

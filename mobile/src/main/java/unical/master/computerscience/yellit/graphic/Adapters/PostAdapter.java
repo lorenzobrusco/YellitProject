@@ -153,59 +153,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .error(mContext.getResources().getDrawable(R.mipmap.ic_launcher))
                     .into(imagePost);
-           /* final ImagePopup imagePopup = new ImagePopup(mContext);
-            imagePopup.setBackgroundColor(Color.TRANSPARENT);
-            imagePost.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    *//** Initiate Popup view **//*
-                    final Dialog dialog = new Dialog(mContext);
-                    dialog.setContentView(R.layout.dialog_image_popup);
-                    ImageView imageView = (ImageView) dialog.findViewById(R.id.image_popup);
-                    imageView.setImageDrawable(imagePost.getDrawable());
-                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    dialog.show();
-                }
-            });*/
-//            like.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//
-//                }
-//
-//            });
-//            like.setOnTouchListener(new View.OnTouchListener() {
-//                @Override
-//                public boolean onTouch(View view, MotionEvent motionEvent) {
-//                    final float centerX = like.getWidth() / 2.0f;
-//                    final float centerY = like.getHeight() / 2.0f;
-//                    final Rotate3dAnimation rotation = new Rotate3dAnimation(0, 360, centerX, centerY, 0f, false);
-//                    rotation.setDuration(500);
-//                    rotation.setFillAfter(false);
-//                    rotation.setInterpolator(new AccelerateInterpolator());
-//                    rotation.setAnimationListener(new Animation.AnimationListener() {
-//                        @Override
-//                        public void onAnimationStart(Animation animation) {
-//
-//                        }
-//
-//                        @Override
-//                        public void onAnimationEnd(Animation animation) {
-//                                like.setImageDrawable(isLike ? mContext.getResources().getDrawable(R.mipmap.ic_no_like)
-//                                        : mContext.getResources().getDrawable(R.mipmap.ic_like));
-//                            isLike = !isLike;
-//                            //WriteFile.getInstance().writenTot(mContext,BaseURL.FILENAME,"1");
-//                        }
-//
-//                        @Override
-//                        public void onAnimationRepeat(Animation animation) {
-//
-//                        }
-//                    });
-//                    like.startAnimation(rotation);
-//                    return false;
-//                }
-//            });
 
         }
 

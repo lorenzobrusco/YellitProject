@@ -27,6 +27,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".graphic.Activities.WelcomeActivity" />
+        <activity android:name=".graphic.Activities.PlaceActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".graphic.Activities.LoginSignupActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
@@ -35,7 +37,8 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity android:name=".graphic.Activities.SettingActivity" />
+        <activity android:name=".graphic.Activities.SettingActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <meta-data
             android:name="com.google.android.gms.version"
