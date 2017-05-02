@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:gravity="center_horizontal"
@@ -16,10 +16,10 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
-            android:background="@color/colorPrimary"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:layout_collapseMode="pin"/>
+            android:background="@color/colorPrimary"
+            app:layout_collapseMode="pin" />
 
 
     </android.support.design.widget.AppBarLayout>
@@ -52,6 +52,154 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
                 android:text="enable color mode" />
+
+            <LinearLayout
+                android:id="@+id/colors_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical">
+
+                <GridLayout
+                    android:id="@+id/color_1_button_botton_bar"
+                    android:layout_width="match_parent"
+                    android:padding="4dp"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/ic_fitness_center_black_24" />
+
+                    <TextView
+                        android:layout_gravity="center_vertical"
+                        android:textSize="16sp"
+                        android:layout_marginLeft="8dp"
+                        android:text="Color Fitness Button" />
+
+                    <ImageView
+                        android:backgroundTint="@color/page1"
+                        android:background="@drawable/rounded_color_selected"
+                        android:layout_height="25dp"
+                        android:layout_width="25dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_gravity="center_vertical|end"
+                        />
+
+                </GridLayout>
+
+                <GridLayout
+                    android:id="@+id/color_2_button_botton_bar"
+                    android:layout_width="match_parent"
+                    android:padding="4dp"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/ic_person_black_24" />
+
+                    <TextView
+                        android:layout_gravity="center_vertical"
+                        android:textSize="16sp"
+                        android:layout_marginLeft="8dp"
+                        android:text="Color Profile Button" />
+
+                    <ImageView
+                        android:backgroundTint="@color/page2"
+                        android:background="@drawable/rounded_color_selected"
+                        android:layout_height="25dp"
+                        android:layout_width="25dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_gravity="center_vertical|end"
+                        />
+
+                </GridLayout>
+                <GridLayout
+                    android:id="@+id/color_3_button_botton_bar"
+                    android:layout_width="match_parent"
+                    android:padding="4dp"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/ic_home_black_24dp" />
+
+                    <TextView
+                        android:layout_gravity="center_vertical"
+                        android:textSize="16sp"
+                        android:layout_marginLeft="8dp"
+                        android:text="Color Home Button" />
+
+                    <ImageView
+                        android:backgroundTint="@color/page3"
+                        android:background="@drawable/rounded_color_selected"
+                        android:layout_height="25dp"
+                        android:layout_width="25dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_gravity="center_vertical|end"
+                        />
+
+                </GridLayout>
+                <GridLayout
+                    android:id="@+id/color_4_button_botton_bar"
+                    android:layout_width="match_parent"
+                    android:padding="4dp"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/ic_public_black_24" />
+
+                    <TextView
+                        android:layout_gravity="center_vertical"
+                        android:textSize="16sp"
+                        android:layout_marginLeft="8dp"
+                        android:text="Color New post Button" />
+
+                    <ImageView
+                        android:backgroundTint="@color/page4"
+                        android:background="@drawable/rounded_color_selected"
+                        android:layout_height="25dp"
+                        android:layout_width="25dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_gravity="center_vertical|end"
+                        />
+
+                </GridLayout>
+                <GridLayout
+                    android:id="@+id/color_5_button_botton_bar"
+                    android:layout_width="match_parent"
+                    android:padding="4dp"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/ic_menu_black_24" />
+
+                    <TextView
+                        android:layout_gravity="center_vertical"
+                        android:textSize="16sp"
+                        android:layout_marginLeft="8dp"
+                        android:text="Color Menu Button" />
+
+                    <ImageView
+                        android:backgroundTint="@color/page5"
+                        android:background="@drawable/rounded_color_selected"
+                        android:layout_height="25dp"
+                        android:layout_width="25dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_gravity="center_vertical|end"
+                        />
+
+                </GridLayout>
+
+
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
