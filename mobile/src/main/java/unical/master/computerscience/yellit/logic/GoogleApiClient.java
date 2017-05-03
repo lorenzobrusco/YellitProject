@@ -75,7 +75,7 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
                 .addConnectionCallbacks(new com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks() {
                     @Override
                     public void onConnected(@Nullable Bundle bundle) {
-                        if (PrefManager.isFirstTimeLaunch(appCompatActivity))
+                        if (PrefManager.getInstace(appCompatActivity).isFirstTimeLaunch())
                             subscribeAllFitnessRecord(appCompatActivity);
                     }
 

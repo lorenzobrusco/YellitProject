@@ -9,6 +9,17 @@ import android.content.SharedPreferences;
 public class PrefManager {
 
     /**
+     * Singleton pattern
+     */
+    private static PrefManager mPrefManager;
+
+    /**
+     * share pref
+     */
+    private SharedPreferences mPreferences;
+    private SharedPreferences.Editor mEditor;
+
+    /**
      * shared pref mode
      */
     private static int PRIVATE_MODE = 0;
@@ -18,45 +29,56 @@ public class PrefManager {
      */
     private static final String PREF_NAME = "yellit-pref";
     private static final String IS_FIRST_TIME_LAUNCH = "IsFirstTimeLaunch";
-    private static final String IS_COLOR_MODE = "isColorModes";
+    private static final String IS_COLOR_MODE = "isColorMode";
+    private static final String IS_SAFE_MODE = "isSafeMode";
     private static final String USER = "user";
 
-    public static void setFirstTimeLaunch(final Context context, boolean isFirstTime) {
-        SharedPreferences pref = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putBoolean(IS_FIRST_TIME_LAUNCH, isFirstTime);
-        editor.apply();
+    private PrefManager(final Context context) {
+        mPreferences = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
+        mEditor = mPreferences.edit();
     }
 
-    public static boolean isFirstTimeLaunch(final Context context) {
-        SharedPreferences pref = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
-        return pref.getBoolean(IS_FIRST_TIME_LAUNCH, true);
+    public static PrefManager getInstace(final Context context) {
+        if (mPrefManager == null)
+            mPrefManager = new PrefManager(context);
+        return mPrefManager;
     }
 
-
-    public static void setColorMode(final Context context, boolean isColorMode) {
-        SharedPreferences pref = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putBoolean(IS_COLOR_MODE, isColorMode);
-        editor.apply();
+    public void setFirstTimeLaunch(boolean isFirstTime) {
+        mEditor.putBoolean(IS_FIRST_TIME_LAUNCH, isFirstTime);
+        mEditor.commit();
     }
 
-    public static boolean isColorMode(final Context context) {
-        SharedPreferences pref = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
-        return pref.getBoolean(IS_COLOR_MODE, true);
+    public boolean isFirstTimeLaunch() {
+        return mPreferences.getBoolean(IS_FIRST_TIME_LAUNCH, true);
     }
 
 
-    public static void setUser(final Context context, final String user) {
-        SharedPreferences pref = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putString(IS_COLOR_MODE, user);
-        editor.apply();
+    public void setColorMode(boolean isColorMode) {
+        mEditor.putBoolean(IS_COLOR_MODE, isColorMode);
+        mEditor.commit();
     }
 
-    public static String getUser(final Context context) {
-        SharedPreferences pref = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
-        return pref.getString(USER, null);
+    public boolean isColorMode() {
+        return mPreferences.getBoolean(IS_COLOR_MODE, false);
+    }
+
+    public void setSafeMode(boolean isSafeMode) {
+        mEditor.putBoolean(IS_SAFE_MODE, isSafeMode);
+        mEditor.commit();
+    }
+
+    public boolean isSafeMode() {
+        return mPreferences.getBoolean(IS_SAFE_MODE, true);
+    }
+
+    public void setUser(final String user) {
+        mEditor.putString(USER, user);
+        mEditor.commit();
+    }
+
+    public String getUser() {
+        return mPreferences.getString(USER, null);
     }
 
 }

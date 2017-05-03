@@ -316,7 +316,7 @@
                     android:src="@mipmap/ic_fingerprint" />
 
                 <Switch
-                    android:id="@+id/EnableWear"
+                    android:id="@+id/enable_safe_mode_switch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"

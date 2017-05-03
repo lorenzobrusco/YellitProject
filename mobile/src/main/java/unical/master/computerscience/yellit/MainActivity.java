@@ -262,7 +262,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 InfoManager.getInstance().destroy();
-                PrefManager.setUser(MainActivity.this, null);
+                PrefManager.getInstace(getApplicationContext()).setUser(null);
                 startActivity(new Intent(getBaseContext(), LoadActivity.class));
                 finish();
 
@@ -285,7 +285,6 @@ public class MainActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
-
         dialog.show();
 
     }

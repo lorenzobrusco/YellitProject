@@ -48,7 +48,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
     private void initActivity() {
 
-        if (!PrefManager.isFirstTimeLaunch(this)) {
+        if (!PrefManager.getInstace(getApplicationContext()).isFirstTimeLaunch()) {
             launchHomeScreen();
             finish();
         } else {
@@ -128,8 +128,7 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     private void launchHomeScreen() {
-        PrefManager.setFirstTimeLaunch(getApplicationContext(), false);
-//        InfoManager.getInstance().setColorMode(PrefManager.isColorMode(this));
+        PrefManager.getInstace(getApplicationContext()).setFirstTimeLaunch(false);
         startActivity(new Intent(getApplicationContext(), MainActivity.class));
         finish();
     }

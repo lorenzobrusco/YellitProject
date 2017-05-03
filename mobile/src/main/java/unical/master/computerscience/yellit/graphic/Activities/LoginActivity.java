@@ -93,7 +93,7 @@ public class LoginActivity extends Fragment {
 
     public void onLoginSuccess() {
         _loginButton.setEnabled(true);
-        PrefManager.setUser(getContext(), _emailText.getText().toString());
+        PrefManager.getInstace(getContext()).setUser(_emailText.getText().toString());
         startActivity(new Intent(getContext(), WelcomeActivity.class));
         getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
         getActivity().finish();

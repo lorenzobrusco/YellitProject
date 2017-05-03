@@ -55,6 +55,9 @@ public class SettingActivity extends AppCompatActivity {
     @Bind(R.id.EnableColorDisplay)
     protected Switch mColorModeSwitch;
 
+    @Bind(R.id.enable_safe_mode_switch)
+    protected Switch mSafeModeSwitch;
+
     @Bind(R.id.colors_layout)
     protected LinearLayout mColorsLinearLayout;
 
@@ -95,13 +98,13 @@ public class SettingActivity extends AppCompatActivity {
                 buildPrivacyDialog();
             }
         });
-        this.mColorModeSwitch.setChecked(PrefManager.isColorMode(this));
+        this.mColorModeSwitch.setChecked(PrefManager.getInstace(getApplicationContext()).isColorMode());
         this.mColorsLinearLayout.setVisibility(this.mColorModeSwitch.isChecked() ? View.VISIBLE : View.GONE);
         this.mColorModeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 InfoManager.getInstance().setColorMode(isChecked);
-                PrefManager.setColorMode(SettingActivity.this, isChecked);
+                PrefManager.getInstace(getApplicationContext()).setColorMode(isChecked);
                 mAnimationDown.reset();
                 mColorsLinearLayout.clearAnimation();
                 if (isChecked) {
@@ -109,6 +112,14 @@ public class SettingActivity extends AppCompatActivity {
                     mColorsLinearLayout.setVisibility(View.VISIBLE);
                 } else
                     mColorsLinearLayout.setVisibility(View.GONE);
+            }
+        });
+        this.mSafeModeSwitch.setChecked(PrefManager.getInstace(getApplicationContext()).isSafeMode());
+        this.mSafeModeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                InfoManager.getInstance().setColorMode(isChecked);
+                PrefManager.getInstace(getApplicationContext()).setSafeMode(isChecked);
             }
         });
         this.welcomePage.setOnClickListener(new View.OnClickListener() {

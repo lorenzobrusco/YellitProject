@@ -119,7 +119,7 @@ public class SafeModeActivity extends AppCompatActivity {
     private boolean checkFinger() {
 
         try {
-            if (PrefManager.getUser(getApplicationContext()) == null) {
+            if (PrefManager.getInstace(getApplicationContext()).getUser() == null || !PrefManager.getInstace(getApplicationContext()).isSafeMode()) {
                 return false;
             }
             if (!mFingerprintManager.isHardwareDetected()) {
