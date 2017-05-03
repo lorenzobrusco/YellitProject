@@ -21,24 +21,16 @@ import android.widget.CompoundButton;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.Switch;
-import android.widget.TextView;
-
-import com.onegravity.colorpicker.ColorPickerDialog;
-import com.onegravity.colorpicker.ColorPickerListener;
-import com.onegravity.colorpicker.SetColorPickerListenerEvent;
-
 import java.util.ArrayList;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import petrov.kristiyan.colorpicker.ColorPicker;
 import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.graphic.Dialog.CustomDialogPrivacy;
-import unical.master.computerscience.yellit.graphic.Fragments.ProfileFragment;
 import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.utilities.PrefManager;
 
-import static unical.master.computerscience.yellit.utilities.SystemUI.setSystemBarTheme;
+import static unical.master.computerscience.yellit.utilities.SystemUI.changeSystemBar;
 
 /**
  * Created by Lorenzo on 07/09/2016.
@@ -83,12 +75,12 @@ public class SettingActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        changeSystemBar(this, false);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         ButterKnife.bind(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
-            setSystemBarTheme(this, false);
         }
         setSupportActionBar(mToolbar);
         final ActionBar actionBar = getSupportActionBar();

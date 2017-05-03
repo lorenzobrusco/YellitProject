@@ -1,24 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- light mode-->
+    <!-- Android M or more-->
     <color name="colorPrimary">#FFF2F4F4</color>
     <color name="colorPrimaryDark">#FFF2F4F4</color>
-    <color name="colorAccent">#ff8000</color>
+    <color name="colorAccent">#009384</color>
+
+    <!-- Android L-->
+    <color name="colorPrimaryL">#979797</color>
+    <color name="colorPrimaryDarkL">#676767</color>
+    <color name="colorAccentL">#009384</color>
+
     <color name="color_bottom_navigation">#cecece</color>
     <color name="inactive_button_bottom_navitagiont">#c1c1c1</color>
     <color name="active_button_bottom_navitagiont">#222222</color>
     <color name="layout_light">#FFFFFF</color>
     <color name="text_light">#222222</color>
     <color name="subtext_light">#353535</color>
-
-    <!-- dark mode-->
-    <color name="colorPrimary_dark">#969696</color>
-    <color name="colorPrimaryDark_dark">#969696</color>
-    <color name="colorAccent_dark">#ff8000</color>
-    <color name="color_bottom_navigation_dark">#cecece</color>
-    <color name="inactive_button_bottom_navitagiont_dark">#c1c1c1</color>
-    <color name="active_button_bottom_navitagiont_dark">#222222</color>
 
     <color name="colorConfirm">#009900</color>
     <color name="colorAccentPressed">#d59368</color>

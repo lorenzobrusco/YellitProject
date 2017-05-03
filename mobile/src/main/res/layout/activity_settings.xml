@@ -45,13 +45,27 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/colorAccent" />
 
-            <Switch
-                android:id="@+id/EnableColorDisplay"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="10dp"
-                android:text="enable color mode" />
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="8dp"
+                    android:src="@mipmap/ic_paint" />
+
+                <Switch
+                    android:id="@+id/EnableColorDisplay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:checked="false"
+                    android:text="Enable color mode" />
+            </LinearLayout>
+
 
             <LinearLayout
                 android:id="@+id/colors_layout"
@@ -64,8 +78,8 @@
                 <GridLayout
                     android:id="@+id/color_1_button_botton_bar"
                     android:layout_width="match_parent"
-                    android:padding="4dp"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:padding="4dp">
 
                     <ImageView
                         android:layout_width="25dp"
@@ -74,26 +88,25 @@
 
                     <TextView
                         android:layout_gravity="center_vertical"
-                        android:textSize="16sp"
                         android:layout_marginLeft="8dp"
-                        android:text="Color Fitness Button" />
+                        android:text="Color Fitness Button"
+                        android:textSize="16sp" />
 
                     <ImageView
-                        android:backgroundTint="@color/page1"
-                        android:background="@drawable/rounded_color_selected"
-                        android:layout_height="25dp"
                         android:layout_width="25dp"
-                        android:layout_marginRight="16dp"
+                        android:layout_height="25dp"
                         android:layout_gravity="center_vertical|end"
-                        />
+                        android:layout_marginRight="16dp"
+                        android:background="@drawable/rounded_color_selected"
+                        android:backgroundTint="@color/page1" />
 
                 </GridLayout>
 
                 <GridLayout
                     android:id="@+id/color_2_button_botton_bar"
                     android:layout_width="match_parent"
-                    android:padding="4dp"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:padding="4dp">
 
                     <ImageView
                         android:layout_width="25dp"
@@ -102,25 +115,25 @@
 
                     <TextView
                         android:layout_gravity="center_vertical"
-                        android:textSize="16sp"
                         android:layout_marginLeft="8dp"
-                        android:text="Color Profile Button" />
+                        android:text="Color Profile Button"
+                        android:textSize="16sp" />
 
                     <ImageView
-                        android:backgroundTint="@color/page2"
-                        android:background="@drawable/rounded_color_selected"
-                        android:layout_height="25dp"
                         android:layout_width="25dp"
-                        android:layout_marginRight="16dp"
+                        android:layout_height="25dp"
                         android:layout_gravity="center_vertical|end"
-                        />
+                        android:layout_marginRight="16dp"
+                        android:background="@drawable/rounded_color_selected"
+                        android:backgroundTint="@color/page2" />
 
                 </GridLayout>
+
                 <GridLayout
                     android:id="@+id/color_3_button_botton_bar"
                     android:layout_width="match_parent"
-                    android:padding="4dp"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:padding="4dp">
 
                     <ImageView
                         android:layout_width="25dp"
@@ -129,25 +142,25 @@
 
                     <TextView
                         android:layout_gravity="center_vertical"
-                        android:textSize="16sp"
                         android:layout_marginLeft="8dp"
-                        android:text="Color Home Button" />
+                        android:text="Color Home Button"
+                        android:textSize="16sp" />
 
                     <ImageView
-                        android:backgroundTint="@color/page3"
-                        android:background="@drawable/rounded_color_selected"
-                        android:layout_height="25dp"
                         android:layout_width="25dp"
-                        android:layout_marginRight="16dp"
+                        android:layout_height="25dp"
                         android:layout_gravity="center_vertical|end"
-                        />
+                        android:layout_marginRight="16dp"
+                        android:background="@drawable/rounded_color_selected"
+                        android:backgroundTint="@color/page3" />
 
                 </GridLayout>
+
                 <GridLayout
                     android:id="@+id/color_4_button_botton_bar"
                     android:layout_width="match_parent"
-                    android:padding="4dp"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:padding="4dp">
 
                     <ImageView
                         android:layout_width="25dp"
@@ -156,25 +169,25 @@
 
                     <TextView
                         android:layout_gravity="center_vertical"
-                        android:textSize="16sp"
                         android:layout_marginLeft="8dp"
-                        android:text="Color New post Button" />
+                        android:text="Color New post Button"
+                        android:textSize="16sp" />
 
                     <ImageView
-                        android:backgroundTint="@color/page4"
-                        android:background="@drawable/rounded_color_selected"
-                        android:layout_height="25dp"
                         android:layout_width="25dp"
-                        android:layout_marginRight="16dp"
+                        android:layout_height="25dp"
                         android:layout_gravity="center_vertical|end"
-                        />
+                        android:layout_marginRight="16dp"
+                        android:background="@drawable/rounded_color_selected"
+                        android:backgroundTint="@color/page4" />
 
                 </GridLayout>
+
                 <GridLayout
                     android:id="@+id/color_5_button_botton_bar"
                     android:layout_width="match_parent"
-                    android:padding="4dp"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:padding="4dp">
 
                     <ImageView
                         android:layout_width="25dp"
@@ -183,18 +196,17 @@
 
                     <TextView
                         android:layout_gravity="center_vertical"
-                        android:textSize="16sp"
                         android:layout_marginLeft="8dp"
-                        android:text="Color Menu Button" />
+                        android:text="Color Menu Button"
+                        android:textSize="16sp" />
 
                     <ImageView
-                        android:backgroundTint="@color/page5"
-                        android:background="@drawable/rounded_color_selected"
-                        android:layout_height="25dp"
                         android:layout_width="25dp"
-                        android:layout_marginRight="16dp"
+                        android:layout_height="25dp"
                         android:layout_gravity="center_vertical|end"
-                        />
+                        android:layout_marginRight="16dp"
+                        android:background="@drawable/rounded_color_selected"
+                        android:backgroundTint="@color/page5" />
 
                 </GridLayout>
 
@@ -217,14 +229,25 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/colorAccent" />
 
-
-            <Switch
-                android:id="@+id/EnableNotification"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="10dp"
-                android:text="Notification" />
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="8dp"
+                    android:src="@mipmap/ic_notification" />
+
+                <Switch
+                    android:id="@+id/EnableNotification"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:text="Notification" />
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -233,14 +256,24 @@
                 android:background="@android:color/darker_gray" />
 
             <RelativeLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="8dp"
+                    android:src="@mipmap/ic_vibration" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="19dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="start"
+                    android:layout_marginLeft="8dp"
+                    android:layout_toEndOf="@+id/imageView2"
                     android:text="Vibration"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@android:color/black" />
@@ -249,8 +282,9 @@
                     android:id="@+id/EnableVibration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginTop="8dp" />
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="8dp" />
             </RelativeLayout>
 
             <View
@@ -265,17 +299,36 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="15dp"
-                android:text="Fitness"
+                android:text="Safe mode"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/colorAccent" />
 
-            <Switch
-                android:id="@+id/EnableWear"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="10dp"
-                android:text="enable to see more details about you" />
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="8dp"
+                    android:src="@mipmap/ic_fingerprint" />
+
+                <Switch
+                    android:id="@+id/EnableWear"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:text="enable to look the application unlockable only with fingerprint" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="When you set up the safe mode the application is locked and to unlock it you could use fingerprint.\nNote: If the fingerprint doesn't work you'll need delete and reinstall the app" />
 
             <View
                 android:layout_width="match_parent"

@@ -19,7 +19,7 @@ import butterknife.ButterKnife;
 import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.graphic.Fragments.PostFragment;
 
-import static unical.master.computerscience.yellit.utilities.SystemUI.setSystemBarTheme;
+import static unical.master.computerscience.yellit.utilities.SystemUI.changeSystemBar;
 
 /**
  * Created by Lorenzo on 24/04/2017.
@@ -37,12 +37,10 @@ public class LoginSignupActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        changeSystemBar(this, false);
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_login_signup);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            setSystemBarTheme(this, false);
-        }
         ButterKnife.bind(this);
         this.mPages = new ArrayList<>();
         this.mTitlePages = new ArrayList<>();

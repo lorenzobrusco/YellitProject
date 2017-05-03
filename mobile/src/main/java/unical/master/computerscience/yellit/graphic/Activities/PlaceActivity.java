@@ -15,7 +15,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import unical.master.computerscience.yellit.R;
 
-import static unical.master.computerscience.yellit.utilities.SystemUI.setSystemBarTheme;
+import static unical.master.computerscience.yellit.utilities.SystemUI.changeSystemBar;
 
 /**
  * Created by Lorenzo on 02/05/2017.
@@ -23,13 +23,14 @@ import static unical.master.computerscience.yellit.utilities.SystemUI.setSystemB
 
 public class PlaceActivity extends AppCompatActivity {
 
-    @Bind (R.id.toolbar)
+    @Bind(R.id.toolbar)
     protected Toolbar mToolbar;
     @Bind(R.id.collapsing_toolbar)
     protected CollapsingToolbarLayout mCollapsingToolbarLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        changeSystemBar(this, false);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place);
         ButterKnife.bind(this);
@@ -39,11 +40,10 @@ public class PlaceActivity extends AppCompatActivity {
         actionBar.setDisplayShowHomeEnabled(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
-            setSystemBarTheme(this, false);
+            mCollapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ExpandedAppBar);
+            mCollapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.CollapsedAppBar);
         }
         mCollapsingToolbarLayout.setTitle("McDonald's");
-        mCollapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ExpandedAppBar);
-        mCollapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.CollapsedAppBar);
     }
 
     @Override

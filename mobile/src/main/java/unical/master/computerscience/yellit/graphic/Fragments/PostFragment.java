@@ -41,10 +41,11 @@ public class PostFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_posts, container, false);
         ButterKnife.bind(this, view);
         final PostAdapter mPostAdapter = new PostAdapter(this.getContext(), initList());
-        mPosts.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
+        layoutManager.scrollToPositionWithOffset(0, 0);
+        mPosts.setLayoutManager(layoutManager);
         mPosts.setAdapter(mPostAdapter);
         mPosts.addItemDecoration( new PaddingItemDecoration(170));
-
         return view;
     }
 

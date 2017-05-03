@@ -34,6 +34,7 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import unical.master.computerscience.yellit.graphic.Activities.LoadActivity;
 import unical.master.computerscience.yellit.graphic.Activities.LoginSignupActivity;
 import unical.master.computerscience.yellit.graphic.Activities.PlaceActivity;
 import unical.master.computerscience.yellit.graphic.Activities.SettingActivity;
@@ -45,7 +46,7 @@ import unical.master.computerscience.yellit.logic.GoogleApiClient;
 import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.utilities.PermissionCheckUtils;
 
-import static unical.master.computerscience.yellit.utilities.SystemUI.setSystemBarTheme;
+import static unical.master.computerscience.yellit.utilities.SystemUI.changeSystemBar;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -78,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        changeSystemBar(this, false);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
@@ -88,9 +90,7 @@ public class MainActivity extends AppCompatActivity {
         mSearchView.requestFocusFromTouch();
         mSearchView.setQueryHint(" Search ");
         currentFragment = new PostFragment();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            setSystemBarTheme(this, false);
-        }
+
         MainActivity.this.setFragment(currentFragment);
         this.setupViews();
         GoogleApiClient.getInstance(this);
@@ -268,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 InfoManager.getInstance().destroy();
-                startActivity(new Intent(getBaseContext(), LoginSignupActivity.class));
+                startActivity(new Intent(getBaseContext(), LoadActivity.class));
                 finish();
 
             }
@@ -416,7 +416,8 @@ public class MainActivity extends AppCompatActivity {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.BODY_SENSORS
+                Manifest.permission.BODY_SENSORS,
+                Manifest.permission.USE_FINGERPRINT
         };
     }
 
