@@ -28,8 +28,6 @@ import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.utilities.PrefManager;
 
-import static unical.master.computerscience.yellit.utilities.SystemUI.changeSystemBar;
-
 public class WelcomeActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
@@ -42,17 +40,15 @@ public class WelcomeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        changeSystemBar(this, false);
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
-        prefManager = new PrefManager(WelcomeActivity.this);
         initActivity();
     }
 
 
     private void initActivity() {
 
-        if (!prefManager.isFirstTimeLaunch()) {
+        if (!PrefManager.isFirstTimeLaunch(this)) {
             launchHomeScreen();
             finish();
         } else {
@@ -132,8 +128,8 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     private void launchHomeScreen() {
-        prefManager.setFirstTimeLaunch(false);
-        InfoManager.getInstance().setColorMode(prefManager.isColorMode());
+        PrefManager.setFirstTimeLaunch(getApplicationContext(), false);
+//        InfoManager.getInstance().setColorMode(PrefManager.isColorMode(this));
         startActivity(new Intent(getApplicationContext(), MainActivity.class));
         finish();
     }

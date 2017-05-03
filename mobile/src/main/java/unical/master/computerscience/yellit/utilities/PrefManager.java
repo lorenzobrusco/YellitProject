@@ -8,43 +8,55 @@ import android.content.SharedPreferences;
  */
 public class PrefManager {
 
-    SharedPreferences pref;
-    SharedPreferences.Editor editor;
-    Context _context;
+    /**
+     * shared pref mode
+     */
+    private static int PRIVATE_MODE = 0;
 
-    // shared pref mode
-    int PRIVATE_MODE = 0;
-
-    // Shared preferences file name
+    /**
+     * Shared preferences file name
+     */
     private static final String PREF_NAME = "yellit-pref";
     private static final String IS_FIRST_TIME_LAUNCH = "IsFirstTimeLaunch";
-    private static final String IS_COLOR_MODE = "isColorMode";
+    private static final String IS_COLOR_MODE = "isColorModes";
+    private static final String USER = "user";
 
-    public PrefManager(Context context) {
-        this._context = context;
-        pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
-        editor = pref.edit();
-    }
-
-    public void setFirstTimeLaunch(boolean isFirstTime) {
+    public static void setFirstTimeLaunch(final Context context, boolean isFirstTime) {
+        SharedPreferences pref = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
+        SharedPreferences.Editor editor = pref.edit();
         editor.putBoolean(IS_FIRST_TIME_LAUNCH, isFirstTime);
-        editor.commit();
+        editor.apply();
     }
 
-    public boolean isFirstTimeLaunch() {
+    public static boolean isFirstTimeLaunch(final Context context) {
+        SharedPreferences pref = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         return pref.getBoolean(IS_FIRST_TIME_LAUNCH, true);
     }
 
 
-    public void setColorMode(boolean isColorMode) {
+    public static void setColorMode(final Context context, boolean isColorMode) {
+        SharedPreferences pref = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
+        SharedPreferences.Editor editor = pref.edit();
         editor.putBoolean(IS_COLOR_MODE, isColorMode);
-        editor.commit();
+        editor.apply();
     }
 
-    public boolean isColorMode(){
+    public static boolean isColorMode(final Context context) {
+        SharedPreferences pref = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         return pref.getBoolean(IS_COLOR_MODE, true);
     }
 
 
+    public static void setUser(final Context context, final String user) {
+        SharedPreferences pref = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString(IS_COLOR_MODE, user);
+        editor.apply();
+    }
+
+    public static String getUser(final Context context) {
+        SharedPreferences pref = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
+        return pref.getString(USER, null);
+    }
 
 }

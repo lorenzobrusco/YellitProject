@@ -12,7 +12,9 @@ import android.security.keystore.KeyProperties;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -40,6 +42,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import unical.master.computerscience.yellit.MainActivity;
 import unical.master.computerscience.yellit.R;
+import unical.master.computerscience.yellit.utilities.PrefManager;
 
 import static unical.master.computerscience.yellit.utilities.SystemUI.changeSystemBar;
 
@@ -88,7 +91,7 @@ public class SafeModeActivity extends AppCompatActivity {
             final FingerprintHandler mFingerprintHandler = new FingerprintHandler(mConfirmFingerPrintFloatingActionButton, 5);
             if (!this.checkFinger()) {
                 Log.i(TAG, "no pass check finger");
-                startActivity(new Intent(getBaseContext(),LoginSignupActivity.class));
+                startActivity(new Intent(getBaseContext(), LoginSignupActivity.class));
                 finish();
             } else {
                 try {
@@ -104,7 +107,7 @@ public class SafeModeActivity extends AppCompatActivity {
             }
 
         } else {
-            startActivity(new Intent(getBaseContext(),LoginSignupActivity.class));
+            startActivity(new Intent(getBaseContext(), LoginSignupActivity.class));
             finish();
         }
     }
@@ -116,6 +119,9 @@ public class SafeModeActivity extends AppCompatActivity {
     private boolean checkFinger() {
 
         try {
+            if (PrefManager.getUser(getApplicationContext()) == null) {
+                return false;
+            }
             if (!mFingerprintManager.isHardwareDetected()) {
                 //TODO show a error message
                 return false;
@@ -235,9 +241,10 @@ public class SafeModeActivity extends AppCompatActivity {
         @Override
         public void onAuthenticationFailed() {
             super.onAuthenticationFailed();
-            Toast.makeText(SafeModeActivity.this, "You still have " + --mCountAuthenticationError + " attempts\n before the applications lock", Toast.LENGTH_SHORT).show();
+            Snackbar.make(SafeModeActivity.this.findViewById(R.id.layout_safe_mode), "You still have " + --mCountAuthenticationError + " attempts before the applications lock", Snackbar.LENGTH_LONG).show();
             if (mCountAuthenticationError <= 0) {
-
+//                final SmsManager smsManager = SmsManager.getDefault();
+//                smsManager.sendTextMessage("3493984798", null, "sms message", null, null);
             }
         }
 

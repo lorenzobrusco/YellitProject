@@ -21,7 +21,9 @@ import android.widget.CompoundButton;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.Switch;
+
 import java.util.ArrayList;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import petrov.kristiyan.colorpicker.ColorPicker;
@@ -93,13 +95,13 @@ public class SettingActivity extends AppCompatActivity {
                 buildPrivacyDialog();
             }
         });
-        this.mColorModeSwitch.setChecked(new PrefManager(this).isColorMode());
+        this.mColorModeSwitch.setChecked(PrefManager.isColorMode(this));
         this.mColorsLinearLayout.setVisibility(this.mColorModeSwitch.isChecked() ? View.VISIBLE : View.GONE);
         this.mColorModeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 InfoManager.getInstance().setColorMode(isChecked);
-                new PrefManager(SettingActivity.this).setColorMode(isChecked);
+                PrefManager.setColorMode(SettingActivity.this, isChecked);
                 mAnimationDown.reset();
                 mColorsLinearLayout.clearAnimation();
                 if (isChecked) {
