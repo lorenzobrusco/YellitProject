@@ -100,8 +100,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="Open page"
-                        android:textColor="@color/page3" />
+                        android:text="Web site"
+                        android:textColor="@color/color_view_place" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -120,7 +120,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:text="Call it"
-                        android:textColor="@color/page3" />
+                        android:textColor="@color/color_view_place" />
                 </LinearLayout>
 
 
