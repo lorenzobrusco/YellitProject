@@ -4,6 +4,7 @@ package unical.master.computerscience.yellit.graphic.Activities;
  * Created by Lorenzo on 22/02/2017.
  */
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -43,6 +44,9 @@ public class SettingActivity extends AppCompatActivity {
 
     private static final String PREF_NAME = "yellit-pref";
 
+    private static final String ISFIRSTTIMEPIN = "isFirstTime";
+
+
     @Bind(R.id.toolbar)
     protected Toolbar mToolbar;
 
@@ -75,6 +79,9 @@ public class SettingActivity extends AppCompatActivity {
 
     @Bind(R.id.color_5_button_botton_bar)
     protected GridLayout mMenuButtonHome;
+
+    @Bind(R.id.pin_safe_mode_layout)
+    protected LinearLayout mPinSafeModeLinearLayout;
 
     private Animation mAnimationDown;
 
@@ -161,6 +168,14 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 buildColorPicker();
+            }
+        });
+        this.mPinSafeModeLinearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Intent mChangePinIntent = new Intent(getBaseContext(), ChangePinSafeModeActivity.class);
+                mChangePinIntent.putExtra(ISFIRSTTIMEPIN, true);
+                startActivity(mChangePinIntent);
             }
         });
 

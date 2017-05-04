@@ -1,5 +1,6 @@
 package unical.master.computerscience.yellit.graphic.Activities;
 
+import android.app.Dialog;
 import android.app.KeyguardManager;
 import android.content.Intent;
 import android.hardware.fingerprint.FingerprintManager;
@@ -17,10 +18,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -110,6 +113,7 @@ public class SafeModeActivity extends AppCompatActivity {
             startActivity(new Intent(getBaseContext(), LoginSignupActivity.class));
             finish();
         }
+
     }
 
     /**
@@ -199,7 +203,9 @@ public class SafeModeActivity extends AppCompatActivity {
         }
     }
 
-
+    /**
+     * Fingerprint handler class
+     */
     @RequiresApi(api = Build.VERSION_CODES.M)
     private class FingerprintHandler extends FingerprintManager.AuthenticationCallback {
 

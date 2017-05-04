@@ -2,9 +2,9 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_safe_mode"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/layout_safe_mode"
     android:orientation="vertical">
 
     <ImageView
@@ -27,7 +27,7 @@
         android:layout_marginTop="18dp"
         android:fontFamily="serif"
         android:gravity="center_vertical"
-        android:text="Look Yellit with Fingerprint"
+        android:text="@string/title_lock_fingerprint"
         android:textColor="@color/black"
         android:textSize="20dp"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -43,7 +43,7 @@
         android:layout_marginTop="16dp"
         android:fontFamily="serif"
         android:gravity="center"
-        android:text="Use your fingerprint to unlock\n yellit instead typing your password"
+        android:text="Use your fingerprint to unlock\n application instead typing your password"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_title_explanation_fingerprint"

@@ -41,7 +41,14 @@
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".graphic.Activities.SettingActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="Setting"
+            />
+        <activity
+            android:name=".graphic.Activities.ChangePinSafeModeActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="Change Pin"
+            />
         <activity
             android:name=".graphic.Activities.SafeModeActivity"
             android:theme="@style/AppTheme.NoActionBar" />

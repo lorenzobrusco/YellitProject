@@ -48,6 +48,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="19dp"
+                android:layout_marginTop="15dp"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -71,8 +73,9 @@
                 android:id="@+id/colors_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="39dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginRight="8dp"
                 android:orientation="vertical">
 
                 <GridLayout
@@ -232,6 +235,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="19dp"
+                android:layout_marginTop="15dp"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -256,6 +261,8 @@
                 android:background="@android:color/darker_gray" />
 
             <RelativeLayout
+                android:layout_marginLeft="19dp"
+                android:layout_marginTop="15dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -304,6 +311,8 @@
                 android:textColor="@color/colorAccent" />
 
             <LinearLayout
+                android:layout_marginLeft="19dp"
+                android:layout_marginTop="15dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -320,15 +329,55 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
-                    android:text="enable to look the application unlockable only with fingerprint" />
+                    android:text="@string/text_enable_afe_mode" />
 
             </LinearLayout>
 
             <TextView
+                android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:text="When you set up the safe mode the application is locked and to unlock it you could use fingerprint.\nNote: If the fingerprint doesn't work you'll need delete and reinstall the app" />
+                android:layout_marginRight="8dp"
+                android:layout_marginLeft="19dp"
+                android:layout_marginTop="15dp"
+                android:text="@string/text_setting_fingerprint" />
+
+
+            <LinearLayout
+                android:id="@+id/pin_safe_mode_layout"
+                android:layout_marginLeft="19dp"
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Pin: "
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginRight="16dp"
+                        android:text="****" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Press here to set o change the pin to allow you unlock application when fingerprint doesn't work" />
+            </LinearLayout>
+
 
             <View
                 android:layout_width="match_parent"
