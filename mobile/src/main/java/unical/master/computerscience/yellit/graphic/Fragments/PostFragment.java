@@ -70,7 +70,7 @@ public class PostFragment extends Fragment {
                 .build();
 
         PostGestureService postService = retrofit.create(PostGestureService.class);
-        Call<Post[]> call = postService.getAllPosts("aaa");
+        Call<Post[]> call = postService.getAllPosts("getAll");
         call.enqueue(new Callback<Post[]>() {
             @Override
             public void onResponse(Call<Post[]> call, Response<Post[]> response) {

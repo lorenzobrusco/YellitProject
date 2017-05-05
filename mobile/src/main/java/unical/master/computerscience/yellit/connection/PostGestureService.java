@@ -23,9 +23,9 @@ public interface PostGestureService {
 //    Call<Post> getProfile(@Body JSONObject post);
 
     @GET("Posts")
-    Call<String> sendNewPost(@Query("text") String text);
+    Call<String> sendNewPost(@Query("mode") String mode);
 
     @POST("Posts")
-    Call<Post[]> getAllPosts(@Query("email") String email);
+    Call<Post[]> getAllPosts(@Query("mode") String mode);
 
 }

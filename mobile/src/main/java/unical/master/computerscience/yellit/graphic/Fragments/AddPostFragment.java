@@ -239,7 +239,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                         .build();
 
                 PostGestureService postService = retrofit.create(PostGestureService.class);
-                Call<String> call = postService.sendNewPost("provami");
+                Call<String> call = postService.sendNewPost("adding");
                 call.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
