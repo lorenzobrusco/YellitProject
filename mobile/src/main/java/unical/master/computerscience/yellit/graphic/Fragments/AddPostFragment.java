@@ -39,7 +39,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.github.clans.fab.FloatingActionButton;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
@@ -53,6 +52,8 @@ import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import retrofit2.Call;
@@ -75,7 +76,7 @@ import unical.master.computerscience.yellit.logic.GoogleApiClient;
 import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.logic.objects.Post;
 import unical.master.computerscience.yellit.logic.objects.User;
-import unical.master.computerscience.yellit.utiliies.BaseURL;
+import unical.master.computerscience.yellit.utilities.BaseURL;
 
 
 /**
@@ -84,10 +85,6 @@ import unical.master.computerscience.yellit.utiliies.BaseURL;
 public class AddPostFragment extends Fragment implements OnChartValueSelectedListener {
 
     private static final String DEMO_PHOTO_PATH = "MyDemoPhotoDir";
-    private ArrayList<String> mImages;
-    private String currentPath = "";
-    private boolean locked = false;
-    private int currentPosition = 0;
 
     @Bind(R.id.pie_menu)
     protected PieChart mainMenu;
@@ -528,7 +525,13 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                 mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 transparentLayer.setVisibility(View.VISIBLE);
                 mainMenu.highlightValues(null);
-                mLocationSpinner.setItems(InfoManager.getInstance().getmPlaceData().place);
+                List<String> places = InfoManager.getInstance().getmPlaceData().place;
+                if(places.size() == 0)
+                {
+                    places.add("Nowhere");
+                    places.add("Patate");
+                }
+                mLocationSpinner.setItems(places);
                 mLocationSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
                     @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
                         Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();

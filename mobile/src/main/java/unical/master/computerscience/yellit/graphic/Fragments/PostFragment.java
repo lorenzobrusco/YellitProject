@@ -35,7 +35,7 @@ import unical.master.computerscience.yellit.logic.objects.Post;
 import unical.master.computerscience.yellit.logic.objects.User;
 import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.graphic.Adapters.PostAdapter;
-import unical.master.computerscience.yellit.utiliies.BaseURL;
+import unical.master.computerscience.yellit.utilities.BaseURL;
 
 /**
  * Created by Lorenzo on 14/03/2017.
