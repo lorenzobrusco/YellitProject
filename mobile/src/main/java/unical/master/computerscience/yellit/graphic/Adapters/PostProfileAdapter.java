@@ -1,40 +1,27 @@
 package unical.master.computerscience.yellit.graphic.Adapters;
 
-import android.animation.Animator;
-import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.support.v7.widget.CardView;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.ceylonlabs.imageviewpopup.ImagePopup;
 
 import java.util.List;
-import java.util.zip.Inflater;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.logic.objects.Post;
-import unical.master.computerscience.yellit.utiliies.BaseURL;
-import unical.master.computerscience.yellit.utiliies.WriteFile;
+import unical.master.computerscience.yellit.utilities.BaseURL;
 
 /**
  * Created by Lorenzo on 09/04/2017.

@@ -17,6 +17,6 @@
     <dimen name="desc_padding">40dp</dimen>
     <dimen name="dimension_circle_progress_bar">300dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
-    <dimen name="icon_size">22dp</dimen>
+    <dimen name="icon_size">26dp</dimen>
     <dimen name="text_size_info">16dp</dimen>
 </resources>

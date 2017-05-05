@@ -2,11 +2,15 @@ package unical.master.computerscience.yellit.graphic.Activities;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -19,7 +23,9 @@ import butterknife.Bind;
 import unical.master.computerscience.yellit.MainActivity;
 import unical.master.computerscience.yellit.R;
 
-public class SignUpActivity extends AppCompatActivity {
+import static android.app.Activity.RESULT_OK;
+
+public class SignUpActivity extends Fragment {
 
     private static final String TAG = "SignupActivity";
     private static final int REQUEST_CODE = 1;
@@ -27,31 +33,23 @@ public class SignUpActivity extends AppCompatActivity {
 
     @Bind(R.id.profile_image_signup)
     ImageView _profileImage;
-    @Bind(R.id.input_name)
+    @Bind(R.id.input_name_signup)
     EditText _nameText;
-    @Bind(R.id.input_email)
+    @Bind(R.id.input_email_signup)
     EditText _emailText;
-    @Bind(R.id.input_password)
+    @Bind(R.id.input_password_signup)
     EditText _passwordText;
-    @Bind(R.id.input_reEnterPassword)
+    @Bind(R.id.input_password_again_signup)
     EditText _reEnterPasswordText;
-    @Bind(R.id.btn_signup)
+    @Bind(R.id.btn_login_signup)
     Button _signupButton;
-    @Bind(R.id.link_login)
-    TextView _loginLink;
 
+    @Nullable
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-       /* requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-*/
-        getSupportActionBar().hide();
-        setContentView(R.layout.activity_signup);
-        ButterKnife.bind(this);
-
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        final View view = inflater.inflate(R.layout.activity_signup, container, false);
+        ButterKnife.bind(this, view);
+        ButterKnife.bind(this, view);
         _signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,21 +57,10 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
-        _loginLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Finish the registration screen and return to the Login activity
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-                finish();
-            }
-        });
-
         _profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(SignUpActivity.this, "open camera", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "open camera", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
                 startActivityForResult(intent, TAKE_PICTURE);
                /* Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -83,13 +70,9 @@ public class SignUpActivity extends AppCompatActivity {
                 startActivityForResult(intent, TAKE_PICTURE);*/
             }
         });
+        return view;
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-    }
 
     public void signup() {
         Log.d(TAG, "Signup");
@@ -101,7 +84,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         _signupButton.setEnabled(false);
 
-        final ProgressDialog progressDialog = new ProgressDialog(SignUpActivity.this,
+        final ProgressDialog progressDialog = new ProgressDialog(getContext(),
                 R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Creating Account...");
@@ -126,16 +109,15 @@ public class SignUpActivity extends AppCompatActivity {
                 }, 3000);
     }
 
-
     public void onSignupSuccess() {
         _signupButton.setEnabled(true);
-        setResult(RESULT_OK, null);
-        startActivity(new Intent(this, MainActivity.class));
-        finish();
+        getActivity().setResult(RESULT_OK, null);
+        startActivity(new Intent(getContext(), MainActivity.class));
+        getActivity().finish();
     }
 
     public void onSignupFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), "Login failed", Toast.LENGTH_LONG).show();
 
         _signupButton.setEnabled(true);
     }

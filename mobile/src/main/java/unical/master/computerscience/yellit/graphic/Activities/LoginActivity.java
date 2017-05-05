@@ -4,9 +4,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
@@ -15,6 +19,8 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.zip.Inflater;
 
 import javax.xml.transform.TransformerConfigurationException;
 
@@ -30,7 +36,9 @@ import unical.master.computerscience.yellit.connection.LoginService;
 import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.logic.objects.User;
 
-public class LoginActivity extends AppCompatActivity {
+import static android.app.Activity.RESULT_OK;
+
+public class LoginActivity extends Fragment {
     private static final String TAG = "LoginActivity";
     private static final String BASEURL = "http://10.0.2.2:8080/YellitServer/";
     private static final int REQUEST_SIGNUP = 0;
@@ -41,35 +49,23 @@ public class LoginActivity extends AppCompatActivity {
     EditText _passwordText;
     @Bind(R.id.btn_login)
     Button _loginButton;
-    @Bind(R.id.link_signup)
-    TextView _signupLink;
 
+    @Nullable
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
-        setContentView(R.layout.activity_login);
-        ButterKnife.bind(this);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        final View view = inflater.inflate(R.layout.activity_login, container, false);
+        ButterKnife.bind(this, view);
         _loginButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 //TODO replace this code with login();
-               // login();
+                // login();
                 onLoginSuccess();
             }
         });
 
-        _signupLink.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // Start the Signup activity
-                Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
-                startActivityForResult(intent, REQUEST_SIGNUP);
-                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-            }
-        });
+        return view;
     }
 
     public void login() {
@@ -91,37 +87,18 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.setMessage("Authenticating...");
         progressDialog.show();*/
         this.login(email, password);
-         //onLoginSuccess();
-    }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_SIGNUP) {
-            if (resultCode == RESULT_OK) {
-
-                // TODO: Implement successful signup logic here
-                // By default we just finish the Activity and log them in automatically
-                this.finish();
-            }
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        // Disable going back to the MainActivity
-        moveTaskToBack(true);
+        //onLoginSuccess();
     }
 
     public void onLoginSuccess() {
         _loginButton.setEnabled(true);
-        startActivity(new Intent(getApplicationContext(), WelcomeActivity.class));
-        overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-        finish();
+        startActivity(new Intent(getContext(), WelcomeActivity.class));
+        getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+        getActivity().finish();
     }
 
     public void onLoginFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), "Login failed", Toast.LENGTH_LONG).show();
         _loginButton.setEnabled(true);
     }
 
@@ -131,7 +108,7 @@ public class LoginActivity extends AppCompatActivity {
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
 
-        if (email.isEmpty()){// || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        if (email.isEmpty()) {// || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             _emailText.setError("enter a valid email address");
             valid = false;
         } else {
@@ -161,10 +138,10 @@ public class LoginActivity extends AppCompatActivity {
 
                 User profile = response.body();
                 InfoManager.getInstance().setmUser(profile);
-                if(profile.getEmail() == null){
+                if (profile.getEmail() == null) {
                     LoginActivity.this.buildErrorDialog();
-                    Log.d("retrofit","email o password errati");
-                }else {
+                    Log.d("retrofit", "email o password errati");
+                } else {
                     Log.d("nick", profile.getNickname());
                     onLoginSuccess();
                 }
@@ -177,8 +154,8 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void buildErrorDialog(){
-        new AlertDialog.Builder(this)
+    private void buildErrorDialog() {
+        new AlertDialog.Builder(getContext())
                 .setTitle("Login failed")
                 .setMessage("email or password are wrong, if you don't have an account create it")
                 .setCancelable(false)
@@ -190,7 +167,7 @@ public class LoginActivity extends AppCompatActivity {
                 .show();
         this._emailText.setText("");
         this._passwordText.setText("");
-        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
     }

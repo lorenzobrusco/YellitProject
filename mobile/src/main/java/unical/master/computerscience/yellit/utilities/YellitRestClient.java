@@ -1,4 +1,4 @@
-package unical.master.computerscience.yellit.utiliies;
+package unical.master.computerscience.yellit.utilities;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;

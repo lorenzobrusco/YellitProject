@@ -5,51 +5,43 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.Scopes;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Scope;
-import com.google.android.gms.fitness.Fitness;
-import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 
 import java.util.ArrayList;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import unical.master.computerscience.yellit.graphic.Activities.LoginSignupActivity;
 import unical.master.computerscience.yellit.graphic.Activities.SettingActivity;
 import unical.master.computerscience.yellit.graphic.Fragments.AddPostFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.FitnessFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.PostFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.ProfileFragment;
 import unical.master.computerscience.yellit.logic.GoogleApiClient;
-import unical.master.computerscience.yellit.utiliies.BaseURL;
-import unical.master.computerscience.yellit.utiliies.BuilderFile;
-import unical.master.computerscience.yellit.utiliies.PermissionCheckUtils;
-import unical.master.computerscience.yellit.utiliies.ReadFile;
+import unical.master.computerscience.yellit.logic.InfoManager;
+import unical.master.computerscience.yellit.utilities.PermissionCheckUtils;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int PLACE_PICKER_REQUEST = 5;
     private static final int FITNESS_FRAG_BUTTON = 0;
     private static final int PROFILE_FRAG_BUTTON = 1;
     private static final int HOME_FRAG_BUTTON = 2;
@@ -64,6 +56,10 @@ public class MainActivity extends AppCompatActivity {
     View bottomSheet;
     @Bind(R.id.setting_buttom_menu)
     LinearLayout mSettingLayout;
+    @Bind(R.id.map_buttom_menu)
+    LinearLayout mMapLayout;
+    @Bind(R.id.logout_buttom_menu)
+    LinearLayout mLogoutLayout;
     @Bind(R.id.custom_search_view)
     SearchView mSearchView;
     @Bind(R.id.post_filter)
@@ -85,9 +81,20 @@ public class MainActivity extends AppCompatActivity {
         mSearchView.setQueryHint(" Search ");
         currentFragment = new PostFragment();
         MainActivity.this.setFragment(currentFragment);
-        chooseColor(currentItem);
-        GoogleApiClient.getInstance(this);
         this.setupViews();
+        GoogleApiClient.getInstance(this);
+        GoogleApiClient.getInstance(this).getPlaceDetection(this);
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mBottomNavigation.setColored(InfoManager.getInstance().isColorMode());
+        chooseColor(currentItem);
+        if (!hasAllRequiredPermissions()) {
+            requestAllRequiredPermissions();
+        }
     }
 
     @Override
@@ -95,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         GoogleApiClient.getInstance(this).disconnect();
     }
+
 
     private void setupViews() {
         AHBottomNavigationItem itemFitness = new AHBottomNavigationItem(R.string.tab_fitness, R.drawable.ic_fitness_center_black_24, R.color.page1);
@@ -107,21 +115,28 @@ public class MainActivity extends AppCompatActivity {
         mBottomNavigation.addItem(itemHome);
         mBottomNavigation.addItem(itemAdd);
         mBottomNavigation.addItem(itemSomeThing);
-        mBottomNavigation.setColored(true);
-        mBottomNavigation.setForceTint(true);
+        mBottomNavigation.setAccentColor(getResources().getColor(R.color.active_button_bottom_navitagiont));
+        mBottomNavigation.setInactiveColor(getResources().getColor(R.color.inactive_button_bottom_navitagiont));
+        mBottomNavigation.setBehaviorTranslationEnabled(false);
         mBottomNavigation.setTranslucentNavigationEnabled(true);
         mBottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
         this.currentItem = 2;
         mBottomNavigation.setCurrentItem(currentItem);
+        mBottomNavigation.setColored(InfoManager.getInstance().isColorMode());
+        chooseColor(currentItem);
+        mBottomNavigation.setNotificationBackgroundColor(ContextCompat.getColor(this, R.color.color_notification_back));
+
+        // Add or remove notification for each item
+        mBottomNavigation.setNotification("1", PROFILE_FRAG_BUTTON);
 
         mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         mBottomSheetBehavior.setHideable(true);
         mBottomSheetBehavior.setPeekHeight(300);
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+
         mBottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
             @Override
             public boolean onTabSelected(int position, boolean wasSelected) {
-
                 switch (position) {
                     case FITNESS_FRAG_BUTTON:
                         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
@@ -141,7 +156,6 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         if (currentItem != position) {
-                            getWindow().setStatusBarColor(getResources().getColor(R.color.page2));
                             currentItem = position;
                             chooseColor(currentItem);
                             removeFragment(currentFragment);
@@ -156,7 +170,6 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         if (currentItem != position) {
-                            getWindow().setStatusBarColor(getResources().getColor(R.color.page3));
                             currentItem = position;
                             chooseColor(currentItem);
                             removeFragment(currentFragment);
@@ -170,7 +183,6 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         if (currentItem != position) {
-                            getWindow().setStatusBarColor(getResources().getColor(R.color.page4));
                             currentItem = position;
                             chooseColor(currentItem);
                             removeFragment(currentFragment);
@@ -181,13 +193,13 @@ public class MainActivity extends AppCompatActivity {
                     case OTHER_FRAG_BUTTON:
                         if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
                             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                            getWindow().setStatusBarColor(getResources().getColor(R.color.page5));
                         } else {
                             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         }
                         break;
                 }
                 filterImage.setVisibility(currentItem == HOME_FRAG_BUTTON ? View.VISIBLE : View.INVISIBLE);
+                mBottomNavigation.setNotification("", currentItem);
                 return true;
             }
         });
@@ -226,30 +238,56 @@ public class MainActivity extends AppCompatActivity {
                 buildDialogFilter();
             }
         });
+        this.mMapLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+
+                try {
+                    startActivityForResult(builder.build(MainActivity.this), PLACE_PICKER_REQUEST);
+                } catch (GooglePlayServicesRepairableException e) {
+                    e.printStackTrace();
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        this.mLogoutLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InfoManager.getInstance().destroy();
+                startActivity(new Intent(getBaseContext(), LoginSignupActivity.class));
+                finish();
+
+            }
+        });
     }
 
 
     private void chooseColor(int page) {
-
-
-        switch (page) {
-            case FITNESS_FRAG_BUTTON:
-                getWindow().setStatusBarColor(getResources().getColor(R.color.page1));
-                break;
-            case PROFILE_FRAG_BUTTON:
-                getWindow().setStatusBarColor(getResources().getColor(R.color.page2));
-                break;
-            case HOME_FRAG_BUTTON:
-                getWindow().setStatusBarColor(getResources().getColor(R.color.page3));
-                break;
-            case ADDPOST_FRAG_BUTTON:
-                getWindow().setStatusBarColor(getResources().getColor(R.color.page4));
-                break;
-            case OTHER_FRAG_BUTTON:
-                getWindow().setStatusBarColor(getResources().getColor(R.color.page5));
-                break;
-        }
-
+/*
+        if (InfoManager.getInstance().isColorMode()) {
+            switch (page) {
+                case FITNESS_FRAG_BUTTON:
+                    getWindow().setStatusBarColor(getResources().getColor(R.color.page1));
+                    break;
+                case PROFILE_FRAG_BUTTON:
+                    getWindow().setStatusBarColor(getResources().getColor(R.color.page2));
+                    break;
+                case HOME_FRAG_BUTTON:
+                    getWindow().setStatusBarColor(getResources().getColor(R.color.page3));
+                    break;
+                case ADDPOST_FRAG_BUTTON:
+                    getWindow().setStatusBarColor(getResources().getColor(R.color.page4));
+                    break;
+                case OTHER_FRAG_BUTTON:
+                    getWindow().setStatusBarColor(getResources().getColor(R.color.page5));
+                    break;
+            }
+        } else {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+        }*/
     }
 
     private void buildDialogFilter() {
@@ -274,13 +312,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (!hasAllRequiredPermissions()) {
-            requestAllRequiredPermissions();
-        }
-    }
 
     @Override
     public void onBackPressed() {
@@ -299,6 +330,16 @@ public class MainActivity extends AppCompatActivity {
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         }
 
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlacePicker.getPlace(data, this);
+                String toastMsg = String.format("Place: %s", place.getName());
+                Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     protected void setFragment(Fragment fragment) {
@@ -384,8 +425,5 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public void patata() {
-        Toast.makeText(MainActivity.this.getApplicationContext(), "cicici", Toast.LENGTH_SHORT);
-    }
 }
 

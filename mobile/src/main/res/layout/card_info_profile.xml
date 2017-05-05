@@ -16,7 +16,7 @@
         app:cardCornerRadius="4dp"
         app:cardElevation="8dp">
 
-    <RelativeLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fitsSystemWindows="true">
@@ -97,7 +97,6 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
@@ -113,60 +112,67 @@
                         android:visibility="gone">
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
                             <ImageView
-
                                 android:layout_width="@dimen/icon_size"
                                 android:layout_height="@dimen/icon_size"
                                 android:layout_marginRight="8dp"
                                 android:src="@mipmap/ic_sex" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
+                            <Spinner
+                                android:id="@+id/spinner_sex_profile"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Sesso"
-                                android:textSize="@dimen/text_size_info" />
+                                android:drawSelectorOnTop="true"
+                                android:entries="@array/spinner_sex_profile" />
+
                         </LinearLayout>
 
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:id="@+id/height_profile"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:paddingBottom="4dp"
+                            android:paddingTop="4dp">
 
                             <ImageView
-
                                 android:layout_width="@dimen/icon_size"
                                 android:layout_height="@dimen/icon_size"
                                 android:layout_marginRight="8dp"
-                                android:src="@mipmap/ic_birth_date" />
+                                android:src="@mipmap/ic_height" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="center"
                                 android:text="Altezza"
-
                                 android:textSize="@dimen/text_size_info" />
                         </LinearLayout>
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:id="@+id/weight_profile"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:paddingBottom="4dp"
+                            android:paddingTop="4dp">
 
                             <ImageView
 
                                 android:layout_width="@dimen/icon_size"
                                 android:layout_height="@dimen/icon_size"
                                 android:layout_marginRight="8dp"
-                                android:src="@mipmap/ic_birth_date" />
+                                android:src="@mipmap/ic_weight" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="center"
                                 android:text="Peso"
                                 android:textSize="@dimen/text_size_info" />
                         </LinearLayout>
@@ -175,7 +181,6 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
@@ -191,9 +196,12 @@
                         android:visibility="gone">
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:id="@+id/birth_date_profile"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:paddingBottom="4dp"
+                            android:paddingTop="4dp">
 
                             <ImageView
 
@@ -205,26 +213,37 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="center"
                                 android:text="Data di nascita"
                                 android:textSize="@dimen/text_size_info" />
                         </LinearLayout>
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:paddingBottom="4dp"
+                            android:paddingTop="4dp">
 
                             <ImageView
-
                                 android:layout_width="@dimen/icon_size"
                                 android:layout_height="@dimen/icon_size"
+                                android:layout_gravity="center"
                                 android:layout_marginRight="8dp"
                                 android:src="@mipmap/ic_city" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
+                            <EditText
+                                android:id="@+id/city_profile"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Città"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:background="@android:color/transparent"
+                                android:ellipsize="end"
+                                android:hint="Città"
+                                android:maxLength="35"
+                                android:maxLines="1"
+                                android:scrollHorizontally="true"
                                 android:textSize="@dimen/text_size_info" />
                         </LinearLayout>
 
@@ -248,9 +267,11 @@
                         android:visibility="gone">
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:paddingBottom="4dp"
+                            android:paddingTop="4dp">
 
                             <ImageView
 
@@ -281,7 +302,8 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
                     android:background="@android:color/darker_gray" />
 
 
@@ -293,7 +315,7 @@
 
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
@@ -311,7 +333,7 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
@@ -320,7 +342,7 @@
                             android:layout_width="@dimen/icon_size"
                             android:layout_height="@dimen/icon_size"
                             android:layout_marginRight="8dp"
-                            android:src="@mipmap/ic_city" />
+                            android:src="@mipmap/ic_height" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -330,7 +352,7 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
@@ -339,7 +361,7 @@
                             android:layout_width="@dimen/icon_size"
                             android:layout_height="@dimen/icon_size"
                             android:layout_marginRight="8dp"
-                            android:src="@mipmap/ic_city" />
+                            android:src="@mipmap/ic_weight" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -349,7 +371,7 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
@@ -368,7 +390,7 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
@@ -388,7 +410,7 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 

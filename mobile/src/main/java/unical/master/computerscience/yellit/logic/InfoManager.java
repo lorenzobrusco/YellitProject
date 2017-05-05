@@ -1,6 +1,9 @@
 package unical.master.computerscience.yellit.logic;
 
+import java.util.ArrayList;
+
 import unical.master.computerscience.yellit.logic.objects.FitnessSessionData;
+import unical.master.computerscience.yellit.logic.objects.PlaceData;
 import unical.master.computerscience.yellit.logic.objects.User;
 
 /**
@@ -13,15 +16,23 @@ public class InfoManager {
     private String mToken;
     private Statistics mStatistics;
     private FitnessSessionData mFitnessSessionData;
+    private PlaceData mPlaceData;
+    private boolean isColorMode;
 
     private InfoManager() {
         mFitnessSessionData = new FitnessSessionData();
+        mPlaceData = new PlaceData();
+        mPlaceData.place = new ArrayList<>();
     }
 
     public static InfoManager getInstance() {
         if (mInfoManager == null)
             mInfoManager = new InfoManager();
         return mInfoManager;
+    }
+
+    public void destroy(){
+        mInfoManager = null;
     }
 
     public String getmToken() {
@@ -54,5 +65,29 @@ public class InfoManager {
 
     public void setmFitnessSessionData(FitnessSessionData mFitnessSessionData) {
         this.mFitnessSessionData = mFitnessSessionData;
+    }
+
+    public static InfoManager getmInfoManager() {
+        return mInfoManager;
+    }
+
+    public static void setmInfoManager(InfoManager mInfoManager) {
+        InfoManager.mInfoManager = mInfoManager;
+    }
+
+    public PlaceData getmPlaceData() {
+        return mPlaceData;
+    }
+
+    public void setmPlaceData(PlaceData mPlaceData) {
+        this.mPlaceData = mPlaceData;
+    }
+
+    public boolean isColorMode() {
+        return isColorMode;
+    }
+
+    public void setColorMode(boolean colorMode) {
+        isColorMode = colorMode;
     }
 }

@@ -11,11 +11,16 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.Switch;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.graphic.Dialog.CustomDialogPrivacy;
+import unical.master.computerscience.yellit.logic.InfoManager;
+import unical.master.computerscience.yellit.utilities.PrefManager;
 
 /**
  * Created by Lorenzo on 07/09/2016.
@@ -29,6 +34,8 @@ public class SettingActivity extends AppCompatActivity {
     LinearLayout privacy;
     @Bind(R.id.welcomePage)
     LinearLayout welcomePage;
+    @Bind(R.id.EnableColorDisplay)
+    Switch mColorModeSwitch;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,6 +49,14 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 buildPrivacyDialog();
+            }
+        });
+        this.mColorModeSwitch.setChecked(new PrefManager(this).isColorMode());
+        this.mColorModeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                InfoManager.getInstance().setColorMode(isChecked);
+                new PrefManager(SettingActivity.this).setColorMode(isChecked);
             }
         });
         this.welcomePage.setOnClickListener(new View.OnClickListener() {

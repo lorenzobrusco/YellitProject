@@ -1,4 +1,4 @@
-package unical.master.computerscience.yellit.utiliies;
+package unical.master.computerscience.yellit.utilities;
 
 import android.content.Context;
 import android.content.pm.PackageManager;

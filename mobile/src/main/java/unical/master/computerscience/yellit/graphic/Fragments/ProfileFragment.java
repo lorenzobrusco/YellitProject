@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -45,6 +46,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.graphic.Adapters.PostProfileAdapter;
 import unical.master.computerscience.yellit.graphic.custom.SelectorImageView;
+import unical.master.computerscience.yellit.logic.GoogleApiClient;
 import unical.master.computerscience.yellit.logic.objects.Friend;
 import unical.master.computerscience.yellit.logic.objects.Post;
 
@@ -97,6 +99,7 @@ public class ProfileFragment extends Fragment {
         mPosts.setExpanded(true);
         this.setupRadar();
         this.setupFriendGridView();
+        GoogleApiClient.getInstance((AppCompatActivity) this.getActivity()).getLocation(this.getContext());
         return view;
     }
 

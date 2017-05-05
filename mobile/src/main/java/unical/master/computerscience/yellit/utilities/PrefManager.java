@@ -1,4 +1,4 @@
-package unical.master.computerscience.yellit.utiliies;
+package unical.master.computerscience.yellit.utilities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -16,9 +16,9 @@ public class PrefManager {
     int PRIVATE_MODE = 0;
 
     // Shared preferences file name
-    private static final String PREF_NAME = "androidhive-welcome";
-
+    private static final String PREF_NAME = "yellit-pref";
     private static final String IS_FIRST_TIME_LAUNCH = "IsFirstTimeLaunch";
+    private static final String IS_COLOR_MODE = "isColorMode";
 
     public PrefManager(Context context) {
         this._context = context;
@@ -34,5 +34,17 @@ public class PrefManager {
     public boolean isFirstTimeLaunch() {
         return pref.getBoolean(IS_FIRST_TIME_LAUNCH, true);
     }
+
+
+    public void setColorMode(boolean isColorMode) {
+        editor.putBoolean(IS_COLOR_MODE, isColorMode);
+        editor.commit();
+    }
+
+    public boolean isColorMode(){
+        return pref.getBoolean(IS_COLOR_MODE, true);
+    }
+
+
 
 }

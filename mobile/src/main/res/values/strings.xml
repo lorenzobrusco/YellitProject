@@ -65,6 +65,20 @@
     <string name="calories_burned">1000 calories\t\n<br></br> burned</string>
     <string name="title_activity_gallery">GalleryActivity</string>
 
-    <string name="google_maps_key">AIzaSyC0DWLtC3oZTJsgANpDez3RulcFH5I33V4</string>
+    <string name="google_maps_key">AIzaSyBvbEQcymb9UMPaFXrKsAcUGFGDMbvYb-8</string>
 
+    
+    <string-array name="spinner_sex_profile">
+        <item> Sex </item>
+        <item> Male </item>
+        <item> Female </item>
+    </string-array>
+
+
+    <string-array name="spinner_relation_profile">
+        <item> Sex </item>
+        <item> Single </item>
+        <item> Female </item>
+    </string-array>
+    
 </resources>

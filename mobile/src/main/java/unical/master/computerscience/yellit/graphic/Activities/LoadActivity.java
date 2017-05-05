@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Handler;
-import android.util.Log;
 
 import org.w3c.dom.Document;
 
@@ -16,8 +15,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import unical.master.computerscience.yellit.R;
-import unical.master.computerscience.yellit.utiliies.BaseURL;
-import unical.master.computerscience.yellit.utiliies.BuilderFile;
+import unical.master.computerscience.yellit.utilities.BaseURL;
+import unical.master.computerscience.yellit.utilities.BuilderFile;
 
 /**
  * Created by Lorenzo on 18/03/2017.
@@ -39,7 +38,7 @@ public class LoadActivity extends AppCompatActivity {
                 /**
                  * load the first 10 posts and also others stuff
                  */
-                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                startActivity(new Intent(getApplicationContext(), LoginSignupActivity.class));
                 overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
                 finish();
             }

@@ -1,17 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- light mode-->
     <color name="colorPrimary">#969696</color>
     <color name="colorPrimaryDark">#969696</color>
     <color name="colorAccent">#ff8000</color>
     <color name="color_bottom_navigation">#cecece</color>
-    <color name="inactive_button_bottom_navitagiont">#797979</color>
-    <color name="active_button_bottom_navitagiont">#e60707</color>
+    <color name="inactive_button_bottom_navitagiont">#c1c1c1</color>
+    <color name="active_button_bottom_navitagiont">#222222</color>
+    <color name="layout_light">#FFFFFF</color>
+    <color name="text_light">#222222</color>
+    <color name="subtext_light">#353535</color>
+
+    <!-- dark mode-->
+    <color name="colorPrimary_dark">#969696</color>
+    <color name="colorPrimaryDark_dark">#969696</color>
+    <color name="colorAccent_dark">#ff8000</color>
+    <color name="color_bottom_navigation_dark">#cecece</color>
+    <color name="inactive_button_bottom_navitagiont_dark">#c1c1c1</color>
+    <color name="active_button_bottom_navitagiont_dark">#222222</color>
+
     <color name="colorConfirm">#009900</color>
     <color name="colorAccentPressed">#d59368</color>
     <color name="colorFacebook">#3b5998</color>
     <color name="colorGoogle">#d34836</color>
     <color name="light_blu">#8100cc</color>
-
     <color name="transp">#02000000</color>
     <color name="black">#000000</color>
     <color name="jet">#222222</color>
@@ -39,19 +52,8 @@
     <color name="page4">#af2925</color>
     <color name="page5">#3c2d75</color>
 
-    <!-- Colori Freddi
+    <color name="color_notification_back">#d34836</color>
 
-    <color name="page1">#7e57c2</color>
-    <color name="page2">#738ffe</color>
-    <color name="page3">#5c6bc0</color>
-    <color name="page4">#29b6f6</color>
-    <color name="page5">#26c6da</color>
 
-    <color name="page1">#ff9800</color>
-    <color name="page2">#f9a825</color>
-    <color name="page3">#ff5722</color>
-    <color name="page4">#e84e40</color>
-    <color name="page5">#ffc107</color>  -->
 
-    <color name="test">#009688</color>
 </resources>
