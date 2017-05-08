@@ -77,9 +77,10 @@ public class PostFragment extends Fragment {
 
                 Post[] posts = response.body();
 
-                for (Post p : posts) {
-                    postsToShow.add(p);
-                }
+                if(posts != null)
+                     for (Post p : posts) {
+                         postsToShow.add(p);
+                       }
 
                 final PostAdapter mPostAdapter = new PostAdapter(PostFragment.this.getContext(), postsToShow);
                 mPosts.setAdapter(mPostAdapter);

@@ -12,11 +12,11 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.SwitchCompat;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
@@ -30,7 +30,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
-import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -48,14 +48,20 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.FileUtils;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -67,15 +73,12 @@ import siclo.com.ezphotopicker.api.models.EZPhotoPickConfig;
 import siclo.com.ezphotopicker.api.models.PhotoSource;
 import siclo.com.ezphotopicker.models.PhotoIntentException;
 import unical.master.computerscience.yellit.R;
-import unical.master.computerscience.yellit.connection.LoginService;
 import unical.master.computerscience.yellit.connection.PostGestureService;
-import unical.master.computerscience.yellit.graphic.Activities.LoginActivity;
-import unical.master.computerscience.yellit.graphic.Dialog.CustomDialogBottomSheet;
+import unical.master.computerscience.yellit.connection.ServerResponse;
 import unical.master.computerscience.yellit.graphic.custom.SelectorImageView;
 import unical.master.computerscience.yellit.logic.GoogleApiClient;
 import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.logic.objects.Post;
-import unical.master.computerscience.yellit.logic.objects.User;
 import unical.master.computerscience.yellit.utilities.BaseURL;
 
 
@@ -98,6 +101,8 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
     protected View mBottomSheetAddPost;
     @Bind(R.id.comment_post_add)
     protected TextInputEditText mCommentText;
+    @Bind(R.id.addpost_switch_button)
+    protected SwitchCompat positionSwitchButton;
     @Bind(R.id.galleryGridView)
     protected GridView gallery;
     @Bind(R.id.addpost_transp_layer)
@@ -111,6 +116,8 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
     private String[] subCategoryLabels;
     private int[] mainCategoryColors;
     private int[] subCategoryColors;
+
+    private String currentCategory;
 
     private Animation expandIn;
     private Animation expandOut;
@@ -157,7 +164,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         isSubMenu = false;
         lastSubMenu = -1;
 
-        buildAnimationStuff();
+        buildAnimationCallback();
 
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetAddPost);
         mBottomSheetBehavior.setHideable(true);
@@ -231,13 +238,60 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
             @Override
             public void onClick(View v) {
 
-                Post po = new Post("Paola Arcuri");
+                String comment = mCommentText.getText().toString();
+                String place = "";
+
+                boolean positionEnabled = positionSwitchButton.isChecked();
+                if(positionEnabled)
+                    place = mLocationSpinner.getItems().get(mLocationSpinner.getSelectedIndex()).toString();
+                
+                File file = new File(currentPath);
+                RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
+                MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
+
+                RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
+                RequestBody newComment = RequestBody.create(MediaType.parse("text/plain"), comment);
+                RequestBody newPlace = RequestBody.create(MediaType.parse("text/plain"), place);
+                RequestBody newCategory = RequestBody.create(MediaType.parse("text/plain"), currentCategory);
+                //RequestBody newUserMail = RequestBody.create(MediaType.parse("text/plain"), InfoManager.getInstance().getmUser().getEmail());
+                RequestBody newUserMail = RequestBody.create(MediaType.parse("text/plain"), "prova@gcosco.com");
 
                 Retrofit retrofit = new Retrofit.Builder()
                         .baseUrl(BaseURL.LOCAL_URL)
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
 
+                PostGestureService getResponse = retrofit.create(PostGestureService.class);
+
+                Call<ServerResponse> call = getResponse.uploadFile(fileToUpload, filename, newUserMail, newComment, newPlace, newCategory);
+                call.enqueue(new Callback<ServerResponse>() {
+                    @Override
+                    public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
+
+                        Toast.makeText(getContext(), "In a way",Toast.LENGTH_SHORT).show();
+
+                        ServerResponse serverResponse = response.body();
+                        if (serverResponse != null) {
+
+                            if (serverResponse.getSuccess()) {
+                                Toast.makeText(getContext(), serverResponse.getMessage(),Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getContext(), serverResponse.getMessage(),Toast.LENGTH_SHORT).show();
+                            }
+
+                        } else {
+                            Toast.makeText(getContext(), "Server Response NULL",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ServerResponse> call, Throwable t) {
+                        Toast.makeText(getContext(), "Fallimento " + call.toString(),Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+
+                /*
                 PostGestureService postService = retrofit.create(PostGestureService.class);
                 Call<String> call = postService.sendNewPost("adding");
                 call.enqueue(new Callback<String>() {
@@ -255,7 +309,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                         }else {
                             Log.d("nick", profile.getNickname());
                             onLoginSuccess();
-                        } */
+                        }
                     }
 
                     @Override
@@ -264,8 +318,9 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                     }
                 });
 
+                */
 
-                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                //mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
             }
         });
 
@@ -274,7 +329,6 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
             public void onClick(View v) {
 
                 try {
-
                     EZPhotoPickConfig config = new EZPhotoPickConfig();
                     config.photoSource = PhotoSource.CAMERA;
                     config.storageDir = DEMO_PHOTO_PATH;
@@ -308,9 +362,16 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                 }
             }
         });
+
+        positionSwitchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mLocationSpinner.setEnabled(isChecked);
+            }
+        });
     }
 
-    private void buildAnimationStuff() {
+    private void buildAnimationCallback() {
         expandIn = AnimationUtils.loadAnimation(getContext(), R.anim.expand_in);
         expandOut = AnimationUtils.loadAnimation(getContext(), R.anim.expand_out);
 
@@ -333,10 +394,14 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
                 if (isSubMenu) {
 
-                    mainMenu.setCenterText(mainCategoryLabels[lastSubMenu]);
+                    currentCategory = mainCategoryLabels[lastSubMenu];
+
+                    mainMenu.setCenterText(currentCategory);
                     setPieMenuData(subCategoryLabels, subCategoryColors);
 
                 } else {
+
+                    currentCategory = "";
 
                     mainMenu.setCenterText(generateCenterSpannableText());
                     setPieMenuData(mainCategoryLabels, mainCategoryColors);
@@ -395,7 +460,6 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
     private SpannableString generateCenterSpannableText() {
 
         SpannableString s = new SpannableString("Yellit!\nWhat's up today?");
-
 
         s.setSpan(new RelativeSizeSpan(2.2f), 0, 7, 0);
         s.setSpan(new StyleSpan(Typeface.NORMAL), 0, 7, 0);
@@ -528,15 +592,14 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                 List<String> places = InfoManager.getInstance().getmPlaceData().place;
                 if(places.size() == 0)
                 {
-                    places.add("Nowhere");
-                    places.add("Patate");
+                    places.add("No places detected");
                 }
                 mLocationSpinner.setItems(places);
-                mLocationSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
+                /* mLocationSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
                     @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
                         Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
                     }
-                });
+                }); */
 
             case 1:
             case 2:
@@ -615,9 +678,10 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+        //super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode != Activity.RESULT_OK) {
+            Toast.makeText(this.getContext(), "Sono in questo IF improbabile", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -674,16 +738,8 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
      */
     private class ImageAdapter extends BaseAdapter {
 
-        /**
-         * The context.
-         */
         private Activity context;
 
-        /**
-         * Instantiates a new image adapter.
-         *
-         * @param localContext the local context
-         */
         public ImageAdapter(Activity localContext) {
             context = localContext;
             mImages = getAllShownImagesPath(context);
@@ -750,7 +806,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
                     } else {
 
-                        Toast.makeText(getContext(), "Non puoi selezionare altre immagini", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Non puoi selezionare altre immagini", Toast.LENGTH_LONG).show();
                     }
                 }
             });
