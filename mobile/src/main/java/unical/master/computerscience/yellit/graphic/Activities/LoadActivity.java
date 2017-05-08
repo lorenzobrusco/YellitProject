@@ -1,6 +1,7 @@
 package unical.master.computerscience.yellit.graphic.Activities;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -15,8 +16,12 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import unical.master.computerscience.yellit.R;
+import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.utilities.BaseURL;
 import unical.master.computerscience.yellit.utilities.BuilderFile;
+import unical.master.computerscience.yellit.utilities.PrefManager;
+
+import static unical.master.computerscience.yellit.utilities.SystemUI.changeSystemBar;
 
 /**
  * Created by Lorenzo on 18/03/2017.
@@ -28,22 +33,25 @@ public class LoadActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        changeSystemBar(this, false);
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_load);
         initXMLFile();
+        PrefManager.getInstace(this);
+        InfoManager.getInstance().setColorMode(PrefManager.getInstace(this).isColorMode());
         final Handler handler = new Handler();
         final Runnable runnable = new Runnable() {
             public void run() {
                 /**
                  * load the first 10 posts and also others stuff
                  */
-                startActivity(new Intent(getApplicationContext(), LoginSignupActivity.class));
+                startActivity(new Intent(getApplicationContext(), SafeModeActivity.class));
                 overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
                 finish();
             }
         };
-        handler.postDelayed(runnable, 1000);
+        handler.postDelayed(runnable, 2000);
     }
 
     private void initXMLFile() {
@@ -57,9 +65,9 @@ public class LoadActivity extends AppCompatActivity {
             DocumentBuilder docBuilder = null;
             docBuilder = docFactory.newDocumentBuilder();
             Document doc = docBuilder.newDocument();
-            if(doc.getElementById(ROOT) == null)
+            if (doc.getElementById(ROOT) == null)
                 BuilderFile.getInstance().newXMLFile(this, BaseURL.FILENAME);
-        }catch (ParserConfigurationException e){
+        } catch (ParserConfigurationException e) {
 
         }
     }

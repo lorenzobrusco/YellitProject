@@ -1,6 +1,7 @@
 package unical.master.computerscience.yellit.graphic.Activities;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,8 @@ import butterknife.ButterKnife;
 import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.graphic.Fragments.PostFragment;
 
+import static unical.master.computerscience.yellit.utilities.SystemUI.changeSystemBar;
+
 /**
  * Created by Lorenzo on 24/04/2017.
  */
@@ -34,6 +37,7 @@ public class LoginSignupActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        changeSystemBar(this, false);
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_login_signup);

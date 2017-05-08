@@ -8,43 +8,77 @@ import android.content.SharedPreferences;
  */
 public class PrefManager {
 
-    SharedPreferences pref;
-    SharedPreferences.Editor editor;
-    Context _context;
+    /**
+     * Singleton pattern
+     */
+    private static PrefManager mPrefManager;
 
-    // shared pref mode
-    int PRIVATE_MODE = 0;
+    /**
+     * share pref
+     */
+    private SharedPreferences mPreferences;
+    private SharedPreferences.Editor mEditor;
 
-    // Shared preferences file name
+    /**
+     * shared pref mode
+     */
+    private static int PRIVATE_MODE = 0;
+
+    /**
+     * Shared preferences file name
+     */
     private static final String PREF_NAME = "yellit-pref";
     private static final String IS_FIRST_TIME_LAUNCH = "IsFirstTimeLaunch";
     private static final String IS_COLOR_MODE = "isColorMode";
+    private static final String IS_SAFE_MODE = "isSafeMode";
+    private static final String USER = "user";
 
-    public PrefManager(Context context) {
-        this._context = context;
-        pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
-        editor = pref.edit();
+    private PrefManager(final Context context) {
+        mPreferences = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
+        mEditor = mPreferences.edit();
+    }
+
+    public static PrefManager getInstace(final Context context) {
+        if (mPrefManager == null)
+            mPrefManager = new PrefManager(context);
+        return mPrefManager;
     }
 
     public void setFirstTimeLaunch(boolean isFirstTime) {
-        editor.putBoolean(IS_FIRST_TIME_LAUNCH, isFirstTime);
-        editor.commit();
+        mEditor.putBoolean(IS_FIRST_TIME_LAUNCH, isFirstTime);
+        mEditor.commit();
     }
 
     public boolean isFirstTimeLaunch() {
-        return pref.getBoolean(IS_FIRST_TIME_LAUNCH, true);
+        return mPreferences.getBoolean(IS_FIRST_TIME_LAUNCH, true);
     }
 
 
     public void setColorMode(boolean isColorMode) {
-        editor.putBoolean(IS_COLOR_MODE, isColorMode);
-        editor.commit();
+        mEditor.putBoolean(IS_COLOR_MODE, isColorMode);
+        mEditor.commit();
     }
 
-    public boolean isColorMode(){
-        return pref.getBoolean(IS_COLOR_MODE, true);
+    public boolean isColorMode() {
+        return mPreferences.getBoolean(IS_COLOR_MODE, false);
     }
 
+    public void setSafeMode(boolean isSafeMode) {
+        mEditor.putBoolean(IS_SAFE_MODE, isSafeMode);
+        mEditor.commit();
+    }
 
+    public boolean isSafeMode() {
+        return mPreferences.getBoolean(IS_SAFE_MODE, true);
+    }
+
+    public void setUser(final String user) {
+        mEditor.putString(USER, user);
+        mEditor.commit();
+    }
+
+    public String getUser() {
+        return mPreferences.getString(USER, null);
+    }
 
 }

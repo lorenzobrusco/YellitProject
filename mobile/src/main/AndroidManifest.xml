@@ -9,14 +9,15 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.BODY_SENSORS" />
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
 
 
     <application
         android:allowBackup="true"
         android:configChanges="keyboardHidden|orientation|screenSize"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/megaphone"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".graphic.Activities.LoadActivity">
@@ -28,6 +29,9 @@
         </activity>
         <activity android:name=".graphic.Activities.WelcomeActivity" />
         <activity
+            android:name=".graphic.Activities.PlaceActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".graphic.Activities.LoginSignupActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
@@ -35,8 +39,19 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity android:name=".graphic.Activities.SettingActivity" />
-
+        <activity
+            android:name=".graphic.Activities.SettingActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="Setting"
+            />
+        <activity
+            android:name=".graphic.Activities.ChangePinSafeModeActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="Change Pin"
+            />
+        <activity
+            android:name=".graphic.Activities.SafeModeActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

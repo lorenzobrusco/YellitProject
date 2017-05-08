@@ -2,10 +2,13 @@ package unical.master.computerscience.yellit;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -19,6 +22,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -27,9 +31,12 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 
 import java.util.ArrayList;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import unical.master.computerscience.yellit.graphic.Activities.LoadActivity;
 import unical.master.computerscience.yellit.graphic.Activities.LoginSignupActivity;
+import unical.master.computerscience.yellit.graphic.Activities.PlaceActivity;
 import unical.master.computerscience.yellit.graphic.Activities.SettingActivity;
 import unical.master.computerscience.yellit.graphic.Fragments.AddPostFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.FitnessFragment;
@@ -38,6 +45,9 @@ import unical.master.computerscience.yellit.graphic.Fragments.ProfileFragment;
 import unical.master.computerscience.yellit.logic.GoogleApiClient;
 import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.utilities.PermissionCheckUtils;
+import unical.master.computerscience.yellit.utilities.PrefManager;
+
+import static unical.master.computerscience.yellit.utilities.SystemUI.changeSystemBar;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -70,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        changeSystemBar(this, false);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
@@ -80,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
         mSearchView.requestFocusFromTouch();
         mSearchView.setQueryHint(" Search ");
         currentFragment = new PostFragment();
+
         MainActivity.this.setFragment(currentFragment);
         this.setupViews();
         GoogleApiClient.getInstance(this);
@@ -91,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         mBottomNavigation.setColored(InfoManager.getInstance().isColorMode());
-        chooseColor(currentItem);
         if (!hasAllRequiredPermissions()) {
             requestAllRequiredPermissions();
         }
@@ -123,7 +134,6 @@ public class MainActivity extends AppCompatActivity {
         this.currentItem = 2;
         mBottomNavigation.setCurrentItem(currentItem);
         mBottomNavigation.setColored(InfoManager.getInstance().isColorMode());
-        chooseColor(currentItem);
         mBottomNavigation.setNotificationBackgroundColor(ContextCompat.getColor(this, R.color.color_notification_back));
 
         // Add or remove notification for each item
@@ -144,7 +154,6 @@ public class MainActivity extends AppCompatActivity {
                         }
                         if (currentItem != position) {
                             currentItem = position;
-                            chooseColor(currentItem);
                             removeFragment(currentFragment);
                             currentFragment = new FitnessFragment();
                             setFragment(currentFragment);
@@ -157,7 +166,6 @@ public class MainActivity extends AppCompatActivity {
 
                         if (currentItem != position) {
                             currentItem = position;
-                            chooseColor(currentItem);
                             removeFragment(currentFragment);
                             currentFragment = new ProfileFragment();
                             setFragment(currentFragment);
@@ -171,7 +179,6 @@ public class MainActivity extends AppCompatActivity {
 
                         if (currentItem != position) {
                             currentItem = position;
-                            chooseColor(currentItem);
                             removeFragment(currentFragment);
                             currentFragment = new PostFragment();
                             setFragment(currentFragment);
@@ -184,7 +191,6 @@ public class MainActivity extends AppCompatActivity {
 
                         if (currentItem != position) {
                             currentItem = position;
-                            chooseColor(currentItem);
                             removeFragment(currentFragment);
                             currentFragment = new AddPostFragment();
                             setFragment(currentFragment);
@@ -215,7 +221,6 @@ public class MainActivity extends AppCompatActivity {
                 } else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
                     if (mBottomNavigation.getCurrentItem() == 4) {
                         mBottomNavigation.setCurrentItem(currentItem);
-                        chooseColor(currentItem);
                     }
                 }
             }
@@ -257,38 +262,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 InfoManager.getInstance().destroy();
-                startActivity(new Intent(getBaseContext(), LoginSignupActivity.class));
+                PrefManager.getInstace(getApplicationContext()).setUser(null);
+                startActivity(new Intent(getBaseContext(), LoadActivity.class));
                 finish();
 
             }
         });
     }
 
-
-    private void chooseColor(int page) {
-/*
-        if (InfoManager.getInstance().isColorMode()) {
-            switch (page) {
-                case FITNESS_FRAG_BUTTON:
-                    getWindow().setStatusBarColor(getResources().getColor(R.color.page1));
-                    break;
-                case PROFILE_FRAG_BUTTON:
-                    getWindow().setStatusBarColor(getResources().getColor(R.color.page2));
-                    break;
-                case HOME_FRAG_BUTTON:
-                    getWindow().setStatusBarColor(getResources().getColor(R.color.page3));
-                    break;
-                case ADDPOST_FRAG_BUTTON:
-                    getWindow().setStatusBarColor(getResources().getColor(R.color.page4));
-                    break;
-                case OTHER_FRAG_BUTTON:
-                    getWindow().setStatusBarColor(getResources().getColor(R.color.page5));
-                    break;
-            }
-        } else {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
-        }*/
-    }
 
     private void buildDialogFilter() {
 
@@ -297,9 +278,6 @@ public class MainActivity extends AppCompatActivity {
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog_post_filter);
         dialog.setTitle("Choose Filter");
-        //TextView text = (TextView) dialog.findViewById(R.id.text_dialog);
-        //text.setText("Choose Filter");
-
         Button dialogButton = (Button) dialog.findViewById(R.id.delete);
         dialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -307,7 +285,6 @@ public class MainActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
-
         dialog.show();
 
     }
@@ -322,7 +299,6 @@ public class MainActivity extends AppCompatActivity {
             super.onBackPressed();
         } else {
             currentItem = 2;
-            chooseColor(currentItem);
             removeFragment(currentFragment);
             currentFragment = new PostFragment();
             setFragment(currentFragment);
@@ -336,8 +312,8 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(data, this);
-                String toastMsg = String.format("Place: %s", place.getName());
-                Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
+                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                startActivity(new Intent(getBaseContext(), PlaceActivity.class));
             }
         }
     }
@@ -405,7 +381,8 @@ public class MainActivity extends AppCompatActivity {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.BODY_SENSORS
+                Manifest.permission.BODY_SENSORS,
+                Manifest.permission.SEND_SMS
         };
     }
 

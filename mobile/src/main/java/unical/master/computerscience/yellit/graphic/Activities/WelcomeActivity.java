@@ -42,15 +42,13 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
-        prefManager = new PrefManager(WelcomeActivity.this);
         initActivity();
     }
 
 
-
     private void initActivity() {
 
-        if (!prefManager.isFirstTimeLaunch()) {
+        if (!PrefManager.getInstace(getApplicationContext()).isFirstTimeLaunch()) {
             launchHomeScreen();
             finish();
         } else {
@@ -130,8 +128,7 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     private void launchHomeScreen() {
-        prefManager.setFirstTimeLaunch(false);
-        InfoManager.getInstance().setColorMode(prefManager.isColorMode());
+        PrefManager.getInstace(getApplicationContext()).setFirstTimeLaunch(false);
         startActivity(new Intent(getApplicationContext(), MainActivity.class));
         finish();
     }
