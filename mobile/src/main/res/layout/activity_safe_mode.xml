@@ -40,10 +40,10 @@
         android:id="@+id/text_explanation_fingerprint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_margin="16dp"
         android:fontFamily="serif"
         android:gravity="center"
-        android:text="Use your fingerprint to unlock\n application instead typing your password"
+        android:text="@string/use_fingreprint_safe_mode"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_title_explanation_fingerprint"
@@ -76,29 +76,15 @@
         tools:layout_constraintRight_creator="1"
         tools:layout_constraintTop_creator="1" />
 
-    <Button
-        android:id="@+id/use_password_safe_mode_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="48dp"
-        android:layout_marginRight="48dp"
-        android:layout_marginTop="14dp"
-        android:backgroundTint="@color/color1"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:text="Use Password"
-        android:textColor="@color/white"
-        android:visibility="invisible"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_explanation_fingerprint"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1" />
-
     <EditText
         android:id="@+id/password_safe_mode_editText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
+        android:layout_width="0dp"
+        android:layout_height="42dp"
+        android:layout_marginEnd="31dp"
+        android:layout_marginStart="31dp"
+        android:layout_marginTop="19dp"
+        android:layout_marginRight="31dp"
+        android:layout_marginLeft="31dp"
         android:background="@drawable/edit_text_box"
         android:ems="8"
         android:gravity="center"
@@ -106,11 +92,11 @@
         android:inputType="numberPassword"
         android:padding="8dp"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/use_password_safe_mode_button"
-        app:layout_constraintHorizontal_bias="0.936"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/use_password_safe_mode_button"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_explanation_fingerprint"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1" />
 
 </android.support.constraint.ConstraintLayout>

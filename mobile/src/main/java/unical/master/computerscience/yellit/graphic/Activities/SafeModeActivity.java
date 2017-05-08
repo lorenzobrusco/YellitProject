@@ -2,6 +2,7 @@ package unical.master.computerscience.yellit.graphic.Activities;
 
 import android.app.Dialog;
 import android.app.KeyguardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
@@ -14,16 +15,24 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.SmsManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -59,8 +68,6 @@ public class SafeModeActivity extends AppCompatActivity {
     private static final String TAG = "FingerprintYellit";
     @Bind(R.id.password_safe_mode_editText)
     protected EditText mPasswordSafeModeEditText;
-    @Bind(R.id.use_password_safe_mode_button)
-    protected Button mUsePasswordSafeModeButton;
     @Bind(R.id.confirm_fingerprint)
     protected FloatingActionButton mConfirmFingerPrintFloatingActionButton;
 
@@ -80,10 +87,38 @@ public class SafeModeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_safe_mode);
         ButterKnife.bind(this);
-        this.mUsePasswordSafeModeButton.setOnClickListener(new View.OnClickListener() {
+        this.mPasswordSafeModeEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(View v) {
-                mPasswordSafeModeEditText.setVisibility(mPasswordSafeModeEditText.isShown() ? View.INVISIBLE : View.VISIBLE);
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().equals("1111")) {
+                    final View view = getCurrentFocus();
+                    if (view != null) {
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    }
+                    final Animation expandIn = AnimationUtils.loadAnimation(SafeModeActivity.this, R.anim.expand_out);
+                    mConfirmFingerPrintFloatingActionButton.startAnimation(expandIn);
+                    mConfirmFingerPrintFloatingActionButton.setVisibility(View.VISIBLE);
+                    final Handler handler = new Handler();
+                    final Runnable runnable = new Runnable() {
+                        public void run() {
+
+                            startActivity(new Intent(getBaseContext(), MainActivity.class));
+                            finish();
+                        }
+                    };
+                    handler.postDelayed(runnable, 1000);
+                }
             }
         });
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -200,6 +235,29 @@ public class SafeModeActivity extends AppCompatActivity {
                 | KeyStoreException exc) {
             exc.printStackTrace();
             throw new FingerprintException(exc);
+        }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        int action = MotionEventCompat.getActionMasked(event);
+
+        switch (action) {
+            case (MotionEvent.ACTION_DOWN):
+                mPasswordSafeModeEditText.setVisibility(mPasswordSafeModeEditText.isShown() ? View.INVISIBLE : View.VISIBLE);
+                return true;
+            case (MotionEvent.ACTION_MOVE):
+//                mPasswordSafeModeEditText.setVisibility(View.VISIBLE);
+                return true;
+            case (MotionEvent.ACTION_UP):
+                return true;
+            case (MotionEvent.ACTION_CANCEL):
+                return true;
+            case (MotionEvent.ACTION_OUTSIDE):
+                return true;
+            default:
+                return super.onTouchEvent(event);
         }
     }
 
