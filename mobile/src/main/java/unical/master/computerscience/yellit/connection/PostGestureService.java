@@ -36,10 +36,6 @@ public interface PostGestureService {
 
     @Multipart
     @POST("Posts")
-    Call<ResponseBody> editUser (@Header("Authorization") String authorization, @Part("file\"; filename=\"pp.png\" ") RequestBody file , @Part("FirstName") RequestBody fname, @Part("Id") RequestBody id);
-
-    @Multipart
-    @POST("Posts")
     Call<ServerResponse> uploadFile(@Part MultipartBody.Part file, @Part("file") RequestBody name, @Part("email") RequestBody userMail, @Part("comment") RequestBody comment,  @Part("place") RequestBody place,  @Part("category") RequestBody category);
 
 }

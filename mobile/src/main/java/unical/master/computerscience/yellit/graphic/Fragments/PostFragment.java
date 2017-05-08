@@ -49,10 +49,20 @@ public class PostFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_posts, container, false);
+        final View view = inflater.inflate(R.layout.fragment_posts, container, false);
         ButterKnife.bind(this, view);
 
-        initList();
+        /**
+         * Decomment to have actual posts from database
+         */
+        this.initList();
+
+        /**
+         * Decomment to have fake posts for debugging purpose
+         */
+        //final PostAdapter mPostAdapter = new PostAdapter(PostFragment.this.getContext(), FAKE_initList());
+        //mPosts.setAdapter(mPostAdapter);
+
         mPosts.setLayoutManager(new LinearLayoutManager(this.getContext()));
         mPosts.addItemDecoration(new PaddingItemDecoration(170));
 
@@ -77,10 +87,10 @@ public class PostFragment extends Fragment {
 
                 Post[] posts = response.body();
 
-                if(posts != null)
-                     for (Post p : posts) {
-                         postsToShow.add(p);
-                       }
+                if (posts != null)
+                    for (Post p : posts) {
+                        postsToShow.add(p);
+                    }
 
                 final PostAdapter mPostAdapter = new PostAdapter(PostFragment.this.getContext(), postsToShow);
                 mPosts.setAdapter(mPostAdapter);

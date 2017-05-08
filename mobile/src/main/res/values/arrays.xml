@@ -10,11 +10,11 @@
 
     <!--> Categorie e Sottocategorie <-->
     <array name="main_categories">
-        <item>Categoria 1</item>
-        <item>Categoria 2</item>
-        <item>Categoria 3</item>
-        <item>Categoria 4</item>
-        <item>Categoria 5</item>
+        <item>Fitness</item>
+        <item>Food and Drink</item>
+        <item>Inside</item>
+        <item>Outside</item>
+        <item>Travel</item>
     </array>
 
 

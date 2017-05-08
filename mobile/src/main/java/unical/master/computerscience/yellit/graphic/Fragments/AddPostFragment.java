@@ -186,6 +186,12 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
                     sendPostFloatButton.setVisibility(View.INVISIBLE);
                     transparentLayer.setVisibility(View.GONE);
+
+                    resetBottomSheet();
+
+                    isSubMenu = false;
+                    lastSubMenu = -1;
+                    mainMenu.startAnimation(expandIn);
                     //.animate().scaleX(0).scaleY(0).setDuration(300).start();
 
                 }
@@ -202,6 +208,16 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
             public void onClick(View v) {
             }
         });
+    }
+
+    private void resetBottomSheet()
+    {
+        mainMenu.highlightValues(null);
+        mainMenu.invalidate();
+
+        mCommentText.setText("");
+
+        this.setupImagePicker(null);
     }
 
     private void changePriorityOfScroll() {
@@ -268,15 +284,15 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                     @Override
                     public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
 
-                        Toast.makeText(getContext(), "In a way",Toast.LENGTH_SHORT).show();
-
                         ServerResponse serverResponse = response.body();
                         if (serverResponse != null) {
 
                             if (serverResponse.getSuccess()) {
-                                Toast.makeText(getContext(), serverResponse.getMessage(),Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), serverResponse.getMessage(),Toast.LENGTH_LONG).show();
+
+                                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                             } else {
-                                Toast.makeText(getContext(), serverResponse.getMessage(),Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), serverResponse.getMessage(),Toast.LENGTH_LONG).show();
                             }
 
                         } else {
@@ -291,36 +307,6 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                     }
                 });
 
-                /*
-                PostGestureService postService = retrofit.create(PostGestureService.class);
-                Call<String> call = postService.sendNewPost("adding");
-                call.enqueue(new Callback<String>() {
-                    @Override
-                    public void onResponse(Call<String> call, Response<String> response) {
-
-                        Log.e("CI SONO", "MARONNA RO CARMN");
-                        /*
-                        User profile = response.body();
-                        InfoManager.getInstance().setUser(profile);
-
-                        if(profile.getEmail() == null){
-                            LoginActivity.this.buildErrorDialog();
-                            Log.d("retrofit","email o password errati");
-                        }else {
-                            Log.d("nick", profile.getNickname());
-                            onLoginSuccess();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<String> call, Throwable t) {
-                        Log.d("retrofit", t.getMessage());
-                    }
-                });
-
-                */
-
-                //mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
             }
         });
 
