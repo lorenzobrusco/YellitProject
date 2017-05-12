@@ -58,5 +58,6 @@ dependencies {
     compile 'com.github.lawloretienne:discreteslider:0.0.9'
     compile 'com.1gravity:android-colorpicker:2.0.2'
     compile 'petrov.kristiyan:colorpicker-library:1.1.4'
+    compile 'com.github.MatteoBattilana:WeatherView:1.2.0'
     testCompile 'junit:junit:4.12'
 }

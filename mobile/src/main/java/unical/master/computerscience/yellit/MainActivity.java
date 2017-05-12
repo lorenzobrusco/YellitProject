@@ -102,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mBottomNavigation.setColored(InfoManager.getInstance().isColorMode());
         if (!hasAllRequiredPermissions()) {
             requestAllRequiredPermissions();
         }
@@ -137,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
         mBottomNavigation.setNotificationBackgroundColor(ContextCompat.getColor(this, R.color.color_notification_back));
 
         // Add or remove notification for each item
-        mBottomNavigation.setNotification("1", PROFILE_FRAG_BUTTON);
+//        mBottomNavigation.setNotification("1", PROFILE_FRAG_BUTTON);
 
         mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         mBottomSheetBehavior.setHideable(true);

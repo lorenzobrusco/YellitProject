@@ -22,14 +22,37 @@ public class User {
     @SerializedName("pathImg")
     private String pathImg;
 
+    @SerializedName("sesso")
+    private String sesso;
+
+    @SerializedName("altezza")
+    private String altezza;
+
+    @SerializedName("peso")
+    private String peso;
+
+    @SerializedName("città")
+    private String città;
+
+    @SerializedName("birthday")
+    private String birthday;
+
+    @SerializedName("relazione")
+    private String relazione;
+
     @SerializedName("friends")
     private Friend[] friends;
 
-    public User(String nickname, String fullname, String email, String pathImg) {
+    public User(String nickname, String fullname, String email, String pathImg, String sesso, String altezza, String peso, String città, String birthday, String relazione) {
         this.nickname = nickname;
         this.fullname = fullname;
         this.email = email;
         this.pathImg = pathImg;
+        this.altezza = altezza;
+        this.peso = peso;
+        this.città = città;
+        this.birthday = birthday;
+        this.relazione = relazione;
     }
 
     public User(String nickname) {

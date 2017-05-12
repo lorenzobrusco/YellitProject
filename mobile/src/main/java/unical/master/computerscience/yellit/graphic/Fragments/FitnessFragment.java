@@ -23,6 +23,8 @@ import im.dacer.androidcharts.LineView;
 import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.logic.GoogleApiClient;
 import unical.master.computerscience.yellit.logic.InfoManager;
+import xyz.matteobattilana.library.Common.Constants;
+import xyz.matteobattilana.library.WeatherView;
 
 
 public class FitnessFragment extends Fragment {

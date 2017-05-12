@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
@@ -25,15 +27,27 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.ceylonlabs.imageviewpopup.ImagePopup;
+import com.like.LikeButton;
+import com.like.OnLikeListener;
 
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import unical.master.computerscience.yellit.connection.LikeService;
+import unical.master.computerscience.yellit.graphic.Activities.LoginActivity;
 import unical.master.computerscience.yellit.graphic.custom.Rotate3dAnimation;
+import unical.master.computerscience.yellit.logic.InfoManager;
+import unical.master.computerscience.yellit.logic.objects.Like;
 import unical.master.computerscience.yellit.logic.objects.Post;
 import unical.master.computerscience.yellit.R;
+import unical.master.computerscience.yellit.logic.objects.User;
 import unical.master.computerscience.yellit.utilities.BaseURL;
 
 /**
@@ -65,6 +79,58 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         holder.commentText.setText(currPost.getComment());
         holder.setImagePost(currPost.getPostImagePost());
         holder.setUserImage(currPost.getUserImagePath());
+
+    public void onBindViewHolder(PostViewHolder holder, final int position) {
+        holder.personName.setText(mPosts.get(position).getUserName());
+        holder.mLikeButton.setOnLikeListener(new OnLikeListener() {
+            @Override
+            public void liked(LikeButton likeButton) {
+                Toast.makeText(mContext, position+" liked something", Toast.LENGTH_LONG
+                ).show();
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(BaseURL.URL)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+                LikeService likeService = retrofit.create(LikeService.class);
+                Call<Like> call = likeService.addLike(InfoManager.getInstance().getmUser().getEmail(), mPosts.get(position).getIdPost() );
+                call.enqueue(new Callback<Like>() {
+                    @Override
+                    public void onResponse(Call<Like> call, Response<Like> response) {
+
+                        final Like like = response.body();
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<Like> call, Throwable t) {
+                        Log.d("retrofit", "errore di like");
+                    }
+                });
+            }
+
+            @Override
+            public void unLiked(LikeButton likeButton) {
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(BaseURL.URL)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+                LikeService likeService = retrofit.create(LikeService.class);
+                Call<Like> call = likeService.removeLike(InfoManager.getInstance().getmUser().getEmail(), mPosts.get(position).getIdPost() );
+                call.enqueue(new Callback<Like>() {
+                    @Override
+                    public void onResponse(Call<Like> call, Response<Like> response) {
+
+                        Like like = response.body();
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<Like> call, Throwable t) {
+                        Log.d("retrofit", "errore di like");
+                    }
+                });
+            }
+        });
     }
 
 
@@ -102,8 +168,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         VideoView videoPost;
         @Bind(R.id.load_post)
         ProgressBar progressBar;
-//        @Bind(R.id.like_post)
+        //        @Bind(R.id.like_post)
 //        ImageView like;
+        @Bind(R.id.like_post)
+        LikeButton mLikeButton;
         private boolean isLike = false;
 
         public PostViewHolder(final View itemView) {
