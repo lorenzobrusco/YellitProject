@@ -132,7 +132,7 @@ public class SafeModeActivity extends AppCompatActivity {
                 startActivity(new Intent(getBaseContext(), LoginSignupActivity.class));
                 finish();
             } else {
-                try {
+                 try {
                     Log.i(TAG, "pass it");
                     this.generateKey();
                     final Cipher mCipher = this.generateCipher();

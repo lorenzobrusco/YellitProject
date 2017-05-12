@@ -55,13 +55,13 @@ public class PostFragment extends Fragment {
         /**
          * Decomment to have actual posts from database
          */
-        this.initList();
+//        this.initList();
 
         /**
          * Decomment to have fake posts for debugging purpose
          */
-        //final PostAdapter mPostAdapter = new PostAdapter(PostFragment.this.getContext(), FAKE_initList());
-        //mPosts.setAdapter(mPostAdapter);
+        final PostAdapter mPostAdapter = new PostAdapter(PostFragment.this.getContext(), FAKE_initList());
+        mPosts.setAdapter(mPostAdapter);
 
         mPosts.setLayoutManager(new LinearLayoutManager(this.getContext()));
         mPosts.addItemDecoration(new PaddingItemDecoration(170));
