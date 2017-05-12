@@ -35,13 +35,13 @@ import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.connection.LoginService;
 import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.logic.objects.User;
+import unical.master.computerscience.yellit.utilities.BaseURL;
 import unical.master.computerscience.yellit.utilities.PrefManager;
 
 import static android.app.Activity.RESULT_OK;
 
 public class LoginActivity extends Fragment {
     private static final String TAG = "LoginActivity";
-    private static final String BASEURL = "http://10.0.2.2:8080/YellitServer/";
     private static final int REQUEST_SIGNUP = 0;
 
     @Bind(R.id.input_email)
@@ -61,8 +61,8 @@ public class LoginActivity extends Fragment {
             @Override
             public void onClick(View v) {
                 //TODO replace this code with login();
-                // login();
-                onLoginSuccess();
+              //   login();
+               onLoginSuccess();
             }
         });
 
@@ -72,10 +72,10 @@ public class LoginActivity extends Fragment {
     public void login() {
         Log.d(TAG, "Login");
 
-        if (!validate()) {
+      /*  if (!validate()) {
             onLoginFailed();
             return;
-        }
+        }*/
 
         _loginButton.setEnabled(false);
 
@@ -88,7 +88,7 @@ public class LoginActivity extends Fragment {
         progressDialog.setMessage("Authenticating...");
         progressDialog.show();*/
         this.login(email, password);
-        //onLoginSuccess();
+       // onLoginSuccess();
     }
 
     public void onLoginSuccess() {
@@ -129,7 +129,7 @@ public class LoginActivity extends Fragment {
 
     private void login(String email, String password) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASEURL)
+                .baseUrl(BaseURL.LOCAL_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         LoginService loginService = retrofit.create(LoginService.class);
