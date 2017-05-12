@@ -55,7 +55,7 @@ public class PostFragment extends Fragment {
         /**
          * Decomment to have actual posts from database
          */
-//        this.initList();
+        //this.initList();
 
         /**
          * Decomment to have fake posts for debugging purpose
