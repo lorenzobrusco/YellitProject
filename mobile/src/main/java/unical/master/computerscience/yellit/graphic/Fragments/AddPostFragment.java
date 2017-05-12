@@ -210,8 +210,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         });
     }
 
-    private void resetBottomSheet()
-    {
+    private void resetBottomSheet() {
         mainMenu.highlightValues(null);
         mainMenu.invalidate();
 
@@ -258,54 +257,17 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                 String place = "";
 
                 boolean positionEnabled = positionSwitchButton.isChecked();
-                if(positionEnabled)
+                if (positionEnabled)
                     place = mLocationSpinner.getItems().get(mLocationSpinner.getSelectedIndex()).toString();
-                
-                File file = new File(currentPath);
-                RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
-                MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
 
-                RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
-                RequestBody newComment = RequestBody.create(MediaType.parse("text/plain"), comment);
-                RequestBody newPlace = RequestBody.create(MediaType.parse("text/plain"), place);
-                RequestBody newCategory = RequestBody.create(MediaType.parse("text/plain"), currentCategory);
-                //RequestBody newUserMail = RequestBody.create(MediaType.parse("text/plain"), InfoManager.getInstance().getmUser().getEmail());
-                RequestBody newUserMail = RequestBody.create(MediaType.parse("text/plain"), "prova@gcosco.com");
+                if (!positionEnabled && comment.equals("") && currentPath.equals(""))
+                    Toast.makeText(getContext(), "Nothing Selected", Toast.LENGTH_SHORT).show();
+                else {
 
-                Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl(BaseURL.LOCAL_URL)
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build();
+                    createPostForUpload(comment, place);
 
-                PostGestureService getResponse = retrofit.create(PostGestureService.class);
 
-                Call<ServerResponse> call = getResponse.uploadFile(fileToUpload, filename, newUserMail, newComment, newPlace, newCategory);
-                call.enqueue(new Callback<ServerResponse>() {
-                    @Override
-                    public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
-
-                        ServerResponse serverResponse = response.body();
-                        if (serverResponse != null) {
-
-                            if (serverResponse.getSuccess()) {
-                                Toast.makeText(getContext(), serverResponse.getMessage(),Toast.LENGTH_LONG).show();
-
-                                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                            } else {
-                                Toast.makeText(getContext(), serverResponse.getMessage(),Toast.LENGTH_LONG).show();
-                            }
-
-                        } else {
-                            Toast.makeText(getContext(), "Server Response NULL",Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ServerResponse> call, Throwable t) {
-                        Toast.makeText(getContext(), "Fallimento " + call.toString(),Toast.LENGTH_SHORT).show();
-
-                    }
-                });
+                }
 
             }
         });
@@ -353,6 +315,58 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mLocationSpinner.setEnabled(isChecked);
+            }
+        });
+    }
+
+    /*
+        Gestire casi di variabili NULLE ma quando comunque il post può essere inviato
+     */
+    private void createPostForUpload(String comment, String place) {
+
+        File file = new File(currentPath);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
+        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
+
+        RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
+        RequestBody newComment = RequestBody.create(MediaType.parse("text/plain"), comment);
+        RequestBody newPlace = RequestBody.create(MediaType.parse("text/plain"), place);
+        RequestBody newCategory = RequestBody.create(MediaType.parse("text/plain"), currentCategory);
+        //RequestBody newUserMail = RequestBody.create(MediaType.parse("text/plain"), InfoManager.getInstance().getmUser().getEmail());
+        RequestBody newUserMail = RequestBody.create(MediaType.parse("text/plain"), "lollo@gmail.com");
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BaseURL.LOCAL_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        PostGestureService getResponse = retrofit.create(PostGestureService.class);
+
+        Call<ServerResponse> call = getResponse.uploadFile(fileToUpload, filename, newUserMail, newComment, newPlace, newCategory);
+        call.enqueue(new Callback<ServerResponse>() {
+            @Override
+            public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
+
+                ServerResponse serverResponse = response.body();
+                if (serverResponse != null) {
+
+                    if (serverResponse.getSuccess()) {
+                        Toast.makeText(getContext(), serverResponse.getMessage(), Toast.LENGTH_LONG).show();
+
+                        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                    } else {
+                        Toast.makeText(getContext(), serverResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+
+                } else {
+                    Toast.makeText(getContext(), "Server Response NULL", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ServerResponse> call, Throwable t) {
+                Toast.makeText(getContext(), "Fallimento " + call.toString(), Toast.LENGTH_SHORT).show();
+
             }
         });
     }
@@ -576,8 +590,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                 transparentLayer.setVisibility(View.VISIBLE);
                 mainMenu.highlightValues(null);
                 List<String> places = InfoManager.getInstance().getmPlaceData().place;
-                if(places.size() == 0)
-                {
+                if (places.size() == 0) {
                     places.add("No places detected");
                 }
                 mLocationSpinner.setItems(places);
