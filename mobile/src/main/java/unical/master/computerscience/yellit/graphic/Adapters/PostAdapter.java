@@ -72,19 +72,19 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     }
 
     @Override
-    public void onBindViewHolder(PostViewHolder holder, int position) {
+    public void onBindViewHolder(PostViewHolder holder, final int position) {
         Post currPost = mPosts.get(position);
 
         holder.personName.setText(currPost.getUserName());
         holder.commentText.setText(currPost.getComment());
         holder.setImagePost(currPost.getPostImagePost());
         holder.setUserImage(currPost.getUserImagePath());
+        holder.mLikeContent.setText(currPost.getLikes() + " LAIK");
 
-    public void onBindViewHolder(PostViewHolder holder, final int position) {
-        holder.personName.setText(mPosts.get(position).getUserName());
         holder.mLikeButton.setOnLikeListener(new OnLikeListener() {
             @Override
             public void liked(LikeButton likeButton) {
+
                 Toast.makeText(mContext, position+" liked something", Toast.LENGTH_LONG
                 ).show();
                 Retrofit retrofit = new Retrofit.Builder()
@@ -131,6 +131,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                 });
             }
         });
+
     }
 
 
@@ -169,9 +170,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         @Bind(R.id.load_post)
         ProgressBar progressBar;
         //        @Bind(R.id.like_post)
-//        ImageView like;
+        //        ImageView like;
+
         @Bind(R.id.like_post)
         LikeButton mLikeButton;
+        @Bind(R.id.like_post_content)
+        TextView mLikeContent;
+
         private boolean isLike = false;
 
         public PostViewHolder(final View itemView) {

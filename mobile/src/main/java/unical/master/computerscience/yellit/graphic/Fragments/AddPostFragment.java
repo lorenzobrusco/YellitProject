@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -594,11 +595,13 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                     places.add("No places detected");
                 }
                 mLocationSpinner.setItems(places);
-                /* mLocationSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
+                mLocationSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
                     @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-                        Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
+
+                        Snackbar.make(view, "Clicked " + item + " at " + position, Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(view, InfoManager.getInstance().getmPlaceData().latLongs.get(position).latitude + " lat", Snackbar.LENGTH_LONG).show();
                     }
-                }); */
+                });
 
             case 1:
             case 2:
