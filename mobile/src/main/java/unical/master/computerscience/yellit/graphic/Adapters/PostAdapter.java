@@ -73,10 +73,18 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
     @Override
     public void onBindViewHolder(PostViewHolder holder, final int position) {
-        holder.personName.setText(mPosts.get(position).getUserName());
+        Post currPost = mPosts.get(position);
+
+        holder.personName.setText(currPost.getUserName());
+        holder.commentText.setText(currPost.getComment());
+        holder.setImagePost(currPost.getPostImagePost());
+        holder.setUserImage(currPost.getUserImagePath());
+        holder.mLikeContent.setText(currPost.getLikes() + " LAIK");
+
         holder.mLikeButton.setOnLikeListener(new OnLikeListener() {
             @Override
             public void liked(LikeButton likeButton) {
+
                 Toast.makeText(mContext, position+" liked something", Toast.LENGTH_LONG
                 ).show();
                 Retrofit retrofit = new Retrofit.Builder()
@@ -123,6 +131,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                 });
             }
         });
+
     }
 
 
@@ -142,8 +151,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         LinearLayout userInfo;
         @Bind(R.id.current_action_post)
         RelativeLayout actionUser;
+
         @Bind(R.id.comment_content_post)
         RelativeLayout commentUser;
+        @Bind(R.id.comment_value_post)
+        TextView commentText;
+
         @Bind(R.id.cardview_post)
         CardView mCardView;
         @Bind(R.id.full_name_post)
@@ -157,17 +170,24 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         @Bind(R.id.load_post)
         ProgressBar progressBar;
         //        @Bind(R.id.like_post)
-//        ImageView like;
+        //        ImageView like;
+
         @Bind(R.id.like_post)
         LikeButton mLikeButton;
+        @Bind(R.id.like_post_content)
+        TextView mLikeContent;
+
         private boolean isLike = false;
 
         public PostViewHolder(final View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+
+        public void setUserImage(String userImgPath)
+        {
             Glide.with(mContext)
-//                    .load(BaseURL.URL + "Images/user.jpg")
-                    .load("http://static.wixstatic.com/media/9ee4ab_b0c4a4d968c64d74b20415843218d895.png")
+                    .load(userImgPath)
                     .listener(new RequestListener<String, GlideDrawable>() {
                         @Override
                         public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
@@ -192,9 +212,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
 //                    .error(mContext.getResources().getDrawable(R.mipmap.ic_launcher))
                     .into(userImage);
+
+        }
+
+        public void setImagePost(String imagePath)
+        {
             Glide.with(mContext)
-//                    .load(BaseURL.URL + "Images/pizza.jpg")
-                    .load("https://upload.wikimedia.org/wikipedia/commons/a/a3/Eq_it-na_pizza-margherita_sep2005_sml.jpg")
+    //                .load("https://upload.wikimedia.org/wikipedia/commons/a/a3/Eq_it-na_pizza-margherita_sep2005_sml.jpg")
+                    .load(imagePath)
                     .listener(new RequestListener<String, GlideDrawable>() {
                         @Override
                         public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
@@ -215,12 +240,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                         }
                     })
                     .fitCenter()
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                   // .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .error(mContext.getResources().getDrawable(R.mipmap.ic_launcher))
                     .into(imagePost);
-
         }
-
     }
 
 }

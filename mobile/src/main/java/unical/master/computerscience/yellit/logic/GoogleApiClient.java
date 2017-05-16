@@ -160,14 +160,22 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
             @Override
             public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
                 Log.i(TAG, likelyPlaces + " banana");
+
                 final List<String> places = new ArrayList<>();
+                final List<LatLng> latlongs = new ArrayList<>();
+
                 for (PlaceLikelihood placeLikelihood : likelyPlaces) {
                     places.add(placeLikelihood.getPlace().getName() + "");
+                    latlongs.add(placeLikelihood.getPlace().getLatLng());
+
                     Log.i(TAG, String.format("Place '%s' has likelihood: %g",
                             placeLikelihood.getPlace().getName(),
                             placeLikelihood.getLikelihood()));
                 }
+
                 InfoManager.getInstance().getmPlaceData().place = places;
+                InfoManager.getInstance().getmPlaceData().latLongs = latlongs;
+
                 likelyPlaces.release();
             }
         });

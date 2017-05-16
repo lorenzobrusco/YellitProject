@@ -36,10 +36,11 @@ public class Post {
     private String postVideoPost;
 
     @SerializedName("likes")
-    private Like likes;
+    //private Like likes;
+    private Integer likes;
 
     public Post(Integer idPost, String userName, String userImagePath, String date, String type, String location, String comment, String postImagePost,
-                String postVideoPost, Like likes) {
+                String postVideoPost, Integer likes) {
         this.idPost = idPost;
         this.userName = userName;
         this.userImagePath = userImagePath;
@@ -129,11 +130,11 @@ public class Post {
         this.postVideoPost = postVideoPost;
     }
 
-    public Like getLikes() {
+    public Integer getLikes() {
         return likes;
     }
 
-    public void setLikes(Like likes) {
+    public void setLikes(Integer likes) {
         this.likes = likes;
     }
 }
