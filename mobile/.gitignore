@@ -1,2 +1,2 @@
 /build
-*.json
+/src/main/res/*.json
