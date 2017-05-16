@@ -49,7 +49,6 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.utils.FileUtils;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import java.io.File;
@@ -62,7 +61,6 @@ import butterknife.ButterKnife;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -79,7 +77,6 @@ import unical.master.computerscience.yellit.connection.ServerResponse;
 import unical.master.computerscience.yellit.graphic.custom.SelectorImageView;
 import unical.master.computerscience.yellit.logic.GoogleApiClient;
 import unical.master.computerscience.yellit.logic.InfoManager;
-import unical.master.computerscience.yellit.logic.objects.Post;
 import unical.master.computerscience.yellit.utilities.BaseURL;
 
 
@@ -512,6 +509,8 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
     }
 
     /*
+        Log.i("VAL SELECTED", "Value: " + e.getX() + ", index: " + h.getX() + ", DataSet index: " + h.getDataSetIndex());
+
         In base all'index del bottone premuto carichiamo uno specifico sub menù, secondo l'ordine:
 
         Category 1 = Index 0
@@ -527,20 +526,14 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         if (isSubMenu) {
 
             switch (lastSubMenu) {
-                case 0:
-                    handleSubMenu1(e, h);
-                    break;
                 case 1:
-                    handleSubMenu2(e, h);
+                    handleSubMenuCase1(e, h);
                     break;
                 case 2:
-                    handleSubMenu3(e, h);
+                    handleSubMenuCase2(e, h);
                     break;
                 case 3:
-                    handleSubMenu4(e, h);
-                    break;
-                case 4:
-                    handleSubMenu5(e, h);
+                    handleSubMenuCase3(e, h);
                     break;
             }
 
@@ -550,8 +543,9 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
             switch (index) {
                 case 0:
-                    subCategoryLabels = getResources().getStringArray(R.array.sub_categories_1);
-                    subCategoryColors = getResources().getIntArray(R.array.sub_colors_1);
+                    openBottomSheet();
+                    //subCategoryLabels = getResources().getStringArray(R.array.sub_categories_1);
+                    //subCategoryColors = getResources().getIntArray(R.array.sub_colors_1);
                     break;
                 case 1:
                     subCategoryLabels = getResources().getStringArray(R.array.sub_categories_2);
@@ -566,42 +560,29 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                     subCategoryColors = getResources().getIntArray(R.array.sub_colors_4);
                     break;
                 case 4:
-                    subCategoryLabels = getResources().getStringArray(R.array.sub_categories_5);
-                    subCategoryColors = getResources().getIntArray(R.array.sub_colors_5);
+                    openBottomSheet();
+                    //subCategoryLabels = getResources().getStringArray(R.array.sub_categories_5);
+                    //subCategoryColors = getResources().getIntArray(R.array.sub_colors_5);
                     break;
             }
 
-            isSubMenu = true;
-            lastSubMenu = index;
-            mainMenu.startAnimation(expandIn);
+            if(index != 0 && index != 4)
+            {
+                isSubMenu = true;
+                lastSubMenu = index;
+                mainMenu.startAnimation(expandIn);
+            }
         }
-        /* Log.i("VAL SELECTED",
-                "Value: " + e.getX() + ", index: " + h.getX()
-                        + ", DataSet index: " + h.getDataSetIndex()); */
     }
 
-    private void handleSubMenu1(Entry e, Highlight h) {
+    private void handleSubMenu(Entry e, Highlight h) {
 
         int index = (int) h.getX();
 
         switch (index) {
 
             case 0:
-                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                transparentLayer.setVisibility(View.VISIBLE);
-                mainMenu.highlightValues(null);
-                List<String> places = InfoManager.getInstance().getmPlaceData().place;
-                if (places.size() == 0) {
-                    places.add("No places detected");
-                }
-                mLocationSpinner.setItems(places);
-                mLocationSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
-                    @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-
-                        Snackbar.make(view, "Clicked " + item + " at " + position, Snackbar.LENGTH_LONG).show();
-                        Snackbar.make(view, InfoManager.getInstance().getmPlaceData().latLongs.get(position).latitude + " lat", Snackbar.LENGTH_LONG).show();
-                    }
-                });
+                openBottomSheet();
 
             case 1:
             case 2:
@@ -617,7 +598,26 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         }
     }
 
-    private void handleSubMenu2(Entry e, Highlight h) {
+    private void openBottomSheet() {
+
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        transparentLayer.setVisibility(View.VISIBLE);
+        mainMenu.highlightValues(null);
+        List<String> places = InfoManager.getInstance().getmPlaceData().place;
+        if (places.size() == 0) {
+            places.add("No places detected");
+        }
+        mLocationSpinner.setItems(places);
+        mLocationSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
+            @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+
+                Snackbar.make(view, "Clicked " + item + " at " + position, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(view, InfoManager.getInstance().getmPlaceData().latLongs.get(position).latitude + " lat", Snackbar.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void handleSubMenuCase1(Entry e, Highlight h) {
 
         int index = (int) h.getX();
 
@@ -631,7 +631,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         }
     }
 
-    private void handleSubMenu3(Entry e, Highlight h) {
+    private void handleSubMenuCase2(Entry e, Highlight h) {
 
         int index = (int) h.getX();
 
@@ -645,21 +645,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         }
     }
 
-    private void handleSubMenu4(Entry e, Highlight h) {
-
-        int index = (int) h.getX();
-
-        switch (index) {
-
-            default:
-                isSubMenu = false;
-                lastSubMenu = -1;
-                mainMenu.startAnimation(expandIn);
-                break;
-        }
-    }
-
-    private void handleSubMenu5(Entry e, Highlight h) {
+    private void handleSubMenuCase3(Entry e, Highlight h) {
 
         int index = (int) h.getX();
 

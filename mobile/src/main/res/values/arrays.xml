@@ -45,11 +45,6 @@
     </array>
 
     <array name="sub_categories_1">
-        <item>Sub 1 Cat 1</item>
-        <item>Sub 2 Cat 1</item>
-        <item>Sub 3 Cat 1</item>
-        <item>Sub 4 Cat 1</item>
-        <item>Back</item>
     </array>
 
     <array name="sub_colors_1">
@@ -61,10 +56,10 @@
     </array>
 
     <array name="sub_categories_2">
-        <item>Sub 1 Cat 2</item>
-        <item>Sub 2 Cat 2</item>
-        <item>Sub 3 Cat 2</item>
-        <item>Sub 4 Cat 2</item>
+        <item>Games</item>
+        <item>Films</item>
+        <item>Reading</item>
+        <item>Cooking</item>
         <item>Back</item>
     </array>
 
@@ -77,26 +72,24 @@
     </array>
 
     <array name="sub_categories_3">
-        <item>Sub 1 Cat 3</item>
-        <item>Sub 2 Cat 3</item>
-        <item>Sub 3 Cat 3</item>
-        <item>Sub 4 Cat 3</item>
+        <item>Cinema</item>
+        <item>Sport</item>
+        <item>Friends</item>
         <item>Back</item>
     </array>
 
     <array name="sub_colors_3">
         <item>@color/amber_800</item>
         <item>@color/amber_900</item>
-        <item>@color/amber_600</item>
         <item>@color/amber_500</item>
         <item>@color/page4</item>
     </array>
 
     <array name="sub_categories_4">
-        <item>Sub 1 Cat 4</item>
-        <item>Sub 2 Cat 4</item>
-        <item>Sub 3 Cat 4</item>
-        <item>Sub 4 Cat 4</item>
+        <item>Pizza</item>
+        <item>Restaurant</item>
+        <item>Bar</item>
+        <item>Pub</item>
         <item>Back</item>
     </array>
 
@@ -109,11 +102,6 @@
     </array>
 
     <array name="sub_categories_5">
-        <item>Sub 1 Cat 5</item>
-        <item>Sub 2 Cat 5</item>
-        <item>Sub 3 Cat 5</item>
-        <item>Sub 4 Cat 5</item>
-        <item>Back</item>
     </array>
 
     <array name="sub_colors_5">
