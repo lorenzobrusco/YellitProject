@@ -75,7 +75,7 @@ public class PostFragment extends Fragment {
         final List<Post> postsToShow = new ArrayList<>();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BaseURL.LOCAL_URL)
+                .baseUrl(BaseURL.URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

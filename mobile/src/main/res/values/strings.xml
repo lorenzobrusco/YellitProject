@@ -70,6 +70,7 @@
     <string name="text_setting_fingerprint">When you set up the safe mode the application is locked and to unlock it you could use fingerprint.\nNote: If the fingerprint doesn\'t work you\'ll need delete and reinstall the app</string>
     <string name="text_enable_afe_mode">enable to look the application unlockable\nonly with fingerprint</string>
     <string name="use_fingreprint_safe_mode">Use your fingerprint to unlock application\ninstead typing your password\n\nIf you have some problems with fingerprint\npress everywhere to display input text </string>
+    <string name="open_weather_maps_app_id">6554a42544bed5315bc828745d11309d</string>
 
     <string-array name="spinner_sex_profile">
         <item> Sex </item>

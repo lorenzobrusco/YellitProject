@@ -187,9 +187,6 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
                     resetBottomSheet();
 
-                    isSubMenu = false;
-                    lastSubMenu = -1;
-                    mainMenu.startAnimation(expandIn);
                     //.animate().scaleX(0).scaleY(0).setDuration(300).start();
 
                 }
@@ -261,10 +258,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                 if (!positionEnabled && comment.equals("") && currentPath.equals(""))
                     Toast.makeText(getContext(), "Nothing Selected", Toast.LENGTH_SHORT).show();
                 else {
-
                     createPostForUpload(comment, place);
-
-
                 }
 
             }
@@ -334,7 +328,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         RequestBody newUserMail = RequestBody.create(MediaType.parse("text/plain"), "lollo@gmail.com");
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BaseURL.LOCAL_URL)
+                .baseUrl(BaseURL.URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -352,6 +346,11 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                         Toast.makeText(getContext(), serverResponse.getMessage(), Toast.LENGTH_LONG).show();
 
                         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+
+                        isSubMenu = false;
+                        lastSubMenu = -1;
+                        mainMenu.startAnimation(expandIn);
+
                     } else {
                         Toast.makeText(getContext(), serverResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
@@ -527,13 +526,13 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
             switch (lastSubMenu) {
                 case 1:
-                    handleSubMenuCase1(e, h);
+                    handleSubMenuCategory2(e, h);
                     break;
                 case 2:
-                    handleSubMenuCase2(e, h);
+                    handleSubMenuCategory3(e, h);
                     break;
                 case 3:
-                    handleSubMenuCase3(e, h);
+                    handleSubMenuCategory4(e, h);
                     break;
             }
 
@@ -617,12 +616,18 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         });
     }
 
-    private void handleSubMenuCase1(Entry e, Highlight h) {
+    private void handleSubMenuCategory2(Entry e, Highlight h) {
 
         int index = (int) h.getX();
 
         switch (index) {
 
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+                openBottomSheet();
+                break;
             default:
                 isSubMenu = false;
                 lastSubMenu = -1;
@@ -631,12 +636,16 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         }
     }
 
-    private void handleSubMenuCase2(Entry e, Highlight h) {
+    private void handleSubMenuCategory3(Entry e, Highlight h) {
 
         int index = (int) h.getX();
 
         switch (index) {
-
+            case 0:
+            case 1:
+            case 2:
+                openBottomSheet();
+                break;
             default:
                 isSubMenu = false;
                 lastSubMenu = -1;
@@ -645,12 +654,17 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         }
     }
 
-    private void handleSubMenuCase3(Entry e, Highlight h) {
+    private void handleSubMenuCategory4(Entry e, Highlight h) {
 
         int index = (int) h.getX();
 
         switch (index) {
-
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+                openBottomSheet();
+                break;
             default:
                 isSubMenu = false;
                 lastSubMenu = -1;

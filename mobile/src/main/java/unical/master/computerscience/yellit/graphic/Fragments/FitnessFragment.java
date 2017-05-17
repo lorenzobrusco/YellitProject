@@ -3,6 +3,7 @@ package unical.master.computerscience.yellit.graphic.Fragments;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,11 +12,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.android.gms.fitness.request.OnDataPointListener;
 import com.hookedonplay.decoviewlib.DecoView;
 import com.hookedonplay.decoviewlib.charts.DecoDrawEffect;
 import com.hookedonplay.decoviewlib.charts.SeriesItem;
 import com.hookedonplay.decoviewlib.events.DecoEvent;
+
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -23,6 +29,7 @@ import im.dacer.androidcharts.LineView;
 import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.logic.GoogleApiClient;
 import unical.master.computerscience.yellit.logic.InfoManager;
+import unical.master.computerscience.yellit.utilities.RemoteFetch;
 import xyz.matteobattilana.library.Common.Constants;
 import xyz.matteobattilana.library.WeatherView;
 
@@ -62,6 +69,9 @@ public class FitnessFragment extends Fragment {
         GoogleApiClient.getInstance((AppCompatActivity) getActivity()).readFitnessHistory(getContext());
         ButterKnife.bind(this, view);
         createBackSeries();
+
+        updateWeatherData("Cosenza");
+
         createDataSeries1();
         createDataSeries2();
         createDataSeries3();
@@ -69,6 +79,31 @@ public class FitnessFragment extends Fragment {
         initLineView(lines);
         randomSet(lines);
         return view;
+    }
+
+    Handler handler = new Handler();
+
+    private void updateWeatherData(final String city) {
+        new Thread() {
+            public void run() {
+                final JSONObject json = RemoteFetch.getJSON(getActivity(), city);
+                if (json == null) {
+                    handler.post(new Runnable() {
+                        public void run() {
+                            Toast.makeText(getActivity(),
+                                    "Città non trovata",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    });
+                } else {
+                    handler.post(new Runnable() {
+                        public void run() {
+                            RemoteFetch.renderWeather(json);
+                        }
+                    });
+                }
+            }
+        }.start();
     }
 
     @Override
