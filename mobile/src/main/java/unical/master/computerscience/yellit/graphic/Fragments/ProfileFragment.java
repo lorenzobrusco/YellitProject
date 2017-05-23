@@ -99,7 +99,6 @@ public class ProfileFragment extends Fragment {
         mPosts.setExpanded(true);
         this.setupRadar();
         this.setupFriendGridView();
-        GoogleApiClient.getInstance((AppCompatActivity) this.getActivity()).getLocation(this.getContext());
         return view;
     }
 
