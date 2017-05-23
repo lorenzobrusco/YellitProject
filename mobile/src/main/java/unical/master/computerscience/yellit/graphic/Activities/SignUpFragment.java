@@ -1,10 +1,11 @@
 package unical.master.computerscience.yellit.graphic.Activities;
 
 
+import android.app.Activity;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.util.Log;
@@ -14,22 +15,32 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
+import java.io.IOException;
+import java.util.ArrayList;
+
 import butterknife.ButterKnife;
 import butterknife.Bind;
+import siclo.com.ezphotopicker.api.EZPhotoPick;
+import siclo.com.ezphotopicker.api.EZPhotoPickStorage;
+import siclo.com.ezphotopicker.api.models.EZPhotoPickConfig;
+import siclo.com.ezphotopicker.api.models.PhotoSource;
+import siclo.com.ezphotopicker.models.PhotoIntentException;
 import unical.master.computerscience.yellit.MainActivity;
 import unical.master.computerscience.yellit.R;
 
 import static android.app.Activity.RESULT_OK;
 
-public class SignUpActivity extends Fragment {
+public class SignUpFragment extends Fragment {
 
+    private static final String DEMO_PHOTO_PATH = "MyDemoPhotoDir";
     private static final String TAG = "SignupActivity";
     private static final int REQUEST_CODE = 1;
     private static final int TAKE_PICTURE = 1;
+
+    private EZPhotoPickStorage ezPhotoPickStorage;
 
     @Bind(R.id.profile_image_signup)
     ImageView _profileImage;
@@ -50,6 +61,9 @@ public class SignUpActivity extends Fragment {
         final View view = inflater.inflate(R.layout.activity_signup, container, false);
         ButterKnife.bind(this, view);
         ButterKnife.bind(this, view);
+
+        ezPhotoPickStorage = new EZPhotoPickStorage(getActivity());
+
         _signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,13 +75,18 @@ public class SignUpActivity extends Fragment {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getContext(), "open camera", Toast.LENGTH_LONG).show();
-                Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-                startActivityForResult(intent, TAKE_PICTURE);
-               /* Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                File file = new File(Environment.getExternalStorageDirectory(), "test.jpg");
-                Uri outputFileUri = Uri.fromFile(file);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-                startActivityForResult(intent, TAKE_PICTURE);*/
+
+                try {
+                    EZPhotoPickConfig config = new EZPhotoPickConfig();
+                    config.photoSource = PhotoSource.CAMERA;
+                    config.storageDir = DEMO_PHOTO_PATH;
+                    config.needToAddToGallery = true;
+                    config.exportingSize = 1000;
+                    EZPhotoPick.startPhotoPickActivity(SignUpFragment.this, config);
+
+                } catch (PhotoIntentException e) {
+                    e.printStackTrace();
+                }
             }
         });
         return view;
@@ -75,6 +94,7 @@ public class SignUpActivity extends Fragment {
 
 
     public void signup() {
+
         Log.d(TAG, "Signup");
 
         if (!validate()) {
@@ -168,5 +188,33 @@ public class SignUpActivity extends Fragment {
         intent.setAction(Intent.ACTION_GET_CONTENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         startActivityForResult(intent, REQUEST_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (resultCode != Activity.RESULT_OK) {
+            Toast.makeText(this.getContext(), "Sono in questo IF improbabile", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(requestCode == EZPhotoPick.PHOTO_PICK_CAMERA_REQUEST_CODE)
+        {
+            try {
+                ArrayList<String> pickedPhotoNames = data.getStringArrayListExtra(EZPhotoPick.PICKED_PHOTO_NAMES_KEY);
+                Bitmap pickedPhoto = ezPhotoPickStorage.loadLatestStoredPhotoBitmap(300);
+
+                _profileImage.setImageBitmap(pickedPhoto);
+
+                String profPhoto = ezPhotoPickStorage.getAbsolutePathOfStoredPhoto(DEMO_PHOTO_PATH, pickedPhotoNames.get(0));
+
+                Toast.makeText(this.getContext(), "IMMA " + profPhoto, Toast.LENGTH_LONG).show();
+
+                //setupImagePicker(ezPhotoPickStorage.getAbsolutePathOfStoredPhoto(DEMO_PHOTO_PATH, pickedPhotoNames.get(0)));
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

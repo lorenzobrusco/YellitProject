@@ -565,10 +565,12 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                     break;
             }
 
+            lastSubMenu = index;
+            currentCategory = mainCategoryLabels[lastSubMenu];
+
             if(index != 0 && index != 4)
             {
                 isSubMenu = true;
-                lastSubMenu = index;
                 mainMenu.startAnimation(expandIn);
             }
         }

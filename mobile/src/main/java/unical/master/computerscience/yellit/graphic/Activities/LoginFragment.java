@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +16,7 @@ import android.widget.Button;
 
 import android.util.Log;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.zip.Inflater;
-
-import javax.xml.transform.TransformerConfigurationException;
 
 import butterknife.ButterKnife;
 import butterknife.Bind;
@@ -38,10 +32,8 @@ import unical.master.computerscience.yellit.logic.objects.User;
 import unical.master.computerscience.yellit.utilities.BaseURL;
 import unical.master.computerscience.yellit.utilities.PrefManager;
 
-import static android.app.Activity.RESULT_OK;
-
-public class LoginActivity extends Fragment {
-    private static final String TAG = "LoginActivity";
+public class LoginFragment extends Fragment {
+    private static final String TAG = "LoginFragment";
     private static final int REQUEST_SIGNUP = 0;
 
     @Bind(R.id.input_email)
@@ -82,7 +74,7 @@ public class LoginActivity extends Fragment {
 
         final String email = _emailText.getText().toString();
         final String password = _passwordText.getText().toString();
-       /* final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
+       /* final ProgressDialog progressDialog = new ProgressDialog(LoginFragment.this,
                 R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Authenticating...");
@@ -141,7 +133,7 @@ public class LoginActivity extends Fragment {
                 User profile = response.body();
                 InfoManager.getInstance().setmUser(profile);
                 if (profile.getEmail() == null) {
-                    LoginActivity.this.buildErrorDialog();
+                    LoginFragment.this.buildErrorDialog();
                     Log.d("retrofit", "email o password errati");
                 } else {
                     Log.d("nick", profile.getNickname());
