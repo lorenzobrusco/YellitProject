@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -34,8 +33,6 @@ import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.logic.GoogleApiClient;
 import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.utilities.RemoteFetch;
-import xyz.matteobattilana.library.Common.Constants;
-import xyz.matteobattilana.library.WeatherView;
 
 
 public class FitnessFragment extends Fragment {

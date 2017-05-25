@@ -8,13 +8,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/signin_gall_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginBottom="16dp"
             android:background="@drawable/rounded_image"
             android:backgroundTint="@color/page1"
             android:drawableLeft="@drawable/ic_gallery"

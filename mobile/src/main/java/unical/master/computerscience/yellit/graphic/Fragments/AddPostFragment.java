@@ -127,7 +127,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
     private EZPhotoPickStorage ezPhotoPickStorage;
 
     private ArrayList<String> mImages;
-    private String currentPath = "";
+    private String currentPhotoPath = "";
     private boolean locked = false;
     private int currentPosition = 0;
 
@@ -255,7 +255,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                 if (positionEnabled)
                     place = mLocationSpinner.getItems().get(mLocationSpinner.getSelectedIndex()).toString();
 
-                if (!positionEnabled && comment.equals("") && currentPath.equals(""))
+                if (!positionEnabled && comment.equals("") && currentPhotoPath.equals(""))
                     Toast.makeText(getContext(), "Nothing Selected", Toast.LENGTH_SHORT).show();
                 else {
                     createPostForUpload(comment, place);
@@ -316,7 +316,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
      */
     private void createPostForUpload(String comment, String place) {
 
-        File file = new File(currentPath);
+        File file = new File(currentPhotoPath);
         RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
         MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
 
@@ -793,7 +793,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                         if (!picturesView.ismSelected()) {
                             selectorImage.setBackground(getResources().getDrawable(R.drawable.unselected_image));
                             picturesView.setColorFilter(Color.argb(0, 0, 0, 0));
-                            currentPath = "";
+                            currentPhotoPath = "";
                             locked = false;
                         }
 
@@ -803,7 +803,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                         if (picturesView.ismSelected()) {
                             picturesView.setColorFilter(Color.argb(80, 0, 0, 0));
                             selectorImage.setBackground(getResources().getDrawable(R.drawable.selected_image));
-                            currentPath = mImages.get(position);
+                            currentPhotoPath = mImages.get(position);
                             locked = true;
                             currentPosition = position;
                         }
