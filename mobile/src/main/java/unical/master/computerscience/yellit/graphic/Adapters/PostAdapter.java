@@ -1,18 +1,12 @@
 package unical.master.computerscience.yellit.graphic.Adapters;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -26,7 +20,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.ceylonlabs.imageviewpopup.ImagePopup;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
 
@@ -41,13 +34,10 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import unical.master.computerscience.yellit.connection.LikeService;
-import unical.master.computerscience.yellit.graphic.Activities.LoginActivity;
-import unical.master.computerscience.yellit.graphic.custom.Rotate3dAnimation;
 import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.logic.objects.Like;
 import unical.master.computerscience.yellit.logic.objects.Post;
 import unical.master.computerscience.yellit.R;
-import unical.master.computerscience.yellit.logic.objects.User;
 import unical.master.computerscience.yellit.utilities.BaseURL;
 
 /**

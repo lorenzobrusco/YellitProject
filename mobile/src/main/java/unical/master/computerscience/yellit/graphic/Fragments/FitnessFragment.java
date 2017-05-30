@@ -4,13 +4,15 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +22,7 @@ import com.hookedonplay.decoviewlib.charts.DecoDrawEffect;
 import com.hookedonplay.decoviewlib.charts.SeriesItem;
 import com.hookedonplay.decoviewlib.events.DecoEvent;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -30,8 +33,6 @@ import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.logic.GoogleApiClient;
 import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.utilities.RemoteFetch;
-import xyz.matteobattilana.library.Common.Constants;
-import xyz.matteobattilana.library.WeatherView;
 
 
 public class FitnessFragment extends Fragment {
@@ -53,6 +54,16 @@ public class FitnessFragment extends Fragment {
     TextView textActivity3;
     @Bind(R.id.chart_repo_lines)
     LineView lines;
+    @Bind(R.id.type_weather)
+    TextView mTypeWeatherTextView;
+    @Bind(R.id.temperature_weather)
+    TextView mTemperature;
+    @Bind(R.id.icon_weather)
+    ImageView mIconWeather;
+    @Bind(R.id.image_weather)
+    ImageView mImageWeather;
+    @Bind(R.id.progressBar_weather)
+    ProgressBar mWeatherProgressBar;
     private int mBackIndex;
     private int mSeries1Index;
     private int mSeries2Index;
@@ -83,9 +94,19 @@ public class FitnessFragment extends Fragment {
     Handler handler = new Handler();
 
     private void updateWeatherData(final String city) {
-        new Thread() {
-            public void run() {
-                final JSONObject json = RemoteFetch.getJSON(getActivity(), city);
+
+        new AsyncTask<String, Void, JSONObject>(){
+
+            @Override
+            protected void onPreExecute() {
+                mWeatherProgressBar.setVisibility(View.VISIBLE);
+                super.onPreExecute();
+            }
+
+            @Override
+            protected JSONObject doInBackground(String... strings) {
+                final JSONObject json = RemoteFetch.getJSON(getActivity(), strings[0]);
+                final JSONObject data = RemoteFetch.getData(json);
                 if (json == null) {
                     handler.post(new Runnable() {
                         public void run() {
@@ -97,12 +118,23 @@ public class FitnessFragment extends Fragment {
                 } else {
                     handler.post(new Runnable() {
                         public void run() {
-                            RemoteFetch.renderWeather(json);
+                            RemoteFetch.getData(json);
+                            initWeather(data);
+
                         }
                     });
                 }
+                Log.e("TEMPO!", data.toString());
+                return json;
             }
-        }.start();
+
+            @Override
+            protected void onPostExecute(JSONObject jsonObject) {
+                mWeatherProgressBar.setVisibility(View.INVISIBLE);
+                super.onPostExecute(jsonObject);
+            }
+        }.execute(city);
+
     }
 
     @Override
@@ -115,6 +147,42 @@ public class FitnessFragment extends Fragment {
         super.onStop();
     }
 
+    private void initWeather(JSONObject data)
+    {
+        try {
+            mTypeWeatherTextView.setText(data.getString("weather"));
+            mTemperature.setText(data.getString("temperature"));
+            String weather = data.getString("weather");
+            setWeatherIcon(weather);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setWeatherIcon(String weather)
+    {
+        if(weather.contains("thunderstorm")) {
+            mIconWeather.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_storm));
+            mImageWeather.setImageDrawable(getContext().getResources().getDrawable(R.drawable.lightning));
+        }
+        else if(weather.contains("snow")) {
+            mIconWeather.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_snow));
+            mImageWeather.setImageDrawable(getContext().getResources().getDrawable(R.drawable.snow));
+        }
+        else if(weather.contains("cloud")) {
+            mIconWeather.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_cloudy));
+            mImageWeather.setImageDrawable(getContext().getResources().getDrawable(R.drawable.cloud));
+        }
+        else if(weather.contains("clear")) {
+            mIconWeather.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_clear));
+            mImageWeather.setImageDrawable(getContext().getResources().getDrawable(R.drawable.sun));
+        }
+        else if(weather.contains("rain")) {
+            mIconWeather.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_rain));
+            mImageWeather.setImageDrawable(getContext().getResources().getDrawable(R.drawable.rain));
+        }
+    }
     private void initLineView(LineView lineView) {
         ArrayList<String> test = new ArrayList<>();
         for (int i = 0; i < randomint; i++) {
@@ -126,6 +194,8 @@ public class FitnessFragment extends Fragment {
         lineView.setShowPopup(LineView.SHOW_POPUPS_NONE);
 
     }
+
+
 
     private void randomSet(LineView lineViewFloat) {
 

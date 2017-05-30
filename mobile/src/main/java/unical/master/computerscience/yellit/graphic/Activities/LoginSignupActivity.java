@@ -1,13 +1,11 @@
 package unical.master.computerscience.yellit.graphic.Activities;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
@@ -17,7 +15,6 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import unical.master.computerscience.yellit.R;
-import unical.master.computerscience.yellit.graphic.Fragments.PostFragment;
 
 import static unical.master.computerscience.yellit.utilities.SystemUI.changeSystemBar;
 
@@ -44,8 +41,8 @@ public class LoginSignupActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         this.mPages = new ArrayList<>();
         this.mTitlePages = new ArrayList<>();
-        this.addPage(new LoginActivity(), "Login");
-        this.addPage(new SignUpActivity(), "Signup");
+        this.addPage(new LoginFragment(), "Login");
+        this.addPage(new SignUpFragment(), "Signup");
         this.mFragmentPagerAdapter = new LoginSignupPagerAdapter(getSupportFragmentManager());
         this.mLoginSignupViewPager.setAdapter(this.mFragmentPagerAdapter);
         this.mLoginSignupViewPager.setOnPageChangeListener(
@@ -67,6 +64,8 @@ public class LoginSignupActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == REQUEST_SIGNUP) {
             if (resultCode == RESULT_OK) {
                 // TODO: Implement successful signup logic here
