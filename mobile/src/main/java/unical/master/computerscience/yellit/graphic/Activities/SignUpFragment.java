@@ -35,7 +35,7 @@ import unical.master.computerscience.yellit.utilities.BaseURL;
 
 import static android.app.Activity.RESULT_OK;
 
-public class SignUpActivity extends Fragment {
+public class SignUpFragment extends Fragment {
 
     private static final String TAG = "SignupActivity";
     private static final int REQUEST_CODE = 1;
@@ -120,7 +120,7 @@ public class SignUpActivity extends Fragment {
                 User profile = response.body();
                 InfoManager.getInstance().setmUser(profile);
                 if (profile.getEmail() == null) {
-                    SignUpActivity.this.onSignupFailed();
+                    SignUpFragment.this.onSignupFailed();
                     Log.d("retrofit", "email o password errati");
                 } else {
                     Log.d("nick", profile.getNickname());
