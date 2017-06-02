@@ -20,8 +20,18 @@ import android.widget.Toast;
 
 import butterknife.ButterKnife;
 import butterknife.Bind;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import unical.master.computerscience.yellit.MainActivity;
 import unical.master.computerscience.yellit.R;
+import unical.master.computerscience.yellit.connection.LoginService;
+import unical.master.computerscience.yellit.connection.SigninService;
+import unical.master.computerscience.yellit.logic.InfoManager;
+import unical.master.computerscience.yellit.logic.objects.User;
+import unical.master.computerscience.yellit.utilities.BaseURL;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -77,10 +87,10 @@ public class SignUpActivity extends Fragment {
     public void signup() {
         Log.d(TAG, "Signup");
 
-        if (!validate()) {
+        /*if (!validate()) {
             onSignupFailed();
             return;
-        }
+        }*/
 
         _signupButton.setEnabled(false);
 
@@ -95,9 +105,36 @@ public class SignUpActivity extends Fragment {
         String password = _passwordText.getText().toString();
         String reEnterPassword = _reEnterPasswordText.getText().toString();
 
-        // TODO: Implement your own signup logic here.
+        //TODO: controllare se la password re-inserita è uguale alla password
 
-        new android.os.Handler().postDelayed(
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BaseURL.URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        SigninService signinService = retrofit.create(SigninService.class);
+        Call<User> call = signinService.createProfile(name, email, password);
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+
+                User profile = response.body();
+                InfoManager.getInstance().setmUser(profile);
+                if (profile.getEmail() == null) {
+                    SignUpActivity.this.onSignupFailed();
+                    Log.d("retrofit", "email o password errati");
+                } else {
+                    Log.d("nick", profile.getNickname());
+                    onSignupSuccess();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Log.d("retrofit", "errore di log");
+            }
+        });
+
+       /* new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
                         // On complete call either onSignupSuccess or onSignupFailed
@@ -106,7 +143,7 @@ public class SignUpActivity extends Fragment {
                         // onSignupFailed();
                         progressDialog.dismiss();
                     }
-                }, 3000);
+                }, 3000);*/
     }
 
     public void onSignupSuccess() {
@@ -117,7 +154,7 @@ public class SignUpActivity extends Fragment {
     }
 
     public void onSignupFailed() {
-        Toast.makeText(getContext(), "Login failed", Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), "Signin failed", Toast.LENGTH_LONG).show();
 
         _signupButton.setEnabled(true);
     }
