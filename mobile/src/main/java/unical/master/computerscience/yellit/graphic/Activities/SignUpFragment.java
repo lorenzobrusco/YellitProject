@@ -7,16 +7,17 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -25,6 +26,11 @@ import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 import butterknife.Bind;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import siclo.com.ezphotopicker.api.EZPhotoPick;
 import siclo.com.ezphotopicker.api.EZPhotoPickStorage;
 import siclo.com.ezphotopicker.api.models.EZPhotoPickConfig;
@@ -32,16 +38,18 @@ import siclo.com.ezphotopicker.api.models.PhotoSource;
 import siclo.com.ezphotopicker.models.PhotoIntentException;
 import unical.master.computerscience.yellit.MainActivity;
 import unical.master.computerscience.yellit.R;
-import unical.master.computerscience.yellit.graphic.Fragments.AddPostFragment;
+import unical.master.computerscience.yellit.connection.LoginService;
+import unical.master.computerscience.yellit.connection.SigninService;
+import unical.master.computerscience.yellit.logic.InfoManager;
+import unical.master.computerscience.yellit.logic.objects.User;
+import unical.master.computerscience.yellit.utilities.BaseURL;
 
 import static android.app.Activity.RESULT_OK;
 
 public class SignUpFragment extends Fragment {
 
     private static final String DEMO_PHOTO_PATH = "MyDemoPhotoDir";
-    private static final String TAG = "SignupActivity";
-    private static final int REQUEST_CODE = 1;
-    private static final int TAKE_PICTURE = 1;
+    private static final String TAG = "SignupFragment";
 
     private EZPhotoPickStorage ezPhotoPickStorage;
 
@@ -85,6 +93,7 @@ public class SignUpFragment extends Fragment {
             public void onClick(View v) {
 
                 choosePhotoDialog.show();
+
             }
         });
         return view;
@@ -142,13 +151,12 @@ public class SignUpFragment extends Fragment {
     }
 
     public void signup() {
-
         Log.d(TAG, "Signup");
 
-        if (!validate()) {
+        /*if (!validate()) {
             onSignupFailed();
             return;
-        }
+        }*/
 
         _signupButton.setEnabled(false);
 
@@ -163,9 +171,36 @@ public class SignUpFragment extends Fragment {
         String password = _passwordText.getText().toString();
         String reEnterPassword = _reEnterPasswordText.getText().toString();
 
-        // TODO: Implement your own signup logic here.
+        //TODO: controllare se la password re-inserita è uguale alla password
 
-        new android.os.Handler().postDelayed(
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BaseURL.URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        SigninService signinService = retrofit.create(SigninService.class);
+        Call<User> call = signinService.createProfile(name, email, password);
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+
+                User profile = response.body();
+                InfoManager.getInstance().setmUser(profile);
+                if (profile.getEmail() == null) {
+                    SignUpFragment.this.onSignupFailed();
+                    Log.d("retrofit", "email o password errati");
+                } else {
+                    Log.d("nick", profile.getNickname());
+                    onSignupSuccess();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Log.d("retrofit", "errore di log");
+            }
+        });
+
+       /* new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
                         // On complete call either onSignupSuccess or onSignupFailed
@@ -174,7 +209,7 @@ public class SignUpFragment extends Fragment {
                         // onSignupFailed();
                         progressDialog.dismiss();
                     }
-                }, 3000);
+                }, 3000);*/
     }
 
     public void onSignupSuccess() {
@@ -185,7 +220,7 @@ public class SignUpFragment extends Fragment {
     }
 
     public void onSignupFailed() {
-        Toast.makeText(getContext(), "Login failed", Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), "Signin failed", Toast.LENGTH_LONG).show();
 
         _signupButton.setEnabled(true);
     }

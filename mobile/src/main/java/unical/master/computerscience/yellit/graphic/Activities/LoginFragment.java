@@ -121,7 +121,7 @@ public class LoginFragment extends Fragment {
 
     private void login(String email, String password) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BaseURL.LOCAL_URL)
+                .baseUrl(BaseURL.URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         LoginService loginService = retrofit.create(LoginService.class);
