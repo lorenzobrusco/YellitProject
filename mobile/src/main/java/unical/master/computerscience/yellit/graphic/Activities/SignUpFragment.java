@@ -58,6 +58,7 @@ import unical.master.computerscience.yellit.connection.SigninService;
 import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.logic.objects.User;
 import unical.master.computerscience.yellit.utilities.BaseURL;
+import unical.master.computerscience.yellit.utilities.PrefManager;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -124,7 +125,7 @@ public class SignUpFragment extends Fragment {
 
                                 try {
 
-                                    String email = object.getString("email");
+                                    final String email = object.getString("email");
                                     String nameFirst = object.getString("name"); // 01/31/1980 format
 
                                     Retrofit retrofit = new Retrofit.Builder()
@@ -144,7 +145,7 @@ public class SignUpFragment extends Fragment {
                                                 Log.d("retrofit", "email o password errati");
                                             } else {
                                                 Log.d("nick", profile.getNickname());
-                                                onSignupSuccess();
+                                                onSignupSuccess(email);
                                             }
                                         }
 
@@ -276,7 +277,7 @@ public class SignUpFragment extends Fragment {
                     Log.d("retrofit", "email o password errati");
                 } else {
                     Log.d("nick", profile.getNickname());
-                    onSignupSuccess();
+                    onSignupSuccess(null);
                 }
             }
 
@@ -298,9 +299,10 @@ public class SignUpFragment extends Fragment {
                 }, 3000);*/
     }
 
-    public void onSignupSuccess() {
+    public void onSignupSuccess(String name) {
         _signupButton.setEnabled(true);
         getActivity().setResult(RESULT_OK, null);
+        PrefManager.getInstace(getContext()).setUser(name == null ?_emailText.getText().toString() : name);
         startActivity(new Intent(getContext(), MainActivity.class));
         getActivity().finish();
     }
