@@ -75,14 +75,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             @Override
             public void liked(LikeButton likeButton) {
 
-                Toast.makeText(mContext, position+" liked something", Toast.LENGTH_LONG
+                Toast.makeText(mContext, position + " liked something", Toast.LENGTH_LONG
                 ).show();
                 Retrofit retrofit = new Retrofit.Builder()
                         .baseUrl(BaseURL.URL)
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
                 LikeService likeService = retrofit.create(LikeService.class);
-                Call<Like> call = likeService.addLike(InfoManager.getInstance().getmUser().getEmail(), mPosts.get(position).getIdPost() );
+                Call<Like> call = likeService.addLike(InfoManager.getInstance().getmUser().getEmail(), mPosts.get(position).getIdPost());
                 call.enqueue(new Callback<Like>() {
                     @Override
                     public void onResponse(Call<Like> call, Response<Like> response) {
@@ -105,7 +105,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
                 LikeService likeService = retrofit.create(LikeService.class);
-                Call<Like> call = likeService.removeLike(InfoManager.getInstance().getmUser().getEmail(), mPosts.get(position).getIdPost() );
+                Call<Like> call = likeService.removeLike(InfoManager.getInstance().getmUser().getEmail(), mPosts.get(position).getIdPost());
                 call.enqueue(new Callback<Like>() {
                     @Override
                     public void onResponse(Call<Like> call, Response<Like> response) {
@@ -141,12 +141,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         LinearLayout userInfo;
         @Bind(R.id.current_action_post)
         RelativeLayout actionUser;
-
         @Bind(R.id.comment_content_post)
         RelativeLayout commentUser;
         @Bind(R.id.comment_value_post)
         TextView commentText;
-
         @Bind(R.id.cardview_post)
         CardView mCardView;
         @Bind(R.id.full_name_post)
@@ -159,9 +157,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         VideoView videoPost;
         @Bind(R.id.load_post)
         ProgressBar progressBar;
-        //        @Bind(R.id.like_post)
-        //        ImageView like;
-
         @Bind(R.id.like_post)
         LikeButton mLikeButton;
         @Bind(R.id.like_post_content)
@@ -174,8 +169,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             ButterKnife.bind(this, itemView);
         }
 
-        public void setUserImage(String userImgPath)
-        {
+        public void setUserImage(String userImgPath) {
             Glide.with(mContext)
                     .load(userImgPath)
                     .listener(new RequestListener<String, GlideDrawable>() {
@@ -198,17 +192,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                         }
 
                     })
-                    .fitCenter()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-//                    .error(mContext.getResources().getDrawable(R.mipmap.ic_launcher))
                     .into(userImage);
 
         }
 
-        public void setImagePost(String imagePath)
-        {
+        public void setImagePost(String imagePath) {
             Glide.with(mContext)
-    //                .load("https://upload.wikimedia.org/wikipedia/commons/a/a3/Eq_it-na_pizza-margherita_sep2005_sml.jpg")
                     .load(imagePath)
                     .listener(new RequestListener<String, GlideDrawable>() {
                         @Override
@@ -229,10 +219,22 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                             return false;
                         }
                     })
-                    .fitCenter()
-                   // .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .error(mContext.getResources().getDrawable(R.mipmap.ic_launcher))
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(imagePost);
+        }
+
+        public void hideAll() {
+            progressBar.setVisibility(View.VISIBLE);
+            userInfo.setVisibility(View.INVISIBLE);
+            actionUser.setVisibility(View.INVISIBLE);
+            commentUser.setVisibility(View.INVISIBLE);
+        }
+
+        public void showAll() {
+            progressBar.setVisibility(View.GONE);
+            userInfo.setVisibility(View.VISIBLE);
+            actionUser.setVisibility(View.VISIBLE);
+            commentUser.setVisibility(View.VISIBLE);
         }
     }
 

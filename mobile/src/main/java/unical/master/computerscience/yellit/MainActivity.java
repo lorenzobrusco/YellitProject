@@ -19,8 +19,10 @@ import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
@@ -76,6 +78,9 @@ public class MainActivity extends AppCompatActivity {
     ImageView filterImage;
     private Fragment currentFragment;
     private BottomSheetBehavior mBottomSheetBehavior;
+    /** food&drink = 0 , inside = 1, outside = 2, travel = 3, fitness = 4*/
+    private Boolean[] mFavoritesCatogories;
+    private int mDistance;
 
 
     @Override
@@ -91,8 +96,8 @@ public class MainActivity extends AppCompatActivity {
         mSearchView.requestFocusFromTouch();
         mSearchView.setQueryHint(" Search ");
         currentFragment = new PostFragment();
-
-        MainActivity.this.setFragment(currentFragment);
+        mFavoritesCatogories = new Boolean[5];
+        this.setFragment(currentFragment);
         this.setupViews();
         GoogleApiClient.getInstance(this);
         GoogleApiClient.getInstance(this).getPlaceDetection(this);
@@ -277,8 +282,49 @@ public class MainActivity extends AppCompatActivity {
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog_post_filter);
         dialog.setTitle("Choose Filter");
-        Button dialogButton = (Button) dialog.findViewById(R.id.delete);
-        dialogButton.setOnClickListener(new View.OnClickListener() {
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(true);
+        Button dialogButtonDelete = (Button) dialog.findViewById(R.id.delete);
+        CheckBox foodAndDrinkCheckBox = (CheckBox) dialog.findViewById(R.id.food_and_drink);
+        CheckBox insideCheckBox = (CheckBox) dialog.findViewById(R.id.inside);
+        CheckBox outsideCheckBox = (CheckBox) dialog.findViewById(R.id.outside);
+        CheckBox travelCheckBox = (CheckBox) dialog.findViewById(R.id.travel);
+        CheckBox fitnessCheckBox = (CheckBox) dialog.findViewById(R.id.fitness);
+        /** set true if a catogorie is selectd */
+        if(foodAndDrinkCheckBox.isChecked())
+            MainActivity.this.mFavoritesCatogories[0]=true;
+        if(insideCheckBox.isChecked())
+            MainActivity.this.mFavoritesCatogories[1]=true;
+        if(outsideCheckBox.isChecked())
+            MainActivity.this.mFavoritesCatogories[2]=true;
+        if(travelCheckBox.isChecked())
+            MainActivity.this.mFavoritesCatogories[3]=true;
+        if(fitnessCheckBox.isChecked())
+            MainActivity.this.mFavoritesCatogories[4]=true;
+        RadioGroup radioGroup = (RadioGroup) dialog.findViewById(R.id.radioGroupFilter);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch(checkedId){
+                    /** set the max distance in which user want see the posts*
+                     *  near = 20
+                     *  medium = 50
+                     *  far = 100
+                     */
+                    case R.id.radioButton1:
+                        MainActivity.this.mDistance = 20;
+                        break;
+                    case R.id.radioButton2:
+                        MainActivity.this.mDistance = 50;
+                        break;
+                    case R.id.radioButton3:
+                        MainActivity.this.mDistance = 100;
+                        break;
+                }
+            }
+        });
+
+        dialogButtonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
@@ -314,7 +360,9 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(data, this);
                 mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                startActivity(new Intent(getBaseContext(), PlaceActivity.class));
+                /**Enable this code to show a new page
+                 * startActivity(new Intent(getBaseContext(), PlaceActivity.class));
+                 */
             }
         }
     }

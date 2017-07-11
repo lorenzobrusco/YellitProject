@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -298,10 +299,6 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
         cal.set(Calendar.HOUR_OF_DAY, 0);
         long startTime = cal.getTimeInMillis();
 
-        java.text.DateFormat dateFormat = getDateInstance();
-        Log.i(TAG, "Range Start: " + dateFormat.format(startTime));
-        Log.i(TAG, "Range End: " + dateFormat.format(endTime));
-
         final DataReadRequest readRequest = new DataReadRequest.Builder()
                 .aggregate(DataType.TYPE_STEP_COUNT_DELTA, DataType.AGGREGATE_STEP_COUNT_DELTA)
                 .aggregate(DataType.TYPE_CALORIES_EXPENDED, DataType.AGGREGATE_CALORIES_EXPENDED)
@@ -327,58 +324,79 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
 
     }
 
-    /**
-     * @param context
-     */
-
-    public void readFitnessGoal(final Context context) {
-        PendingResult<GoalsResult> pendingResult = Fitness.GoalsApi.readCurrentGoals(mClientFitness,
-                new GoalsReadRequest.Builder()
-                        .addDataType(DataType.TYPE_STEP_COUNT_DELTA)
-                        .build());
-        pendingResult.setResultCallback(new ResultCallback<GoalsResult>() {
-            @Override
-            public void onResult(@NonNull GoalsResult goalsResult) {
-                List<Goal> goals = goalsResult.getGoals();
-                for (Goal goal : goals) {
-                    processGoal(goal);
-                }
-            }
-        });
-    }
-
 
     /**
      * @param dataSet show the data point
      *                set the information about user in the infoManager class
      */
     private void processDataSet(final Context context, final DataSet dataSet) {
-        Log.i(TAG, "Data returned for Data type: " + dataSet.getDataType().getName());
         DateFormat dateFormat = getTimeInstance();
-
         for (DataPoint dataPoint : dataSet.getDataPoints()) {
-            Log.i(TAG, "Data point:");
-            Log.i(TAG, "\tType: " + dataPoint.getDataType().getName());
-            Log.i(TAG, "\tStart: " + dateFormat.format(dataPoint.getStartTime(TimeUnit.MILLISECONDS)));
-            Log.i(TAG, "\tEnd: " + dateFormat.format(dataPoint.getEndTime(TimeUnit.MILLISECONDS)));
             for (Field field : dataPoint.getDataType().getFields()) {
-                if (field.getName().contains(STEPS) && InfoManager.getInstance().getmFitnessSessionData().steps < Integer.parseInt(dataPoint.getValue(field)+""))
+                if (field.getName().contains(STEPS) && InfoManager.getInstance().getmFitnessSessionData().steps < Integer.parseInt(dataPoint.getValue(field) + ""))
                     InfoManager.getInstance().getmFitnessSessionData().steps = Integer.parseInt(dataPoint.getValue(field) + "");
-                if (field.getName().contains(CALORIES) && InfoManager.getInstance().getmFitnessSessionData().calories < Float.parseFloat(dataPoint.getValue(field)+""))
+                if (field.getName().contains(CALORIES) && InfoManager.getInstance().getmFitnessSessionData().calories < Float.parseFloat(dataPoint.getValue(field) + ""))
                     InfoManager.getInstance().getmFitnessSessionData().calories = Float.parseFloat(dataPoint.getValue(field) + "");
                 if (field.getName().contains(SPEED) && !(dataPoint.getValue(field) + "").equals("NaN"))
                     InfoManager.getInstance().getmFitnessSessionData().speed = Float.parseFloat(dataPoint.getValue(field) + "");
-                Log.i(TAG, "\tField: " + field.getName());
-                Log.i(TAG, "\tValue: " + dataPoint.getValue(field));
             }
         }
 
     }
 
     /**
-     * @param goal
+     * @param context show all goals from google fit
+     */
+    public void readFitnessGoal(final Context context) {
+       new AsyncTask<Context, Void, Double>(){
+           @Override
+           protected Double doInBackground(Context... params) {
+               double progress = 0;
+               PendingResult<GoalsResult> pendingResult =
+                       Fitness.GoalsApi.readCurrentGoals(
+                               mClientFitness,
+                               new GoalsReadRequest.Builder()
+                                       .addDataType(DataType.TYPE_STEP_COUNT_DELTA)
+                                       .addDataType(DataType.TYPE_DISTANCE_DELTA)
+                                       .build());
+
+               GoalsResult readDataResult = pendingResult.await();
+               List<Goal> goals = readDataResult.getGoals();
+               for(Goal goal : goals){
+                   Calendar current = Calendar.getInstance();
+                   PendingResult<DataReadResult> pendingResultGoal = Fitness.HistoryApi.readData(
+                           mClientFitness,
+                           new DataReadRequest.Builder()
+                                   .read(DataType.TYPE_STEP_COUNT_DELTA)
+                                   .setTimeRange(
+                                           goal.getStartTime(current, TimeUnit.NANOSECONDS),
+                                           goal.getEndTime(current, TimeUnit.NANOSECONDS),
+                                           TimeUnit.NANOSECONDS)
+                                   .build());
+                   DataReadResult stepReadResult = pendingResultGoal.await();
+                   List<DataPoint> dataPoints =
+                           stepReadResult.getDataSet(DataType.TYPE_STEP_COUNT_DELTA).getDataPoints();
+
+                   int total = 0;
+                   for (DataPoint dataPoint : dataPoints) {
+                       Field field = dataPoint.getDataType().getFields().get(0);
+                       total += dataPoint.getValue(field).asInt();
+                   }
+                   progress = total / goal.getMetricObjective().getValue();
+                   Log.i(TAG, "Goal: " + progress);
+               }
+               return progress;
+           }
+       }.execute(context);
+
+    }
+
+
+    /**
+     * @param goal this method show the number of step that user might do every day
      */
     private void processGoal(final Goal goal) {
+        Log.i(TAG, "here");
         Calendar current = Calendar.getInstance();
         PendingResult<DataReadResult> pendingResult = Fitness.HistoryApi.readData(mClientFitness,
                 new DataReadRequest.Builder()

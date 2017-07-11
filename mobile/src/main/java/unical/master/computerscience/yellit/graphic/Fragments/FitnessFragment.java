@@ -81,6 +81,7 @@ public class FitnessFragment extends Fragment {
         createBackSeries();
         updateWeatherData("Cosenza");
         GoogleApiClient.getInstance((AppCompatActivity) getActivity()).readFitnessHistory(getContext());
+        GoogleApiClient.getInstance((AppCompatActivity) getActivity()).readFitnessGoal(getContext());
 //        GoogleApiClient.getInstance((AppCompatActivity) getActivity()).unsubscribeAllFitnessRecord(getContext());
         createDataSeries1();
         createDataSeries2();
