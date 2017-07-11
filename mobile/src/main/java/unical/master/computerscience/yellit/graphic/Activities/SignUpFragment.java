@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Debug;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -25,11 +26,18 @@ import android.widget.Toast;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import butterknife.ButterKnife;
 import butterknife.Bind;
@@ -102,23 +110,72 @@ public class SignUpFragment extends Fragment {
 
         callbackManager = CallbackManager.Factory.create();
 
-        _facebookSignButton.setReadPermissions("email");
+        _facebookSignButton.setReadPermissions(Arrays.asList(
+                "public_profile", "email", "user_birthday", "user_friends"));
         _facebookSignButton.setFragment(this);
 
         _facebookSignButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                // App code
+
+                GraphRequest request = GraphRequest.newMeRequest(
+                        loginResult.getAccessToken(),
+                        new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(JSONObject object, GraphResponse response) {
+                                Log.v("LoginActivity", response.toString());
+
+                                try {
+
+                                    String email = object.getString("email");
+                                    String nameFirst = object.getString("name"); // 01/31/1980 format
+
+                                    Retrofit retrofit = new Retrofit.Builder()
+                                            .baseUrl(BaseURL.URL)
+                                            .addConverterFactory(GsonConverterFactory.create())
+                                            .build();
+                                    SigninService signinService = retrofit.create(SigninService.class);
+                                    Call<User> call = signinService.createProfile(nameFirst, email, "");
+                                    call.enqueue(new Callback<User>() {
+                                        @Override
+                                        public void onResponse(Call<User> call, Response<User> response) {
+
+                                            User profile = response.body();
+                                            InfoManager.getInstance().setmUser(profile);
+                                            if (profile.getEmail() == null) {
+                                                SignUpFragment.this.onSignupFailed();
+                                                Log.d("retrofit", "email o password errati");
+                                            } else {
+                                                Log.d("nick", profile.getNickname());
+                                                onSignupSuccess();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<User> call, Throwable t) {
+                                            Log.e("Facebook signin", "errore di signin");
+                                        }
+                                    });
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id,name,email,gender,birthday");
+                request.setParameters(parameters);
+                request.executeAsync();
             }
 
             @Override
             public void onCancel() {
-                // App code
+                Log.e("CANCEL", "vabbè");
             }
 
             @Override
             public void onError(FacebookException exception) {
-                // App code
+                Log.e("ERRORE", "mannaia");
             }
         });
 
@@ -304,6 +361,14 @@ public class SignUpFragment extends Fragment {
             Toast.makeText(this.getContext(), "Something went wrong!", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        if(FacebookSdk.isFacebookRequestCode(requestCode))
+        {
+            if(resultCode == Activity.RESULT_OK) {
+                callbackManager.onActivityResult(requestCode, resultCode, data);
+            }
+        }
+
 
         if(requestCode == EZPhotoPick.PHOTO_PICK_CAMERA_REQUEST_CODE)
         {
