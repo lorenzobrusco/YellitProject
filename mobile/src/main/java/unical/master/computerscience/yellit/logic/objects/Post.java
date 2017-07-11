@@ -35,6 +35,12 @@ public class Post {
     @SerializedName("post_video")
     private String postVideoPost;
 
+    @SerializedName("lat")
+    private double lat;
+
+    @SerializedName("longi")
+    private double longi;
+
     @SerializedName("likes")
     //private Like likes;
     private Integer likes;

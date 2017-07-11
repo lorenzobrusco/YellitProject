@@ -311,19 +311,26 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         });
     }
 
-    /*
-        Gestire casi di variabili NULLE ma quando comunque il post può essere inviato
+    /**
+     * Gestire casi di variabili NULLE ma quando comunque il post può essere inviato
      */
     private void createPostForUpload(String comment, String place) {
+
+        int pos = positionLocation(place) == -1 ? 0 : positionLocation(place);
 
         File file = new File(currentPhotoPath);
         RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
         MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
 
         RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
+
+        RequestBody lat = RequestBody.create(MediaType.parse("text/plain"), InfoManager.getInstance().getmPlaceData().latLongs.get(pos).latitude + "");
+        RequestBody longi = RequestBody.create(MediaType.parse("text/plain"), InfoManager.getInstance().getmPlaceData().latLongs.get(pos).longitude + "");
+
         RequestBody newComment = RequestBody.create(MediaType.parse("text/plain"), comment);
         RequestBody newPlace = RequestBody.create(MediaType.parse("text/plain"), place);
         RequestBody newCategory = RequestBody.create(MediaType.parse("text/plain"), currentCategory);
+        //TODO remove comment at the end
         //RequestBody newUserMail = RequestBody.create(MediaType.parse("text/plain"), InfoManager.getInstance().getmUser().getEmail());
         RequestBody newUserMail = RequestBody.create(MediaType.parse("text/plain"), "lollo@gmail.com");
 
@@ -334,7 +341,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
         PostGestureService getResponse = retrofit.create(PostGestureService.class);
 
-        Call<ServerResponse> call = getResponse.uploadFile(fileToUpload, filename, newUserMail, newComment, newPlace, newCategory);
+        Call<ServerResponse> call = getResponse.uploadFile(fileToUpload, filename, newUserMail, newComment, newPlace, newCategory, lat, longi);
         call.enqueue(new Callback<ServerResponse>() {
             @Override
             public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
@@ -366,6 +373,16 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
             }
         });
+    }
+
+    private int positionLocation(String place) {
+        int i = 0;
+        for (String s : InfoManager.getInstance().getmPlaceData().place) {
+            if (s.equals(place))
+                return i;
+            i++;
+        }
+        return -1;
     }
 
     private void buildAnimationCallback() {
@@ -568,8 +585,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
             lastSubMenu = index;
             currentCategory = mainCategoryLabels[lastSubMenu];
 
-            if(index != 0 && index != 4)
-            {
+            if (index != 0 && index != 4) {
                 isSubMenu = true;
                 mainMenu.startAnimation(expandIn);
             }
@@ -610,7 +626,8 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         }
         mLocationSpinner.setItems(places);
         mLocationSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
-            @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
 
                 Snackbar.make(view, "Clicked " + item + " at " + position, Snackbar.LENGTH_LONG).show();
                 Snackbar.make(view, InfoManager.getInstance().getmPlaceData().latLongs.get(position).latitude + " lat", Snackbar.LENGTH_LONG).show();

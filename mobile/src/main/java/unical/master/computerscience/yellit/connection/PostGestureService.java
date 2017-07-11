@@ -36,6 +36,6 @@ public interface PostGestureService {
 
     @Multipart
     @POST("Posts")
-    Call<ServerResponse> uploadFile(@Part MultipartBody.Part file, @Part("file") RequestBody name, @Part("email") RequestBody userMail, @Part("comment") RequestBody comment,  @Part("place") RequestBody place,  @Part("category") RequestBody category);
+    Call<ServerResponse> uploadFile(@Part MultipartBody.Part file, @Part("file") RequestBody name, @Part("email") RequestBody userMail, @Part("comment") RequestBody comment, @Part("place") RequestBody place, @Part("category") RequestBody category, @Part("lat") RequestBody lat, @Part("longi") RequestBody longi);
 
 }
