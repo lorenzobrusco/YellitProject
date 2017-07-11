@@ -66,28 +66,25 @@ public class SignUpFragment extends Fragment {
     private static final String DEMO_PHOTO_PATH = "MyDemoPhotoDir";
     private static final String TAG = "SignupFragment";
 
+    private Dialog choosePhotoDialog;
+    private String currentPhotoPath;
+    private CallbackManager callbackManager;
     private EZPhotoPickStorage ezPhotoPickStorage;
 
     @Bind(R.id.profile_image_signup)
-    ImageView _profileImage;
+    protected ImageView _profileImage;
     @Bind(R.id.input_name_signup)
-    EditText _nameText;
+    protected EditText _nameText;
     @Bind(R.id.input_email_signup)
-    EditText _emailText;
+    protected EditText _emailText;
     @Bind(R.id.input_password_signup)
-    EditText _passwordText;
+    protected EditText _passwordText;
     @Bind(R.id.input_password_again_signup)
-    EditText _reEnterPasswordText;
+    protected EditText _reEnterPasswordText;
     @Bind(R.id.btn_login_signup)
-    Button _signupButton;
+    protected Button _signupButton;
     @Bind(R.id.btn_fb_login_signup)
-    LoginButton _facebookSignButton;
-
-    private Dialog choosePhotoDialog;
-    private String currentPhotoPath;
-
-    private CallbackManager callbackManager;
-
+    protected LoginButton _facebookSignButton;
 
     @Nullable
     @Override

@@ -145,7 +145,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:layout_weight="0.55"
                 android:background="@drawable/rounded_image"
                 android:backgroundTint="@color/colorFacebook"
                 android:paddingLeft="36dp"

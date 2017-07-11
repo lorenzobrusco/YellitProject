@@ -32,10 +32,8 @@ import unical.master.computerscience.yellit.utilities.BaseURL;
 
 public class PostFragment extends Fragment {
 
-    private static final String ARGS_SCROLL_POS = "scroll_pos" ;
-    private static final String ARGS_SCROLL_OFFSET = "scroll_offset";
     @Bind(R.id.recycleview_posts)
-    RecyclerView mPosts;
+    protected RecyclerView mPosts;
 
     @Nullable
     @Override
