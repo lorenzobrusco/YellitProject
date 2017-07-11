@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -16,6 +17,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -33,6 +35,8 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -46,6 +50,8 @@ import unical.master.computerscience.yellit.graphic.Fragments.PostFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.ProfileFragment;
 import unical.master.computerscience.yellit.logic.GoogleApiClient;
 import unical.master.computerscience.yellit.logic.InfoManager;
+import unical.master.computerscience.yellit.logic.objects.Post;
+import unical.master.computerscience.yellit.utilities.GenerateMainCategories;
 import unical.master.computerscience.yellit.utilities.PermissionCheckUtils;
 import unical.master.computerscience.yellit.utilities.PrefManager;
 
@@ -59,6 +65,11 @@ public class MainActivity extends AppCompatActivity {
     private static final int HOME_FRAG_BUTTON = 2;
     private static final int ADDPOST_FRAG_BUTTON = 3;
     private static final int OTHER_FRAG_BUTTON = 4;
+    private static final String FOODANDDRINK = "FoodandDrink";
+    private static final String INSIDE = "Inside";
+    private static final String OUTSIDE = "Outside";
+    private static final String TRAVEL = "Travel";
+    private static final String FITNESS = "Fitness";
     private int currentItem = 2;
     private static final int REQUEST_ALL_MISSING_PERMISSIONS = 1;
 
@@ -78,8 +89,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView filterImage;
     private Fragment currentFragment;
     private BottomSheetBehavior mBottomSheetBehavior;
-    /** food&drink = 0 , inside = 1, outside = 2, travel = 3, fitness = 4*/
-    private Boolean[] mFavoritesCatogories;
+    private  HashSet<String> mFavoritesCatogories;
     private int mDistance;
 
 
@@ -96,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         mSearchView.requestFocusFromTouch();
         mSearchView.setQueryHint(" Search ");
         currentFragment = new PostFragment();
-        mFavoritesCatogories = new Boolean[5];
+        mFavoritesCatogories = new HashSet<>();
         this.setFragment(currentFragment);
         this.setupViews();
         GoogleApiClient.getInstance(this);
@@ -285,45 +295,64 @@ public class MainActivity extends AppCompatActivity {
         dialog.setCancelable(true);
         dialog.setCanceledOnTouchOutside(true);
         Button dialogButtonDelete = (Button) dialog.findViewById(R.id.delete);
-        CheckBox foodAndDrinkCheckBox = (CheckBox) dialog.findViewById(R.id.food_and_drink);
-        CheckBox insideCheckBox = (CheckBox) dialog.findViewById(R.id.inside);
-        CheckBox outsideCheckBox = (CheckBox) dialog.findViewById(R.id.outside);
-        CheckBox travelCheckBox = (CheckBox) dialog.findViewById(R.id.travel);
-        CheckBox fitnessCheckBox = (CheckBox) dialog.findViewById(R.id.fitness);
-        /** set true if a catogorie is selectd */
-        if(foodAndDrinkCheckBox.isChecked())
-            MainActivity.this.mFavoritesCatogories[0]=true;
-        if(insideCheckBox.isChecked())
-            MainActivity.this.mFavoritesCatogories[1]=true;
-        if(outsideCheckBox.isChecked())
-            MainActivity.this.mFavoritesCatogories[2]=true;
-        if(travelCheckBox.isChecked())
-            MainActivity.this.mFavoritesCatogories[3]=true;
-        if(fitnessCheckBox.isChecked())
-            MainActivity.this.mFavoritesCatogories[4]=true;
-        RadioGroup radioGroup = (RadioGroup) dialog.findViewById(R.id.radioGroupFilter);
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
-        {
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch(checkedId){
-                    /** set the max distance in which user want see the posts*
-                     *  near = 20
-                     *  medium = 50
-                     *  far = 100
-                     */
-                    case R.id.radioButton1:
-                        MainActivity.this.mDistance = 20;
-                        break;
-                    case R.id.radioButton2:
-                        MainActivity.this.mDistance = 50;
-                        break;
-                    case R.id.radioButton3:
-                        MainActivity.this.mDistance = 100;
-                        break;
-                }
-            }
-        });
 
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+            @Override
+            public void onDismiss(DialogInterface dialog1) {
+                CheckBox foodAndDrinkCheckBox = (CheckBox) dialog.findViewById(R.id.food_and_drink);
+                CheckBox insideCheckBox = (CheckBox) dialog.findViewById(R.id.inside);
+                CheckBox outsideCheckBox = (CheckBox) dialog.findViewById(R.id.outside);
+                CheckBox travelCheckBox = (CheckBox) dialog.findViewById(R.id.travel);
+                CheckBox fitnessCheckBox = (CheckBox) dialog.findViewById(R.id.fitness);
+                /** set true if a catogorie is selectd */
+                if(foodAndDrinkCheckBox.isChecked())
+                    mFavoritesCatogories.add(FOODANDDRINK);
+                else
+                    mFavoritesCatogories.remove(FOODANDDRINK);
+                if(insideCheckBox.isChecked())
+                    mFavoritesCatogories.add(INSIDE);
+                else
+                    mFavoritesCatogories.remove(INSIDE);
+                if(outsideCheckBox.isChecked())
+                    mFavoritesCatogories.add(OUTSIDE);
+                else
+                    mFavoritesCatogories.remove(OUTSIDE);
+                if(travelCheckBox.isChecked())
+                    mFavoritesCatogories.add(TRAVEL);
+                else
+                    mFavoritesCatogories.remove(TRAVEL);
+                if(fitnessCheckBox.isChecked())
+                    mFavoritesCatogories.add(FITNESS);
+                else
+                    mFavoritesCatogories.remove(FITNESS);
+
+                RadioGroup radioGroup = (RadioGroup) dialog.findViewById(R.id.radioGroupFilter);
+                radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+                {
+                    public void onCheckedChanged(RadioGroup group, int checkedId) {
+                        switch(checkedId){
+                            /** set the max distance in which user want see the posts*
+                             *  near = 20
+                             *  medium = 50
+                             *  far = 100
+                             */
+                            case R.id.radioButton1:
+                                MainActivity.this.mDistance = 20;
+                                break;
+                            case R.id.radioButton2:
+                                MainActivity.this.mDistance = 50;
+                                break;
+                            case R.id.radioButton3:
+                                MainActivity.this.mDistance = 100;
+                                break;
+                        }
+                    }
+                });
+                updateListPosts();
+            }
+
+        });
         dialogButtonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -381,6 +410,20 @@ public class MainActivity extends AppCompatActivity {
                 fragmentManager.beginTransaction();
         fragmentTransaction.remove(fragment);
         fragmentTransaction.commit();
+    }
+
+    private void updateListPosts(){
+        final List<Post> posts = new ArrayList<>();
+        for(Post post : InfoManager.getInstance().getmPostList()){
+            String type = GenerateMainCategories.getMacro(this,post.getType());
+            if(mFavoritesCatogories.contains(type))
+               posts.add(post);
+        }
+        for(Post post : posts){
+            Log.d("HASHSETFILTER",post.getIdPost()+"");
+        }
+        InfoManager.getInstance().getmPostAdapter().changeList(posts);
+        InfoManager.getInstance().getmPostAdapter().notifyDataSetChanged();
     }
 
     /*****************************************************************************************/

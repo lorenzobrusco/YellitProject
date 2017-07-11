@@ -3,6 +3,7 @@ package unical.master.computerscience.yellit.logic;
 import java.util.ArrayList;
 import java.util.List;
 
+import unical.master.computerscience.yellit.graphic.Adapters.PostAdapter;
 import unical.master.computerscience.yellit.logic.objects.FitnessSessionData;
 import unical.master.computerscience.yellit.logic.objects.PlaceData;
 import unical.master.computerscience.yellit.logic.objects.Post;
@@ -21,6 +22,8 @@ public class InfoManager {
     private FitnessSessionData mFitnessSessionData;
     private PlaceData mPlaceData;
     private List<Post> mPostList;
+    private List<Post> mPostFilteredList;
+    private PostAdapter mPostAdapter;
     private boolean isColorMode;
 
     private InfoManager() {
@@ -28,6 +31,7 @@ public class InfoManager {
         mPlaceData = new PlaceData();
         mPlaceData.place = new ArrayList<>();
         mPostList = new ArrayList<>();
+        mPostFilteredList = new ArrayList<>();
     }
 
     public static InfoManager getInstance() {
@@ -36,7 +40,7 @@ public class InfoManager {
         return mInfoManager;
     }
 
-    public void destroy(){
+    public void destroy() {
         mInfoManager = null;
     }
 
@@ -88,11 +92,27 @@ public class InfoManager {
         this.mPlaceData = mPlaceData;
     }
 
-    public void setmPostList(final List<Post> posts){
+    public void setmPostList(final List<Post> posts) {
         this.mPostList = posts;
     }
 
-    public List<Post> getmPostList(){
+    public List<Post> getmPostFilteredList() {
+        return mPostFilteredList;
+    }
+
+    public void setmPostFilteredList(List<Post> mPostFilteredList) {
+        this.mPostFilteredList = mPostFilteredList;
+    }
+
+    public PostAdapter getmPostAdapter() {
+        return mPostAdapter;
+    }
+
+    public void setmPostAdapter(PostAdapter mPostAdapter) {
+        this.mPostAdapter = mPostAdapter;
+    }
+
+    public List<Post> getmPostList() {
         return this.mPostList;
     }
 

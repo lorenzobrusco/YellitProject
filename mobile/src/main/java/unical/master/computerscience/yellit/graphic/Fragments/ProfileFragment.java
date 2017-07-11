@@ -24,6 +24,9 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -47,6 +50,7 @@ import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.graphic.Adapters.PostProfileAdapter;
 import unical.master.computerscience.yellit.graphic.custom.SelectorImageView;
 import unical.master.computerscience.yellit.logic.GoogleApiClient;
+import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.logic.objects.Friend;
 import unical.master.computerscience.yellit.logic.objects.Post;
 
@@ -78,10 +82,16 @@ public class ProfileFragment extends Fragment {
     protected ExpandableHeightListView mPosts;
 
     @Bind(R.id.radar_chart_profile)
-    RadarChart mRadarInfo;
+    protected RadarChart mRadarInfo;
 
     @Bind(R.id.friendsGridView)
-    GridView mFriendsGridView;
+    protected GridView mFriendsGridView;
+
+    @Bind(R.id.photo_profile)
+    protected ImageView mPhotoProfile;
+
+    @Bind(R.id.full_name_profile)
+    protected TextView mFullNameProfile;
 
     private List<Friend> mFriends;
 
@@ -99,7 +109,29 @@ public class ProfileFragment extends Fragment {
         mPosts.setExpanded(true);
         this.setupRadar();
         this.setupFriendGridView();
+        this.setupInfo();
         return view;
+    }
+
+    private void setupInfo() {
+        Glide.with(this)
+                .load(InfoManager.getInstance().getmUser().getPathImg())
+                .listener(new RequestListener<String, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        return false;
+                    }
+
+                })
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(mPhotoProfile);
+
+       mFullNameProfile.setText(InfoManager.getInstance().getmUser().getFullname());
     }
 
     private void setupButtonExpandLayout() {
