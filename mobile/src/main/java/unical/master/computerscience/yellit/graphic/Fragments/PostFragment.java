@@ -1,7 +1,5 @@
 package unical.master.computerscience.yellit.graphic.Fragments;
 
-import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,16 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.Toast;
-
-import org.json.JSONArray;
-
-import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import retrofit2.Call;
@@ -28,11 +18,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import unical.master.computerscience.yellit.MainActivity;
 import unical.master.computerscience.yellit.connection.PostGestureService;
 import unical.master.computerscience.yellit.graphic.custom.PaddingItemDecoration;
+import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.logic.objects.Post;
-import unical.master.computerscience.yellit.logic.objects.User;
 import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.graphic.Adapters.PostAdapter;
 import unical.master.computerscience.yellit.utilities.BaseURL;
@@ -43,6 +32,8 @@ import unical.master.computerscience.yellit.utilities.BaseURL;
 
 public class PostFragment extends Fragment {
 
+    private static final String ARGS_SCROLL_POS = "scroll_pos" ;
+    private static final String ARGS_SCROLL_OFFSET = "scroll_offset";
     @Bind(R.id.recycleview_posts)
     RecyclerView mPosts;
 
@@ -55,17 +46,16 @@ public class PostFragment extends Fragment {
         /**
          * Decomment to have actual posts from database
          */
-        this.initList();
 
+        this.initList();
         /**
          * Decomment to have fake posts for debugging purpose
+         * final PostAdapter mPostAdapter = new PostAdapter(PostFragment.this.getContext(), FAKE_initList());
+         * mPosts.setAdapter(mPostAdapter);
          */
-        //final PostAdapter mPostAdapter = new PostAdapter(PostFragment.this.getContext(), FAKE_initList());
-        //mPosts.setAdapter(mPostAdapter);
 
-        mPosts.setLayoutManager(new LinearLayoutManager(this.getContext()));
         mPosts.addItemDecoration(new PaddingItemDecoration(170));
-
+        mPosts.setLayoutManager(new LinearLayoutManager(this.getContext()));
         return view;
     }
 
@@ -92,7 +82,9 @@ public class PostFragment extends Fragment {
                         postsToShow.add(p);
                     }
 
-                final PostAdapter mPostAdapter = new PostAdapter(PostFragment.this.getContext(), postsToShow);
+                Log.d("Posters",posts.length+"");
+                InfoManager.getInstance().setmPostList(postsToShow);
+                final PostAdapter mPostAdapter = new PostAdapter(PostFragment.this.getContext(), InfoManager.getInstance().getmPostList());
                 mPosts.setAdapter(mPostAdapter);
 
             }

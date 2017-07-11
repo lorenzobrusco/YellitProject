@@ -1,8 +1,10 @@
 package unical.master.computerscience.yellit.graphic.Activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -53,34 +55,63 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //TODO replace this code with login();
-              //   login();
-               onLoginSuccess();
+               if(validate()){
+                   new AsyncTask<Void, Void, Boolean>(){
+
+                       ProgressDialog progressDialog;
+
+                       @Override
+                       protected void onPreExecute() {
+                           progressDialog = new ProgressDialog(LoginFragment.this.getContext(),
+                                   R.style.AppTheme_Dark_Dialog);
+                           progressDialog.setIndeterminate(true);
+                           progressDialog.setMessage("Authenticating...");
+                           progressDialog.show();
+                       }
+
+                       @Override
+                       protected Boolean doInBackground(Void... params) {
+                           return login();
+                       }
+
+                       @Override
+                       protected void onPostExecute(Boolean aBoolean) {
+                           if(aBoolean){
+                               if(progressDialog != null){
+                                   progressDialog.dismiss();
+                               }
+                           }
+                       }
+                   }.execute();
+               }
+                   login();
             }
         });
 
         return view;
     }
 
-    public void login() {
+    public boolean login() {
         Log.d(TAG, "Login");
 
-      /*  if (!validate()) {
+        if (!validate()) {
             onLoginFailed();
-            return;
-        }*/
+            return false;
+        }
 
         _loginButton.setEnabled(false);
 
 
         final String email = _emailText.getText().toString();
         final String password = _passwordText.getText().toString();
-       /* final ProgressDialog progressDialog = new ProgressDialog(LoginFragment.this,
-                R.style.AppTheme_Dark_Dialog);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Authenticating...");
-        progressDialog.show();*/
-        this.login(email, password);
-       // onLoginSuccess();
+
+       //TODO Cosco doesn't work this shit
+        if(this.login(email, password)) {
+            onLoginSuccess();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void onLoginSuccess() {
@@ -119,7 +150,9 @@ public class LoginFragment extends Fragment {
         return valid;
     }
 
-    private void login(String email, String password) {
+    private boolean login(String email, String password) {
+        /** the method required this array*/
+        final boolean[] correct = {false};
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BaseURL.URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -138,14 +171,17 @@ public class LoginFragment extends Fragment {
                 } else {
                     Log.d("nick", profile.getNickname());
                     onLoginSuccess();
+                    correct[0] = true;
                 }
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
                 Log.d("retrofit", "errore di log");
+                correct[0] = false;
             }
         });
+        return correct[0];
     }
 
     private void buildErrorDialog() {

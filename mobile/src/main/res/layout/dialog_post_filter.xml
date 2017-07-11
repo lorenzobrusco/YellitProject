@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="300dp"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="16dp">
 
     <TextView
@@ -12,7 +11,11 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="16dp"
-        android:text="testo per far capire che cosa è sto coso" />
+        android:fontFamily="serif"
+        android:gravity="center"
+        android:text="@string/filter_start_string"
+        android:textColor="@color/black"
+        android:textSize="22dp" />
 
     <ScrollView
         android:id="@+id/scrollView2"
@@ -33,10 +36,10 @@
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
+                    android:layout_column="1"
                     android:layout_marginTop="8dp"
-                    android:src="@drawable/radar"
                     android:layout_row="1"
-                    android:layout_column="1" />
+                    android:src="@drawable/radar" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -48,29 +51,14 @@
                     android:textSize="18dp" />
 
 
-
             </GridLayout>
 
-            <com.etiennelawlor.discreteslider.library.ui.DiscreteSlider
-                android:layout_width="match_parent"
-                android:layout_height="64dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:layout_gravity="bottom"
-                android:background="@color/grey_100"
-                app:backdropFillColor="@color/grey_200"
-                app:backdropStrokeColor="@color/grey_300"
-                app:backdropStrokeWidth="1dp"
-                app:horizontalBarThickness="4dp"
-                app:tickMarkCount="6"
-                app:tickMarkRadius="8dp"
-                app:position="1"
-                />
-
             <RadioGroup
+                android:id="@+id/radioGroupFilter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp">
+                android:layout_marginLeft="8dp"
+                android:orientation='horizontal'>
 
 
                 <RadioButton
@@ -78,21 +66,22 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="RadioButton" />
+                    android:text="Near" />
 
                 <RadioButton
                     android:id="@+id/radioButton2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="RadioButton" />
+                    android:text="Medium" />
 
                 <RadioButton
                     android:id="@+id/radioButton3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="RadioButton" />
+                    android:checked="true"
+                    android:text="Far" />
             </RadioGroup>
 
             <View
@@ -125,7 +114,7 @@
             <GridLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:columnCount="2"
+                android:columnCount="3"
                 android:rowCount="2">
 
                 <CheckBox
@@ -133,34 +122,39 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="8dp"
+                    android:checked="true"
                     android:paddingRight="8dp"
-                    android:text="CheckBox" />
+                    android:text="@string/food_and_drink" />
 
                 <CheckBox
                     android:id="@+id/inside"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="8dp"
+                    android:checked="true"
                     android:paddingRight="8dp"
-                    android:text="CheckBox" />
+                    android:text="Inside" />
 
                 <CheckBox
                     android:id="@+id/outside"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="CheckBox" />
+                    android:checked="true"
+                    android:text="Outside" />
 
                 <CheckBox
                     android:id="@+id/travel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="CheckBox" />
+                    android:checked="true"
+                    android:text="Travel" />
 
                 <CheckBox
                     android:id="@+id/fitness"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="CheckBox" />
+                    android:checked="true"
+                    android:text="Fitness" />
             </GridLayout>
 
         </LinearLayout>
@@ -170,7 +164,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/scrollView2">
+        android:layout_below="@+id/scrollView2"
+        android:layout_marginTop="16dp">
 
         <Button
             android:id="@+id/delete"
@@ -179,16 +174,8 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
             android:background="?android:attr/selectableItemBackground"
-            android:text="Delete"
+            android:text="CLOSE"
             android:textColor="@color/colorAccent" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toStartOf="@+id/delete"
-            android:background="?android:attr/selectableItemBackground"
-            android:text="CONFIRM"
-            android:textColor="@color/colorAccent" />
     </RelativeLayout>
 </RelativeLayout>

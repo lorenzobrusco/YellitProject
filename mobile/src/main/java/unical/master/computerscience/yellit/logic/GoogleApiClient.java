@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -42,6 +43,7 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -50,6 +52,9 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import unical.master.computerscience.yellit.utilities.PrefManager;
+
+import static java.text.DateFormat.getDateInstance;
+import static java.text.DateFormat.getTimeInstance;
 
 public class GoogleApiClient implements com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener,
         com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks {
@@ -61,7 +66,6 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
     private static GoogleApiClient mGoogleApiClient = null;
     private com.google.android.gms.common.api.GoogleApiClient mClientFitness;
     private com.google.android.gms.common.api.GoogleApiClient mClientPlace;
-    private com.google.android.gms.common.api.GoogleApiClient mClientLocation;
 
     private GoogleApiClient(final AppCompatActivity appCompatActivity) {
         mClientFitness = new com.google.android.gms.common.api.GoogleApiClient.Builder(appCompatActivity)
@@ -76,8 +80,7 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
                 .addConnectionCallbacks(new com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks() {
                     @Override
                     public void onConnected(@Nullable Bundle bundle) {
-                        if (PrefManager.getInstace(appCompatActivity).isFirstTimeLaunch())
-                            subscribeAllFitnessRecord(appCompatActivity);
+                        subscribeAllFitnessRecord(appCompatActivity);
                     }
 
                     @Override
@@ -98,14 +101,8 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
-        mClientLocation = new com.google.android.gms.common.api.GoogleApiClient.Builder(appCompatActivity)
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
         mClientFitness.connect();
         mClientPlace.connect();
-//        mClientLocation.connect();
     }
 
 
@@ -135,14 +132,12 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
      * disconnect all GoogleApiClient
      */
     public void disconnect() {
-        if (mClientFitness.isConnected() && mClientPlace.isConnected() && mClientLocation.isConnected()) {
+        if (mClientFitness.isConnected() && mClientPlace.isConnected()) {
             mClientFitness.disconnect();
             mClientPlace.disconnect();
-            mClientLocation.disconnect();
         }
         mClientFitness = null;
         mClientPlace = null;
-        mClientLocation = null;
         mGoogleApiClient = null;
     }
 
@@ -159,7 +154,6 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
         result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
             @Override
             public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
-                Log.i(TAG, likelyPlaces + " banana");
 
                 final List<String> places = new ArrayList<>();
                 final List<LatLng> latlongs = new ArrayList<>();
@@ -179,24 +173,6 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
                 likelyPlaces.release();
             }
         });
-    }
-
-    /**
-     * @param context context of activity
-     * @return current location
-     */
-    public String getLocation(final Context context) {
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return null;
-        }
-        Location mLocation = LocationServices.FusedLocationApi.getLastLocation(mClientLocation);
-        Log.i(TAG, mLocation + "");
-        String location = null;
-        if (mLocation != null) {
-            location = this.getAddress(context, mLocation.getLatitude(), mLocation.getLongitude());
-        }
-        return location;
     }
 
     /**
@@ -249,7 +225,6 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
         if (mClientFitness.isConnected()) {
             this.subscribeFitnessRecord(context, DataType.TYPE_STEP_COUNT_DELTA);
             this.subscribeFitnessRecord(context, DataType.TYPE_CALORIES_EXPENDED);
-            this.subscribeFitnessRecord(context, DataType.TYPE_SPEED);
         }
     }
 
@@ -261,7 +236,6 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
         if (mClientFitness.isConnected()) {
             this.unsubscribeFitnessRecord(context, DataType.TYPE_STEP_COUNT_DELTA);
             this.unsubscribeFitnessRecord(context, DataType.TYPE_CALORIES_EXPENDED);
-            this.unsubscribeFitnessRecord(context, DataType.TYPE_SPEED);
         }
     }
 
@@ -312,16 +286,18 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
 
     /**
      * @param context context of activity that call it
-     *                show the history inyo google fit
+     *                show the history into google fit
      */
     public void readFitnessHistory(final Context context) {
         /**
          *  transform day to ms, 1000 ms * 60 s * 60 m * 24 h
          */
-        final long DAY_IN_MS = 1000 * 60 * 60 * 24;
+        Calendar cal = Calendar.getInstance();
         Date now = new Date();
-        long endTime = now.getTime();
-        long startTime = endTime - DAY_IN_MS;
+        cal.setTime(now);
+        long endTime = cal.getTimeInMillis();
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        long startTime = cal.getTimeInMillis();
 
         final DataReadRequest readRequest = new DataReadRequest.Builder()
                 .aggregate(DataType.TYPE_STEP_COUNT_DELTA, DataType.AGGREGATE_STEP_COUNT_DELTA)
@@ -348,50 +324,79 @@ public class GoogleApiClient implements com.google.android.gms.common.api.Google
 
     }
 
-    /**
-     * @param context
-     */
-
-    public void readFitnessGoal(final Context context) {
-        PendingResult<GoalsResult> pendingResult = Fitness.GoalsApi.readCurrentGoals(mClientFitness,
-                new GoalsReadRequest.Builder()
-                        .addDataType(DataType.TYPE_STEP_COUNT_DELTA)
-                        .build());
-        pendingResult.setResultCallback(new ResultCallback<GoalsResult>() {
-            @Override
-            public void onResult(@NonNull GoalsResult goalsResult) {
-                List<Goal> goals = goalsResult.getGoals();
-                for (Goal goal : goals) {
-                    processGoal(goal);
-                }
-            }
-        });
-    }
-
 
     /**
      * @param dataSet show the data point
      *                set the information about user in the infoManager class
      */
     private void processDataSet(final Context context, final DataSet dataSet) {
+        DateFormat dateFormat = getTimeInstance();
         for (DataPoint dataPoint : dataSet.getDataPoints()) {
             for (Field field : dataPoint.getDataType().getFields()) {
-                if (field.getName().contains(STEPS))
+                if (field.getName().contains(STEPS) && InfoManager.getInstance().getmFitnessSessionData().steps < Integer.parseInt(dataPoint.getValue(field) + ""))
                     InfoManager.getInstance().getmFitnessSessionData().steps = Integer.parseInt(dataPoint.getValue(field) + "");
-                if (field.getName().contains(CALORIES))
+                if (field.getName().contains(CALORIES) && InfoManager.getInstance().getmFitnessSessionData().calories < Float.parseFloat(dataPoint.getValue(field) + ""))
                     InfoManager.getInstance().getmFitnessSessionData().calories = Float.parseFloat(dataPoint.getValue(field) + "");
                 if (field.getName().contains(SPEED) && !(dataPoint.getValue(field) + "").equals("NaN"))
                     InfoManager.getInstance().getmFitnessSessionData().speed = Float.parseFloat(dataPoint.getValue(field) + "");
-                Log.i(TAG, "\tField: " + field.getName());
-                Log.i(TAG, "\tValue: " + dataPoint.getValue(field));
             }
         }
+
     }
 
     /**
-     * @param goal
+     * @param context show all goals from google fit
+     */
+    public void readFitnessGoal(final Context context) {
+       new AsyncTask<Context, Void, Double>(){
+           @Override
+           protected Double doInBackground(Context... params) {
+               double progress = 0;
+               PendingResult<GoalsResult> pendingResult =
+                       Fitness.GoalsApi.readCurrentGoals(
+                               mClientFitness,
+                               new GoalsReadRequest.Builder()
+                                       .addDataType(DataType.TYPE_STEP_COUNT_DELTA)
+                                       .addDataType(DataType.TYPE_DISTANCE_DELTA)
+                                       .build());
+
+               GoalsResult readDataResult = pendingResult.await();
+               List<Goal> goals = readDataResult.getGoals();
+               for(Goal goal : goals){
+                   Calendar current = Calendar.getInstance();
+                   PendingResult<DataReadResult> pendingResultGoal = Fitness.HistoryApi.readData(
+                           mClientFitness,
+                           new DataReadRequest.Builder()
+                                   .read(DataType.TYPE_STEP_COUNT_DELTA)
+                                   .setTimeRange(
+                                           goal.getStartTime(current, TimeUnit.NANOSECONDS),
+                                           goal.getEndTime(current, TimeUnit.NANOSECONDS),
+                                           TimeUnit.NANOSECONDS)
+                                   .build());
+                   DataReadResult stepReadResult = pendingResultGoal.await();
+                   List<DataPoint> dataPoints =
+                           stepReadResult.getDataSet(DataType.TYPE_STEP_COUNT_DELTA).getDataPoints();
+
+                   int total = 0;
+                   for (DataPoint dataPoint : dataPoints) {
+                       Field field = dataPoint.getDataType().getFields().get(0);
+                       total += dataPoint.getValue(field).asInt();
+                   }
+                   progress = total / goal.getMetricObjective().getValue();
+                   Log.i(TAG, "Goal: " + progress);
+               }
+               return progress;
+           }
+       }.execute(context);
+
+    }
+
+
+    /**
+     * @param goal this method show the number of step that user might do every day
      */
     private void processGoal(final Goal goal) {
+        Log.i(TAG, "here");
         Calendar current = Calendar.getInstance();
         PendingResult<DataReadResult> pendingResult = Fitness.HistoryApi.readData(mClientFitness,
                 new DataReadRequest.Builder()

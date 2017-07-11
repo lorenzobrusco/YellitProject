@@ -77,12 +77,12 @@ public class FitnessFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_fitness, container, false);
-        GoogleApiClient.getInstance((AppCompatActivity) getActivity()).readFitnessHistory(getContext());
         ButterKnife.bind(this, view);
         createBackSeries();
-
         updateWeatherData("Cosenza");
-
+        GoogleApiClient.getInstance((AppCompatActivity) getActivity()).readFitnessHistory(getContext());
+        GoogleApiClient.getInstance((AppCompatActivity) getActivity()).readFitnessGoal(getContext());
+//        GoogleApiClient.getInstance((AppCompatActivity) getActivity()).unsubscribeAllFitnessRecord(getContext());
         createDataSeries1();
         createDataSeries2();
         createDataSeries3();

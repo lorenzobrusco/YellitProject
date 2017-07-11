@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Handler;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 
 import org.w3c.dom.Document;
 
@@ -15,6 +18,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.utilities.BaseURL;
@@ -30,6 +35,8 @@ import static unical.master.computerscience.yellit.utilities.SystemUI.changeSyst
 public class LoadActivity extends AppCompatActivity {
 
     private static final String ROOT = "info";
+    @Bind(R.id.imageView_load_page)
+    protected ImageView mLogoImageView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,6 +44,11 @@ public class LoadActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_load);
+        ButterKnife.bind(this);
+        Animation zoomin = AnimationUtils.loadAnimation(this, R.anim.zoom_in);
+        Animation zoomout = AnimationUtils.loadAnimation(this, R.anim.zoom_out);
+        mLogoImageView.startAnimation(zoomin);
+        mLogoImageView.startAnimation(zoomout);
         initXMLFile();
         PrefManager.getInstace(this);
         InfoManager.getInstance().setColorMode(PrefManager.getInstace(this).isColorMode());
