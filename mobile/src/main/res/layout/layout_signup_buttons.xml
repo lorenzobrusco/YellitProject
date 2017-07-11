@@ -122,10 +122,9 @@
 
 
         </LinearLayout>
-
         <android.support.v7.widget.AppCompatButton
-            android:layout_marginTop="16dp"
             android:id="@+id/btn_login_signup"
+            android:layout_marginTop="16dp"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
@@ -138,21 +137,32 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:weightSum="1">
 
-            <android.support.v7.widget.AppCompatButton
+            <com.facebook.login.widget.LoginButton
                 android:id="@+id/btn_fb_login_signup"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
+                android:layout_weight="0.55"
+                android:background="@drawable/rounded_image"
+                android:backgroundTint="@color/colorFacebook"
+                android:paddingLeft="36dp"
+                android:paddingRight="36dp" />
 
+            <!-- <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btn_fb_login_signup"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/rounded_image"
                 android:backgroundTint="@color/colorFacebook"
                 android:drawableLeft="@drawable/ic_gallery"
                 android:paddingLeft="36dp"
                 android:paddingRight="36dp"
                 android:text="Facebook"
-                android:textColor="@color/white" />
+                android:textColor="@color/white" /> -->
 
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/btn_gp_login_signup"

@@ -1,6 +1,9 @@
 package unical.master.computerscience.yellit.graphic.Activities;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,7 +11,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
+import android.util.Log;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,12 +61,30 @@ public class LoginSignupActivity extends AppCompatActivity {
 //                        mPagerTitleStrip.
                     }
                 });
+
+        try{
+            PackageInfo info = getPackageManager().getPackageInfo(
+                    "unical.master.computerscience.yellit", PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+
+            e.printStackTrace();
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onBackPressed() {
         // Disable going back to the MainActivity
         moveTaskToBack(true);
+
     }
 
     @Override

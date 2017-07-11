@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -65,9 +72,14 @@ public class SignUpFragment extends Fragment {
     EditText _reEnterPasswordText;
     @Bind(R.id.btn_login_signup)
     Button _signupButton;
+    @Bind(R.id.btn_fb_login_signup)
+    LoginButton _facebookSignButton;
 
     private Dialog choosePhotoDialog;
     private String currentPhotoPath;
+
+    private CallbackManager callbackManager;
+
 
     @Nullable
     @Override
@@ -88,12 +100,32 @@ public class SignUpFragment extends Fragment {
             }
         });
 
+        callbackManager = CallbackManager.Factory.create();
+
+        _facebookSignButton.setReadPermissions("email");
+        _facebookSignButton.setFragment(this);
+
+        _facebookSignButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                // App code
+            }
+
+            @Override
+            public void onCancel() {
+                // App code
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+                // App code
+            }
+        });
+
         _profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 choosePhotoDialog.show();
-
             }
         });
         return view;

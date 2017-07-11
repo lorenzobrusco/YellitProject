@@ -85,4 +85,6 @@
         <item> Female </item>
     </string-array>
 
+    <string name="facebook_app_id">314270565670185</string>
+
 </resources>
