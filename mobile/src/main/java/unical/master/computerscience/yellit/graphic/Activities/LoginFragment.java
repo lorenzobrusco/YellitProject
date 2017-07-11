@@ -108,7 +108,7 @@ public class LoginFragment extends Fragment {
 //               }
 //                   login();
                 //TODO debug
-                onLoginSuccess();
+                onLoginSuccess(null);
             }
         });
 
@@ -132,7 +132,7 @@ public class LoginFragment extends Fragment {
 
                                 try {
 
-                                    String email = object.getString("email");
+                                    final String email = object.getString("email");
 
                                     Retrofit retrofit = new Retrofit.Builder()
                                             .baseUrl(BaseURL.URL)
@@ -151,7 +151,7 @@ public class LoginFragment extends Fragment {
                                                 Log.d("retrofit", "email o password errati");
                                             } else {
                                                 Log.d("nick", profile.getNickname());
-                                                LoginFragment.this.onLoginSuccess();
+                                                LoginFragment.this.onLoginSuccess(email);
                                             }
                                         }
 
@@ -174,12 +174,12 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void onCancel() {
-                Log.e("CANCEL", "vabbè");
+                Log.e("LOGINFACEBOOKERROR", "vabbè");
             }
 
             @Override
             public void onError(FacebookException exception) {
-                Log.e("ERRORE", "mannaia");
+                Log.e("LOGINFACEBOOKERROR", "mannaia");
             }
         });
 
@@ -209,9 +209,9 @@ public class LoginFragment extends Fragment {
         }
     }
 
-    public void onLoginSuccess() {
+    public void onLoginSuccess(String name) {
         _loginButton.setEnabled(true);
-        PrefManager.getInstace(getContext()).setUser(_emailText.getText().toString());
+        PrefManager.getInstace(getContext()).setUser(name == null ?_emailText.getText().toString() : name);
         startActivity(new Intent(getContext(), WelcomeActivity.class));
         getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
         getActivity().finish();
@@ -265,7 +265,7 @@ public class LoginFragment extends Fragment {
                     Log.d("retrofit", "email o password errati");
                 } else {
                     Log.d("nick", profile.getNickname());
-                    onLoginSuccess();
+                    onLoginSuccess(null);
                     correct[0] = true;
                 }
             }
