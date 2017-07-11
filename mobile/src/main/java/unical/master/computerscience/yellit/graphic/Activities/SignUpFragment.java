@@ -362,30 +362,24 @@ public class SignUpFragment extends Fragment {
             return;
         }
 
-        if(FacebookSdk.isFacebookRequestCode(requestCode))
-        {
-            if(resultCode == Activity.RESULT_OK) {
-                callbackManager.onActivityResult(requestCode, resultCode, data);
-            }
+        if (FacebookSdk.isFacebookRequestCode(requestCode)) {
+            callbackManager.onActivityResult(requestCode, resultCode, data);
         }
 
 
-        if(requestCode == EZPhotoPick.PHOTO_PICK_CAMERA_REQUEST_CODE)
-        {
+        if (requestCode == EZPhotoPick.PHOTO_PICK_CAMERA_REQUEST_CODE) {
             try {
                 ArrayList<String> pickedPhotoNames = data.getStringArrayListExtra(EZPhotoPick.PICKED_PHOTO_NAMES_KEY);
                 Bitmap pickedPhoto = ezPhotoPickStorage.loadLatestStoredPhotoBitmap(300);
 
                 _profileImage.setImageBitmap(pickedPhoto);
 
-                currentPhotoPath =  ezPhotoPickStorage.getAbsolutePathOfStoredPhoto(DEMO_PHOTO_PATH, pickedPhotoNames.get(0));
+                currentPhotoPath = ezPhotoPickStorage.getAbsolutePathOfStoredPhoto(DEMO_PHOTO_PATH, pickedPhotoNames.get(0));
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-        else if(requestCode == EZPhotoPick.PHOTO_PICK_GALERY_REQUEST_CODE)
-        {
+        } else if (requestCode == EZPhotoPick.PHOTO_PICK_GALERY_REQUEST_CODE) {
             try {
                 ArrayList<String> pickedPhotoNames = data.getStringArrayListExtra(EZPhotoPick.PICKED_PHOTO_NAMES_KEY);
                 for (String photoName : pickedPhotoNames) {
@@ -394,7 +388,7 @@ public class SignUpFragment extends Fragment {
 
                     _profileImage.setImageBitmap(pickedPhoto);
 
-                    currentPhotoPath =  ezPhotoPickStorage.getAbsolutePathOfStoredPhoto(DEMO_PHOTO_PATH, photoName);
+                    currentPhotoPath = ezPhotoPickStorage.getAbsolutePathOfStoredPhoto(DEMO_PHOTO_PATH, photoName);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
