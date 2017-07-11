@@ -324,8 +324,8 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
         RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
 
-        RequestBody lat = RequestBody.create(MediaType.parse("text/plain"), InfoManager.getInstance().getmPlaceData().latLongs.get(pos).latitude + "");
-        RequestBody longi = RequestBody.create(MediaType.parse("text/plain"), InfoManager.getInstance().getmPlaceData().latLongs.get(pos).longitude + "");
+        RequestBody lat = RequestBody.create(MediaType.parse("text/plain"), pos == -1 ? "0.00" : InfoManager.getInstance().getmPlaceData().latLongs.get(pos).latitude + "");
+        RequestBody longi = RequestBody.create(MediaType.parse("text/plain"),  pos == -1 ? "0.00" : InfoManager.getInstance().getmPlaceData().latLongs.get(pos).longitude + "");
 
         RequestBody newComment = RequestBody.create(MediaType.parse("text/plain"), comment);
         RequestBody newPlace = RequestBody.create(MediaType.parse("text/plain"), place);

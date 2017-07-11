@@ -174,12 +174,12 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void onCancel() {
-                Log.e("CANCEL", "vabbè");
+                Log.e("LOGINFACEBOOKERROR", "vabbè");
             }
 
             @Override
             public void onError(FacebookException exception) {
-                Log.e("ERRORE", "mannaia");
+                Log.e("LOGINFACEBOOKERROR", "mannaia");
             }
         });
 
