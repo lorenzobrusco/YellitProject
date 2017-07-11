@@ -119,6 +119,7 @@
                         android:layout_marginRight="4dp"
                         android:text="mangiando"
                         android:textColor="@android:color/black"
+                        android:id="@+id/type_post"
                         android:textSize="16dp" />
 
                     <TextView

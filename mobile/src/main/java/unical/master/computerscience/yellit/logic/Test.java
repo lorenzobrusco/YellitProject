@@ -5,4 +5,6 @@ package unical.master.computerscience.yellit.logic;
  */
 
 public class Test {
+    //TODO STRONZI DI MERDA A CHE CAZZO VI SERVE QUESTA CAZZO DI CLASSE VACANTE?????
+    //TODO EH PERCHE' VI PIACE VEDERE PUTTANATE EHHHHHHHHH!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 }

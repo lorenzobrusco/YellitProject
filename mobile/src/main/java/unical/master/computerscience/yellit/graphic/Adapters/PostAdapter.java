@@ -39,6 +39,7 @@ import unical.master.computerscience.yellit.logic.objects.Like;
 import unical.master.computerscience.yellit.logic.objects.Post;
 import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.utilities.BaseURL;
+import unical.master.computerscience.yellit.utilities.GenerateMainCategories;
 
 /**
  * Created by Lorenzo on 14/03/2017.
@@ -69,7 +70,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         holder.commentText.setText(currPost.getComment());
         holder.setImagePost(currPost.getPostImagePost());
         holder.setUserImage(currPost.getUserImagePath());
-        holder.mLikeContent.setText(currPost.getLikes() + " LAIK");
+        holder.mType.setText(GenerateMainCategories.getMacro(mContext,currPost.getType()));
+        holder.mLikeContent.setText(currPost.getLikes() + " Like");
 
         holder.mLikeButton.setOnLikeListener(new OnLikeListener() {
             @Override
@@ -135,6 +137,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         super.onAttachedToRecyclerView(recyclerView);
     }
 
+    public void changeList(List<Post> posts){
+        this.mPosts = posts;
+    }
+
     public class PostViewHolder extends RecyclerView.ViewHolder {
 
         @Bind(R.id.user_info_post)
@@ -161,6 +167,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         LikeButton mLikeButton;
         @Bind(R.id.like_post_content)
         TextView mLikeContent;
+        @Bind(R.id.type_post)
+        TextView mType;
 
         private boolean isLike = false;
 

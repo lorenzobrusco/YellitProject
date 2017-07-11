@@ -44,6 +44,8 @@
         <item>@color/cyan_700</item>
     </array>
 
+
+    <!--Travel-->
     <array name="sub_categories_1">
     </array>
 
@@ -55,6 +57,7 @@
         <item>@color/page4</item>
     </array>
 
+    <!-- Inside-->
     <array name="sub_categories_2">
         <item>Games</item>
         <item>Films</item>
@@ -71,6 +74,7 @@
         <item>@color/page4</item>
     </array>
 
+    <!-- Outside-->
     <array name="sub_categories_3">
         <item>Cinema</item>
         <item>Sport</item>
@@ -85,6 +89,8 @@
         <item>@color/page4</item>
     </array>
 
+
+    <!--Food and Drink-->
     <array name="sub_categories_4">
         <item>Pizza</item>
         <item>Restaurant</item>
@@ -101,6 +107,7 @@
         <item>@color/page4</item>
     </array>
 
+    <!-- Fitness-->
     <array name="sub_categories_5">
     </array>
 

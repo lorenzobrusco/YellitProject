@@ -547,12 +547,12 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                     //subCategoryColors = getResources().getIntArray(R.array.sub_colors_1);
                     break;
                 case 1:
-                    subCategoryLabels = getResources().getStringArray(R.array.sub_categories_2);
-                    subCategoryColors = getResources().getIntArray(R.array.sub_colors_2);
-                    break;
-                case 2:
                     subCategoryLabels = getResources().getStringArray(R.array.sub_categories_3);
                     subCategoryColors = getResources().getIntArray(R.array.sub_colors_3);
+                    break;
+                case 2:
+                    subCategoryLabels = getResources().getStringArray(R.array.sub_categories_2);
+                    subCategoryColors = getResources().getIntArray(R.array.sub_colors_2);
                     break;
                 case 3:
                     subCategoryLabels = getResources().getStringArray(R.array.sub_categories_4);

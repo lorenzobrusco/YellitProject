@@ -54,37 +54,37 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                //TODO replace this code with login();
-               if(validate()){
-                   new AsyncTask<Void, Void, Boolean>(){
-
-                       ProgressDialog progressDialog;
-
-                       @Override
-                       protected void onPreExecute() {
-                           progressDialog = new ProgressDialog(LoginFragment.this.getContext(),
-                                   R.style.AppTheme_Dark_Dialog);
-                           progressDialog.setIndeterminate(true);
-                           progressDialog.setMessage("Authenticating...");
-                           progressDialog.show();
-                       }
-
-                       @Override
-                       protected Boolean doInBackground(Void... params) {
-                           return login();
-                       }
-
-                       @Override
-                       protected void onPostExecute(Boolean aBoolean) {
-                           if(aBoolean){
-                               if(progressDialog != null){
-                                   progressDialog.dismiss();
-                               }
-                           }
-                       }
-                   }.execute();
-               }
-                   login();
+//               if(validate()){
+//                   new AsyncTask<Void, Void, Boolean>(){
+//
+//                       ProgressDialog progressDialog;
+//
+//                       @Override
+//                       protected void onPreExecute() {
+//                           progressDialog = new ProgressDialog(LoginFragment.this.getContext());
+//                           progressDialog.setIndeterminate(true);
+//                           progressDialog.setMessage("Authenticating...");
+//                           progressDialog.show();
+//                       }
+//
+//                       @Override
+//                       protected Boolean doInBackground(Void... params) {
+//                           return login();
+//                       }
+//
+//                       @Override
+//                       protected void onPostExecute(Boolean aBoolean) {
+//                           if(aBoolean){
+//                               if(progressDialog != null){
+//                                   progressDialog.dismiss();
+//                                   onLoginSuccess();
+//                               }
+//                           }
+//                       }
+//                   }.execute();
+//               }
+//                   login();
+                onLoginSuccess();
             }
         });
 
@@ -107,7 +107,7 @@ public class LoginFragment extends Fragment {
 
        //TODO Cosco doesn't work this shit
         if(this.login(email, password)) {
-            onLoginSuccess();
+            //onLoginSuccess();
             return true;
         } else {
             return false;
@@ -132,9 +132,9 @@ public class LoginFragment extends Fragment {
 
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
-
-        if (email.isEmpty()) {// || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            _emailText.setError("enter a valid email address");
+        //TODO fix this crash
+        if (email.isEmpty()){// || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+           // _emailText.setError("enter a valid email address");
             valid = false;
         } else {
             _emailText.setError(null);
