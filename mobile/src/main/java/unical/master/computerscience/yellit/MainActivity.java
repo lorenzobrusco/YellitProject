@@ -7,6 +7,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -89,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView filterImage;
     private Fragment currentFragment;
     private BottomSheetBehavior mBottomSheetBehavior;
-    private  HashSet<String> mFavoritesCatogories;
+    private HashSet<String> mFavoritesCatogories;
     private int mDistance;
 
 
@@ -286,7 +287,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void buildDialogFilter() {
-
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
@@ -295,7 +295,6 @@ public class MainActivity extends AppCompatActivity {
         dialog.setCancelable(true);
         dialog.setCanceledOnTouchOutside(true);
         Button dialogButtonDelete = (Button) dialog.findViewById(R.id.delete);
-
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
 
             @Override
@@ -306,32 +305,31 @@ public class MainActivity extends AppCompatActivity {
                 CheckBox travelCheckBox = (CheckBox) dialog.findViewById(R.id.travel);
                 CheckBox fitnessCheckBox = (CheckBox) dialog.findViewById(R.id.fitness);
                 /** set true if a catogorie is selectd */
-                if(foodAndDrinkCheckBox.isChecked())
+                if (foodAndDrinkCheckBox.isChecked())
                     mFavoritesCatogories.add(FOODANDDRINK);
                 else
                     mFavoritesCatogories.remove(FOODANDDRINK);
-                if(insideCheckBox.isChecked())
+                if (insideCheckBox.isChecked())
                     mFavoritesCatogories.add(INSIDE);
                 else
                     mFavoritesCatogories.remove(INSIDE);
-                if(outsideCheckBox.isChecked())
+                if (outsideCheckBox.isChecked())
                     mFavoritesCatogories.add(OUTSIDE);
                 else
                     mFavoritesCatogories.remove(OUTSIDE);
-                if(travelCheckBox.isChecked())
+                if (travelCheckBox.isChecked())
                     mFavoritesCatogories.add(TRAVEL);
                 else
                     mFavoritesCatogories.remove(TRAVEL);
-                if(fitnessCheckBox.isChecked())
+                if (fitnessCheckBox.isChecked())
                     mFavoritesCatogories.add(FITNESS);
                 else
                     mFavoritesCatogories.remove(FITNESS);
 
                 RadioGroup radioGroup = (RadioGroup) dialog.findViewById(R.id.radioGroupFilter);
-                radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
-                {
+                radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                     public void onCheckedChanged(RadioGroup group, int checkedId) {
-                        switch(checkedId){
+                        switch (checkedId) {
                             /** set the max distance in which user want see the posts*
                              *  near = 20
                              *  medium = 50
@@ -350,6 +348,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
                 updateListPosts();
+
             }
 
         });
@@ -412,18 +411,40 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-    private void updateListPosts(){
+    /**
+     * Update the posts after applied filters
+     */
+    private void updateListPosts() {
         final List<Post> posts = new ArrayList<>();
-        for(Post post : InfoManager.getInstance().getmPostList()){
-            String type = GenerateMainCategories.getMacro(this,post.getType());
-            if(mFavoritesCatogories.contains(type))
-               posts.add(post);
+        for (Post post : InfoManager.getInstance().getmPostList()) {
+            String type = GenerateMainCategories.getMacro(this, post.getType());
+            if (mFavoritesCatogories.contains(type))
+                posts.add(post);
         }
-        for(Post post : posts){
-            Log.d("HASHSETFILTER",post.getIdPost()+"");
-        }
+        double distance = distance(InfoManager.getInstance().getmPlaceData().latLongs.get(0).latitude,InfoManager.getInstance().getmPlaceData().latLongs.get(0).longitude,0,0);
+        Toast.makeText(this,"distance : " + distance, Toast.LENGTH_LONG).show();
         InfoManager.getInstance().getmPostAdapter().changeList(posts);
         InfoManager.getInstance().getmPostAdapter().notifyDataSetChanged();
+    }
+
+    /**
+     * @return the distance between two location
+     * */
+    private double distance(double lat1, double long1, double lat2, double long2) {
+        Location startPoint = new Location("locationA");
+        startPoint.setLatitude(lat1);
+        startPoint.setLongitude(long1);
+
+        Location endPoint = new Location("locationB");
+//        endPoint.setLatitude(lat2);
+//        endPoint.setLongitude(long2);
+        endPoint.setLatitude(17.375775);
+        endPoint.setLongitude(78.469218);
+
+
+        double distance = startPoint.distanceTo(endPoint);
+        return distance;
+
     }
 
     /*****************************************************************************************/
