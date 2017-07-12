@@ -34,7 +34,6 @@ import siclo.com.ezphotopicker.api.models.EZPhotoPickConfig;
 import siclo.com.ezphotopicker.api.models.PhotoSource;
 import siclo.com.ezphotopicker.models.PhotoIntentException;
 import unical.master.computerscience.yellit.R;
-import unical.master.computerscience.yellit.graphic.Fragments.Test;
 
 /**
  * Created by Lorenzo on 15/03/2017.

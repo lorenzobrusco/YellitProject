@@ -131,7 +131,7 @@ public class ProfileFragment extends Fragment {
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(mPhotoProfile);
 
-       mFullNameProfile.setText(InfoManager.getInstance().getmUser().getFullname());
+       mFullNameProfile.setText(InfoManager.getInstance().getmUser().getFullname().toUpperCase());
     }
 
     private void setupButtonExpandLayout() {

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -67,48 +68,24 @@ public class LoginFragment extends Fragment {
     protected Button _loginButton;
     @Bind(R.id.btn_fb_login_signup)
     protected LoginButton _facebookSignButton;
+    private ProgressDialog progressDialog;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.activity_login, container, false);
         ButterKnife.bind(this, view);
+        progressDialog = new ProgressDialog(LoginFragment.this.getContext());
         _loginButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-//               if(validate()){
-//                   new AsyncTask<Void, Void, Boolean>(){
-//
-//                       ProgressDialog progressDialog;
-//
-//                       @Override
-//                       protected void onPreExecute() {
-//                           progressDialog = new ProgressDialog(LoginFragment.this.getContext());
-//                           progressDialog.setIndeterminate(true);
-//                           progressDialog.setMessage("Authenticating...");
-//                           progressDialog.show();
-//                       }
-//
-//                       @Override
-//                       protected Boolean doInBackground(Void... params) {
-//                           return login();
-//                       }
-//
-//                       @Override
-//                       protected void onPostExecute(Boolean aBoolean) {
-//                           if(aBoolean){
-//                               if(progressDialog != null){
-//                                   progressDialog.dismiss();
-//                                   onLoginSuccess();
-//                               }
-//                           }
-//                       }
-//                   }.execute();
-//               }
-//                   login();
-                //TODO debug
-                onLoginSuccess(null);
+                if (validate()) {
+                    progressDialog.setIndeterminate(true);
+                    progressDialog.setMessage("Authenticating...");
+                    progressDialog.show();
+                    login();
+                }
             }
         });
 
@@ -118,7 +95,9 @@ public class LoginFragment extends Fragment {
                 "public_profile", "email", "user_birthday", "user_friends"));
         _facebookSignButton.setFragment(this);
 
-        _facebookSignButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+        _facebookSignButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>()
+
+        {
             @Override
             public void onSuccess(LoginResult loginResult) {
 
@@ -189,29 +168,17 @@ public class LoginFragment extends Fragment {
     public boolean login() {
         Log.d(TAG, "Login");
 
-        if (!validate()) {
-            onLoginFailed();
-            return false;
-        }
-
-        _loginButton.setEnabled(false);
-
-
         final String email = _emailText.getText().toString();
         final String password = _passwordText.getText().toString();
 
-        //TODO Cosco doesn't work this shit
-        if (this.login(email, password)) {
-            //onLoginSuccess();
-            return true;
-        } else {
-            return false;
-        }
+        boolean result = this.login(email, password);
+        return result;
+
     }
 
     public void onLoginSuccess(String name) {
-        _loginButton.setEnabled(true);
-        PrefManager.getInstace(getContext()).setUser(name == null ?_emailText.getText().toString() : name);
+        progressDialog.dismiss();
+        PrefManager.getInstace(getContext()).setUser(_emailText.getText().toString());
         startActivity(new Intent(getContext(), WelcomeActivity.class));
         getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
         getActivity().finish();
@@ -224,12 +191,11 @@ public class LoginFragment extends Fragment {
 
     public boolean validate() {
         boolean valid = true;
-
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
         //TODO fix this crash
-        if (email.isEmpty()) {// || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            // _emailText.setError("enter a valid email address");
+        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            _emailText.setError("enter a valid email address");
             valid = false;
         } else {
             _emailText.setError(null);
@@ -260,12 +226,15 @@ public class LoginFragment extends Fragment {
 
                 User profile = response.body();
                 InfoManager.getInstance().setmUser(profile);
+                Toast.makeText(getContext(), profile.getEmail(), Toast.LENGTH_LONG).show();
                 if (profile.getEmail() == null) {
                     LoginFragment.this.buildErrorDialog();
                     Log.d("retrofit", "email o password errati");
+                    buildErrorDialog();
+                    correct[0] = false;
                 } else {
-                    Log.d("nick", profile.getNickname());
                     onLoginSuccess(null);
+                    Log.d("nick", profile.getNickname());
                     correct[0] = true;
                 }
             }
@@ -280,6 +249,7 @@ public class LoginFragment extends Fragment {
     }
 
     private void buildErrorDialog() {
+        progressDialog.dismiss();
         new AlertDialog.Builder(getContext())
                 .setTitle("Login failed")
                 .setMessage("email or password are wrong, if you don't have an account create it")

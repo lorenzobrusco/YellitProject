@@ -105,6 +105,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
+                    android:gravity="center"
                     android:orientation="horizontal">
 
                     <TextView
@@ -122,10 +123,6 @@
                         android:id="@+id/type_post"
                         android:textSize="16dp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="presso" />
                 </LinearLayout>
 
             </RelativeLayout>
