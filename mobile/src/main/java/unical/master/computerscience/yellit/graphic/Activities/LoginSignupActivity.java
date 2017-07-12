@@ -22,6 +22,8 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import unical.master.computerscience.yellit.R;
+import unical.master.computerscience.yellit.logic.InfoManager;
+import unical.master.computerscience.yellit.utilities.PrefManager;
 
 import static unical.master.computerscience.yellit.utilities.SystemUI.changeSystemBar;
 
@@ -46,23 +48,19 @@ public class LoginSignupActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_login_signup);
         ButterKnife.bind(this);
+        if (InfoManager.getInstance().getmUser() != null){
+            startActivity(new Intent(this, WelcomeActivity.class));
+            this.overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+            this.finish();
+        }
+
         this.mPages = new ArrayList<>();
         this.mTitlePages = new ArrayList<>();
         this.addPage(new LoginFragment(), "Login");
         this.addPage(new SignUpFragment(), "Signup");
         this.mFragmentPagerAdapter = new LoginSignupPagerAdapter(getSupportFragmentManager());
         this.mLoginSignupViewPager.setAdapter(this.mFragmentPagerAdapter);
-        this.mLoginSignupViewPager.setOnPageChangeListener(
-                new ViewPager.SimpleOnPageChangeListener() {
-                    @Override
-                    public void onPageSelected(int position) {
-                        // When swiping between pages, select the
-                        // corresponding tab.
-//                        mPagerTitleStrip.
-                    }
-                });
-
-        try{
+        try {
             PackageInfo info = getPackageManager().getPackageInfo(
                     "unical.master.computerscience.yellit", PackageManager.GET_SIGNATURES);
             for (Signature signature : info.signatures) {

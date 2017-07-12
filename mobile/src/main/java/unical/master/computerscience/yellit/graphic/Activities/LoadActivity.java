@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import org.w3c.dom.Document;
 
@@ -27,8 +28,15 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import unical.master.computerscience.yellit.R;
+import unical.master.computerscience.yellit.connection.LoginService;
 import unical.master.computerscience.yellit.logic.InfoManager;
+import unical.master.computerscience.yellit.logic.objects.User;
 import unical.master.computerscience.yellit.utilities.BaseURL;
 import unical.master.computerscience.yellit.utilities.BuilderFile;
 import unical.master.computerscience.yellit.utilities.PrefManager;
@@ -55,6 +63,7 @@ public class LoadActivity extends AppCompatActivity {
         initXMLFile();
         PrefManager.getInstace(this);
         InfoManager.getInstance().setColorMode(PrefManager.getInstace(this).isColorMode());
+        this.getUserWhetherExists();
         final Handler handler = new Handler();
         final Runnable runnable = new Runnable() {
             public void run() {
@@ -100,5 +109,28 @@ public class LoadActivity extends AppCompatActivity {
         } catch (ParserConfigurationException e) {
 
         }
+    }
+
+    private void getUserWhetherExists(){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BaseURL.URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        final LoginService loginService = retrofit.create(LoginService.class);
+        Call<User> call = loginService.getProfile(PrefManager.getInstace(LoadActivity.this).getUser(), "");
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                User profile = response.body();
+                InfoManager.getInstance().setmUser(profile);
+                Toast.makeText(LoadActivity.this,profile.getNickname(),Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Log.e("Facebook signin", "errore di signin");
+            }
+        });
+
     }
 }

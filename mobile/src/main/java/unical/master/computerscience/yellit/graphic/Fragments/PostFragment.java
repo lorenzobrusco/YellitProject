@@ -111,6 +111,12 @@ public class PostFragment extends Fragment {
         posts.add(new Post("Eliana Cannella"));
         posts.add(new Post("Paola Arcuri"));
 
+        InfoManager.getInstance().setmPostList(posts);
+        InfoManager.getInstance().setmPostFilteredList(posts);
+        final PostAdapter mPostAdapter = new PostAdapter(PostFragment.this.getContext(), posts);
+        InfoManager.getInstance().setmPostAdapter(mPostAdapter);
+        mPosts.setAdapter(mPostAdapter);
+
         return posts;
     }
 

@@ -133,7 +133,7 @@ public class SafeModeActivity extends AppCompatActivity {
                 finish();
             } else {
                  try {
-                    Log.i(TAG, "pass it");
+
                     this.generateKey();
                     final Cipher mCipher = this.generateCipher();
                     final FingerprintManager.CryptoObject mCryptoObject = new FingerprintManager.CryptoObject(mCipher);

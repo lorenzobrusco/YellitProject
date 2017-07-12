@@ -162,10 +162,7 @@
                 android:layout_marginTop="8dp"
                 android:visibility="invisible">
 
-                <VideoView
-                    android:id="@+id/video_value_post"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+
             </RelativeLayout>
 
             <RelativeLayout
@@ -175,13 +172,39 @@
                 android:layout_margin="8dp"
                 android:visibility="invisible">
 
+                <LinearLayout
+                    android:id="@+id/position_post"
+                    android:layout_width="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/testimonial"/>
+                    <TextView
+                        android:id="@+id/position_post_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="presso 4 miglia"
+                        android:textColor="@color/black"
+                        android:layout_gravity="center"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                         />
+
+
+
+                </LinearLayout>
+
                 <TextView
+                    android:layout_margin="8sp"
                     android:id="@+id/comment_value_post"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    android:text="@string/lorem" />
+                    android:text="@string/lorem"
+                    android:layout_below="@+id/position_post"
+                    android:layout_alignParentStart="true" />
             </RelativeLayout>
 
         </LinearLayout>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="300dp"
     android:layout_height="match_parent"
     android:layout_margin="16dp">
 
@@ -10,33 +10,49 @@
         android:layout_centerInParent="true"
         android:orientation="vertical">
 
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/signin_gall_button"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="16dp"
-            android:layout_marginLeft="16dp"
             android:layout_marginBottom="16dp"
-            android:background="@drawable/rounded_image"
-            android:backgroundTint="@color/page1"
-            android:drawableLeft="@drawable/ic_gallery"
-            android:paddingLeft="16dp"
-            android:paddingRight="20dp"
-            android:text="GALLERY"
-            android:textColor="@color/white" />
+            android:fontFamily="serif"
+            android:gravity="center"
+            android:text="Select your image profile from gallery or take a new photo"
+            android:textColor="@color/black"
+            android:textSize="22dp" />
 
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/signin_cam_button"
-            android:layout_width="wrap_content"
+        <GridLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:background="@drawable/rounded_image"
-            android:backgroundTint="@color/page3"
-            android:drawableLeft="@drawable/ic_camera"
-            android:paddingLeft="16dp"
-            android:paddingRight="20dp"
-            android:text="CAMERA"
-            android:textColor="@color/white" />
+            android:layout_gravity="fill"
+            android:layout_marginTop="16dp"
+            android:columnCount="2">
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/signin_gall_button"
+                android:layout_columnWeight="1"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/rounded_image"
+                android:backgroundTint="@color/amber_800"
+                android:drawableLeft="@drawable/ic_gallery"
+                android:paddingLeft="16dp"
+                android:paddingRight="20dp"
+                android:text="GALLERY"
+                android:textColor="@color/white" />
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/signin_cam_button"
+                android:layout_columnWeight="1"
+                android:layout_marginLeft="16dp"
+                android:background="@drawable/rounded_image"
+                android:backgroundTint="@color/colorAccent"
+                android:drawableLeft="@drawable/ic_camera"
+                android:paddingLeft="16dp"
+                android:paddingRight="20dp"
+                android:text="CAMERA"
+                android:textColor="@color/white" />
+
+        </GridLayout>
+
 
     </LinearLayout>
 </RelativeLayout>

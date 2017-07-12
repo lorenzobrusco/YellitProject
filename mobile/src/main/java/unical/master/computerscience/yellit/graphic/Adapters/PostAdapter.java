@@ -73,6 +73,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         holder.mType.setText(GenerateMainCategories.getMacro(mContext, currPost.getType()));
         holder.mLikeContent.setText(likes);
         holder.mDataPost.setText(currPost.getDate());
+        holder.mPosition.setText(currPost.getLocation());
         holder.mLikeButton.setOnLikeListener(new OnLikeListener() {
             @Override
             public void liked(LikeButton likeButton) {
@@ -159,8 +160,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         CircleImageView userImage;
         @Bind(R.id.image_value_post)
         ImageView imagePost;
-        @Bind(R.id.video_value_post)
-        VideoView videoPost;
         @Bind(R.id.load_post)
         ProgressBar progressBar;
         @Bind(R.id.like_post)
@@ -171,6 +170,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         TextView mType;
         @Bind(R.id.data_post)
         TextView mDataPost;
+        @Bind(R.id.position_post_text)
+        TextView mPosition;
 
         private boolean isLike = false;
 
