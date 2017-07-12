@@ -52,10 +52,6 @@ public class LoadActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_load);
         ButterKnife.bind(this);
-        Animation zoomin = AnimationUtils.loadAnimation(this, R.anim.zoom_in);
-        Animation zoomout = AnimationUtils.loadAnimation(this, R.anim.zoom_out);
-        mLogoImageView.startAnimation(zoomin);
-        mLogoImageView.startAnimation(zoomout);
         initXMLFile();
         PrefManager.getInstace(this);
         InfoManager.getInstance().setColorMode(PrefManager.getInstace(this).isColorMode());
@@ -70,7 +66,7 @@ public class LoadActivity extends AppCompatActivity {
                 finish();
             }
         };
-        handler.postDelayed(runnable, 2000);
+        handler.postDelayed(runnable, 1000);
 
         try{
             PackageInfo info = getPackageManager().getPackageInfo(

@@ -1,12 +1,14 @@
 package unical.master.computerscience.yellit.graphic.Fragments;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -35,6 +37,7 @@ import android.widget.CompoundButton;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -74,6 +77,7 @@ import siclo.com.ezphotopicker.models.PhotoIntentException;
 import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.connection.PostGestureService;
 import unical.master.computerscience.yellit.connection.ServerResponse;
+import unical.master.computerscience.yellit.graphic.Activities.LoginFragment;
 import unical.master.computerscience.yellit.graphic.custom.SelectorImageView;
 import unical.master.computerscience.yellit.logic.GoogleApiClient;
 import unical.master.computerscience.yellit.logic.InfoManager;
@@ -107,6 +111,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
     protected ImageView transparentLayer;
     @Bind(R.id.tv_location_text)
     protected MaterialSpinner mLocationSpinner;
+    private ProgressDialog progressDialog;
 
     private Typeface mTfRegular;
     private Typeface mTfLight;
@@ -138,6 +143,8 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         View view = inflater.inflate(R.layout.fragment_add_post, container, false);
         ButterKnife.bind(this, view);
         GoogleApiClient.getInstance((AppCompatActivity) getActivity()).getPlaceDetection(getContext());
+
+        this.progressDialog = new ProgressDialog(this.getContext());
         buildVariousStuff();
 
         buildMainMenu();
@@ -315,8 +322,10 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
      * Gestire casi di variabili NULLE ma quando comunque il post può essere inviato
      */
     private void createPostForUpload(String comment, String place) {
-
-        int pos = positionLocation(place) == -1 ? 0 : positionLocation(place);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Publication...");
+        progressDialog.show();
+        int pos = positionLocation(place) == -1 ? -1 : positionLocation(place);
 
         File file = new File(currentPhotoPath);
         RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
@@ -325,14 +334,14 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
 
         RequestBody lat = RequestBody.create(MediaType.parse("text/plain"), pos == -1 ? "0.00" : InfoManager.getInstance().getmPlaceData().latLongs.get(pos).latitude + "");
-        RequestBody longi = RequestBody.create(MediaType.parse("text/plain"),  pos == -1 ? "0.00" : InfoManager.getInstance().getmPlaceData().latLongs.get(pos).longitude + "");
+        RequestBody longi = RequestBody.create(MediaType.parse("text/plain"), pos == -1 ? "0.00" : InfoManager.getInstance().getmPlaceData().latLongs.get(pos).longitude + "");
 
         RequestBody newComment = RequestBody.create(MediaType.parse("text/plain"), comment);
         RequestBody newPlace = RequestBody.create(MediaType.parse("text/plain"), place);
         RequestBody newCategory = RequestBody.create(MediaType.parse("text/plain"), currentCategory);
         //TODO remove comment at the end
-        //RequestBody newUserMail = RequestBody.create(MediaType.parse("text/plain"), InfoManager.getInstance().getmUser().getEmail());
-        RequestBody newUserMail = RequestBody.create(MediaType.parse("text/plain"), "lollo@gmail.com");
+        RequestBody newUserMail = RequestBody.create(MediaType.parse("text/plain"), InfoManager.getInstance().getmUser().getEmail());
+//        RequestBody newUserMail = RequestBody.create(MediaType.parse("text/plain"), "lollo@gmail.com");
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BaseURL.URL)
@@ -345,7 +354,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         call.enqueue(new Callback<ServerResponse>() {
             @Override
             public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
-
+                progressDialog.dismiss();
                 ServerResponse serverResponse = response.body();
                 if (serverResponse != null) {
 
@@ -377,6 +386,8 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
     private int positionLocation(String place) {
         int i = 0;
+        if(place.contains("places") && place.contains("detected") )
+            return -1;
         for (String s : InfoManager.getInstance().getmPlaceData().place) {
             if (s.equals(place))
                 return i;

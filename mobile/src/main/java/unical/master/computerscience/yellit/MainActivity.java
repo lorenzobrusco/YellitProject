@@ -36,6 +36,8 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 
@@ -421,6 +423,13 @@ public class MainActivity extends AppCompatActivity {
             if (mFavoritesCatogories.contains(type))
                 posts.add(post);
         }
+        Collections.sort(posts, new Comparator<Post>() {
+            @Override
+            public int compare(Post post2, Post post1)
+            {
+                return  post1.getDate().compareTo(post2.getDate());
+            }
+        });
         double distance = distance(InfoManager.getInstance().getmPlaceData().latLongs.get(0).latitude,InfoManager.getInstance().getmPlaceData().latLongs.get(0).longitude,0,0);
         Toast.makeText(this,"distance : " + distance, Toast.LENGTH_LONG).show();
         InfoManager.getInstance().getmPostAdapter().changeList(posts);

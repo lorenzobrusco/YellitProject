@@ -65,14 +65,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     @Override
     public void onBindViewHolder(PostViewHolder holder, final int position) {
         Post currPost = mPosts.get(position);
-
+        String likes = currPost.getLikes() + " Like";
         holder.personName.setText(currPost.getUserName());
         holder.commentText.setText(currPost.getComment());
         holder.setImagePost(currPost.getPostImagePost());
         holder.setUserImage(currPost.getUserImagePath());
-        holder.mType.setText(GenerateMainCategories.getMacro(mContext,currPost.getType()));
-        holder.mLikeContent.setText(currPost.getLikes() + " Like");
-
+        holder.mType.setText(GenerateMainCategories.getMacro(mContext, currPost.getType()));
+        holder.mLikeContent.setText(likes);
+        holder.mDataPost.setText(currPost.getDate());
         holder.mLikeButton.setOnLikeListener(new OnLikeListener() {
             @Override
             public void liked(LikeButton likeButton) {
@@ -137,7 +137,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         super.onAttachedToRecyclerView(recyclerView);
     }
 
-    public void changeList(List<Post> posts){
+    public void changeList(List<Post> posts) {
         this.mPosts = posts;
     }
 
@@ -169,6 +169,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         TextView mLikeContent;
         @Bind(R.id.type_post)
         TextView mType;
+        @Bind(R.id.data_post)
+        TextView mDataPost;
 
         private boolean isLike = false;
 
