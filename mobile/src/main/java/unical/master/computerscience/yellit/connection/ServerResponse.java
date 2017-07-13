@@ -3,13 +3,15 @@ package unical.master.computerscience.yellit.connection;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by Altair07 on 06/05/2017.
+ * Used to get the answer of sever
  */
-
 public class ServerResponse {
-    // variable name should be same as in the json response from php
+    /**
+     * variable name should be same as in the json response from php
+     */
     @SerializedName("success")
     boolean success;
+
     @SerializedName("message")
     String message;
 

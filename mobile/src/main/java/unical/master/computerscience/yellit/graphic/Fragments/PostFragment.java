@@ -9,8 +9,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import retrofit2.Call;
@@ -76,11 +78,11 @@ public class PostFragment extends Fragment {
                 Post[] posts = response.body();
 
                 if (posts != null)
-                    for (Post p : posts) {
-                        postsToShow.add(p);
-                    }
+                    for (int i = posts.length - 1; i > 0; i--)
+                        postsToShow.add(posts[i]);
 
-                Log.d("Posters",posts.length+"");
+
+                Log.d("Posters", posts.length + "");
                 InfoManager.getInstance().setmPostList(postsToShow);
                 InfoManager.getInstance().setmPostFilteredList(postsToShow);
                 final PostAdapter mPostAdapter = new PostAdapter(PostFragment.this.getContext(), postsToShow);

@@ -18,9 +18,9 @@ import unical.master.computerscience.yellit.R;
 import static unical.master.computerscience.yellit.utilities.SystemUI.changeSystemBar;
 
 /**
- * Created by Lorenzo on 04/05/2017.
+ * Activity that allow us to change the  pin in the safemode if
+ * we don't use the fingerprint
  */
-
 public class ChangePinSafeModeActivity extends AppCompatActivity {
 
     private static final String ISFIRSTTIME = "isFirstTime";

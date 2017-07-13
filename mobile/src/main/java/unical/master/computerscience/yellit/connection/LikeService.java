@@ -6,15 +6,13 @@ import retrofit2.http.Query;
 import unical.master.computerscience.yellit.logic.objects.Like;
 
 /**
- * Created by Francesco on 08/05/2017.
+ * Used to add or remove like from a post,
+ * called a servelt on the server site
  */
-
 public interface LikeService {
 
-    @GET("AddLike")
-    Call<Like> addLike(@Query("email") String email, @Query("idPost") Integer idPost);
+    @GET("Like")
+    Call<Like> addLike(@Query("email") String email, @Query("idPost") Integer idPost,
+                       @Query("emailPost") String emailPost, @Query("removeLikePost") String removeLikePost);
 
-
-    @GET("RemoveLike")
-    Call<Like> removeLike(@Query("email") String email, @Query("idPost") Integer idPost);
 }

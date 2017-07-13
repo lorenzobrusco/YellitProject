@@ -1,10 +1,6 @@
 package unical.master.computerscience.yellit.graphic.Activities;
 
-/**
- * Created by Lorenzo on 22/02/2017.
- */
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -22,9 +18,7 @@ import android.widget.CompoundButton;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.Switch;
-
 import java.util.ArrayList;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import petrov.kristiyan.colorpicker.ColorPicker;
@@ -32,58 +26,41 @@ import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.graphic.Dialog.CustomDialogPrivacy;
 import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.utilities.PrefManager;
-
 import static unical.master.computerscience.yellit.utilities.SystemUI.changeSystemBar;
 
 /**
- * Created by Lorenzo on 07/09/2016.
+ * Activity used to show all settings
  */
 public class SettingActivity extends AppCompatActivity {
 
     private static final String IS_FIRST_TIME_LAUNCH = "IsFirstTimeLaunch";
-
     private static final String PREF_NAME = "yellit-pref";
-
     private static final String ISFIRSTTIMEPIN = "isFirstTime";
-
-
+    private Animation mAnimationDown;
     @Bind(R.id.toolbar)
     protected Toolbar mToolbar;
-
     @Bind(R.id.privacy)
     protected LinearLayout privacy;
-
     @Bind(R.id.welcomePage)
     protected LinearLayout welcomePage;
-
     @Bind(R.id.EnableColorDisplay)
     protected Switch mColorModeSwitch;
-
     @Bind(R.id.enable_safe_mode_switch)
     protected Switch mSafeModeSwitch;
-
     @Bind(R.id.colors_layout)
     protected LinearLayout mColorsLinearLayout;
-
     @Bind(R.id.color_1_button_botton_bar)
     protected GridLayout mFitnessButtonHome;
-
     @Bind(R.id.color_2_button_botton_bar)
     protected GridLayout mProfileButtonHome;
-
     @Bind(R.id.color_3_button_botton_bar)
     protected GridLayout mHomeButtonHome;
-
     @Bind(R.id.color_4_button_botton_bar)
     protected GridLayout mNewPostButtonHome;
-
     @Bind(R.id.color_5_button_botton_bar)
     protected GridLayout mMenuButtonHome;
-
     @Bind(R.id.pin_safe_mode_layout)
     protected LinearLayout mPinSafeModeLinearLayout;
-
-    private Animation mAnimationDown;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -190,11 +167,17 @@ public class SettingActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Create a dialog that show the privacy of application
+     */
     private void buildPrivacyDialog() {
         final CustomDialogPrivacy customDialogPrivacy = new CustomDialogPrivacy(SettingActivity.this);
         customDialogPrivacy.show();
     }
 
+    /**
+     * Add the Possible colors that user can use for the bottom bar
+     */
     private void buildColorPicker() {
         final ColorPicker colorPicker = new ColorPicker(SettingActivity.this);
         ArrayList<String> colors = new ArrayList<>();
@@ -215,7 +198,8 @@ public class SettingActivity extends AppCompatActivity {
         colorPicker.setColors(colors).setDefaultColorButton(Color.parseColor("#f84c44")).setColumns(5).setOnChooseColorListener(new ColorPicker.OnChooseColorListener() {
             @Override
             public void onChooseColor(int position, int color) {
-                Log.d("position", "" + position);// will be fired only when OK button was tapped
+                //TODO future developments
+                /** After chose a color change it in the bottom bar and save it in the xml*/
             }
 
             @Override

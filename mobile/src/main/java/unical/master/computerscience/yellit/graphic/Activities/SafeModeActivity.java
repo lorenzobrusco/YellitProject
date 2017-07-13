@@ -1,6 +1,5 @@
 package unical.master.computerscience.yellit.graphic.Activities;
 
-import android.app.Dialog;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
@@ -17,22 +16,15 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.telephony.SmsManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -59,20 +51,19 @@ import unical.master.computerscience.yellit.utilities.PrefManager;
 import static unical.master.computerscience.yellit.utilities.SystemUI.changeSystemBar;
 
 /**
- * Created by Lorenzo on 03/05/2017.
+ * Activity used if user enable this mode and required a code to pass it,
+ * either with fingerprint or a code, whether the device hasn't the fingerprint hardware it'll skipped
  */
-
 public class SafeModeActivity extends AppCompatActivity {
 
     private static final String KEY_NAME = "key";
-    private static final String TAG = "FingerprintYellit";
     @Bind(R.id.password_safe_mode_editText)
     protected EditText mPasswordSafeModeEditText;
     @Bind(R.id.confirm_fingerprint)
     protected FloatingActionButton mConfirmFingerPrintFloatingActionButton;
 
     /**
-     * Fingerprint
+     * Fingerprint variables
      */
     private KeyguardManager mKeyguardManager;
 
@@ -128,19 +119,18 @@ public class SafeModeActivity extends AppCompatActivity {
             this.mFingerprintManager = (FingerprintManager) getSystemService(FINGERPRINT_SERVICE);
             final FingerprintHandler mFingerprintHandler = new FingerprintHandler(mConfirmFingerPrintFloatingActionButton, 5);
             if (!this.checkFinger()) {
-                Log.i(TAG, "no pass check finger");
                 startActivity(new Intent(getBaseContext(), LoginSignupActivity.class));
                 finish();
             } else {
-                 try {
-                    Log.i(TAG, "pass it");
+                try {
+
                     this.generateKey();
                     final Cipher mCipher = this.generateCipher();
                     final FingerprintManager.CryptoObject mCryptoObject = new FingerprintManager.CryptoObject(mCipher);
                     mFingerprintHandler.doAuth(mFingerprintManager, mCryptoObject);
 
                 } catch (FingerprintException fpe) {
-                    Log.i(TAG, "exception");
+                    Toast.makeText(this,"Error with fingerprint, concatc the developers",Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -162,15 +152,12 @@ public class SafeModeActivity extends AppCompatActivity {
                 return false;
             }
             if (!mFingerprintManager.isHardwareDetected()) {
-                //TODO show a error message
                 return false;
             }
             if (!mFingerprintManager.hasEnrolledFingerprints()) {
-                //TODO dispaly to user that there is no fingerprint
                 return false;
             }
             if (!mKeyguardManager.isKeyguardSecure()) {
-                //TODO dispaly to user that there is no secure lock screen
                 return false;
             }
 
@@ -187,10 +174,9 @@ public class SafeModeActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void generateKey() throws FingerprintException {
         try {
-            Log.i(TAG, "enter");
-            // Get the reference to the key store
+            /** Get the reference to the key store */
             mKeyStore = KeyStore.getInstance("AndroidKeyStore");
-            // Key generator to generate the key
+            /** Key generator to generate the key */
             mKeyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES,
                     "AndroidKeyStore");
             mKeyStore.load(null);
@@ -220,7 +206,6 @@ public class SafeModeActivity extends AppCompatActivity {
      */
     private Cipher generateCipher() throws FingerprintException {
         try {
-            Log.i(TAG, "enter");
             final Cipher cipher = Cipher.getInstance(KeyProperties.KEY_ALGORITHM_AES + "/"
                     + KeyProperties.BLOCK_MODE_CBC + "/"
                     + KeyProperties.ENCRYPTION_PADDING_PKCS7);
@@ -248,7 +233,6 @@ public class SafeModeActivity extends AppCompatActivity {
                 mPasswordSafeModeEditText.setVisibility(mPasswordSafeModeEditText.isShown() ? View.INVISIBLE : View.VISIBLE);
                 return true;
             case (MotionEvent.ACTION_MOVE):
-//                mPasswordSafeModeEditText.setVisibility(View.VISIBLE);
                 return true;
             case (MotionEvent.ACTION_UP):
                 return true;
@@ -270,7 +254,7 @@ public class SafeModeActivity extends AppCompatActivity {
         private FloatingActionButton mFloatingActionButton;
         private int mCountAuthenticationError;
 
-        public FingerprintHandler(final FloatingActionButton mFloatingActionButton, int mCountAuthenticationError) {
+        private FingerprintHandler(final FloatingActionButton mFloatingActionButton, int mCountAuthenticationError) {
             this.mFloatingActionButton = mFloatingActionButton;
             this.mCountAuthenticationError = mCountAuthenticationError;
         }
@@ -307,8 +291,8 @@ public class SafeModeActivity extends AppCompatActivity {
             super.onAuthenticationFailed();
             Snackbar.make(SafeModeActivity.this.findViewById(R.id.layout_safe_mode), "You still have " + --mCountAuthenticationError + " attempts before the applications lock", Snackbar.LENGTH_LONG).show();
             if (mCountAuthenticationError <= 0) {
-//                final SmsManager smsManager = SmsManager.getDefault();
-//                smsManager.sendTextMessage("3493984798", null, "sms message", null, null);
+                //TODO future developments
+                /** add a penalty if user wrong 5 times*/
             }
         }
 

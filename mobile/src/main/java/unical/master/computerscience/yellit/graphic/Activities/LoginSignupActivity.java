@@ -13,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -22,17 +23,17 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import unical.master.computerscience.yellit.R;
+import unical.master.computerscience.yellit.logic.InfoManager;
+import unical.master.computerscience.yellit.utilities.PrefManager;
 
 import static unical.master.computerscience.yellit.utilities.SystemUI.changeSystemBar;
 
 /**
- * Created by Lorenzo on 24/04/2017.
+ * Activity that contains login fragment and sign in fragment
  */
-
 public class LoginSignupActivity extends AppCompatActivity {
 
     private static final int REQUEST_SIGNUP = 0;
-
     @Bind(R.id.pager_login_signup)
     protected ViewPager mLoginSignupViewPager;
     private FragmentPagerAdapter mFragmentPagerAdapter;
@@ -43,8 +44,9 @@ public class LoginSignupActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         changeSystemBar(this, false);
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
-        setContentView(R.layout.activity_login_signup);
+        if(getSupportActionBar() != null)
+            getSupportActionBar().hide();
+        this.setContentView(R.layout.activity_login_signup);
         ButterKnife.bind(this);
         this.mPages = new ArrayList<>();
         this.mTitlePages = new ArrayList<>();
@@ -52,49 +54,28 @@ public class LoginSignupActivity extends AppCompatActivity {
         this.addPage(new SignUpFragment(), "Signup");
         this.mFragmentPagerAdapter = new LoginSignupPagerAdapter(getSupportFragmentManager());
         this.mLoginSignupViewPager.setAdapter(this.mFragmentPagerAdapter);
-        this.mLoginSignupViewPager.setOnPageChangeListener(
-                new ViewPager.SimpleOnPageChangeListener() {
-                    @Override
-                    public void onPageSelected(int position) {
-                        // When swiping between pages, select the
-                        // corresponding tab.
-//                        mPagerTitleStrip.
-                    }
-                });
-
-        try{
-            PackageInfo info = getPackageManager().getPackageInfo(
+        try {
+            final PackageInfo info = getPackageManager().getPackageInfo(
                     "unical.master.computerscience.yellit", PackageManager.GET_SIGNATURES);
             for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
+                final MessageDigest md = MessageDigest.getInstance("SHA");
                 md.update(signature.toByteArray());
-                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-
             }
-        } catch (PackageManager.NameNotFoundException e) {
-
-            e.printStackTrace();
-
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+        } catch (PackageManager.NameNotFoundException | NoSuchAlgorithmException e) {
+            Toast.makeText(this,"There was some error during creation of facebook keys",Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     public void onBackPressed() {
-        // Disable going back to the MainActivity
         moveTaskToBack(true);
-
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == REQUEST_SIGNUP) {
             if (resultCode == RESULT_OK) {
-                // TODO: Implement successful signup logic here
-                // By default we just finish the Activity and log them in automatically
                 finish();
             }
         }
@@ -102,8 +83,9 @@ public class LoginSignupActivity extends AppCompatActivity {
 
 
     /**
-     * @param fragment page to addd
-     *                 add new fragment
+     * It add new fragment
+     * @param fragment page to add
+     * @param title the fragment title
      */
     public void addPage(final Fragment fragment, final String title) {
         this.mPages.add(fragment);
@@ -111,11 +93,11 @@ public class LoginSignupActivity extends AppCompatActivity {
     }
 
     /**
-     * adapter
+     * Adapter of page slider
      */
     private class LoginSignupPagerAdapter extends FragmentPagerAdapter {
 
-        public LoginSignupPagerAdapter(FragmentManager fm) {
+        private LoginSignupPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 

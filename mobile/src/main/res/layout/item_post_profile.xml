@@ -69,13 +69,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <ImageView
+                    <com.like.LikeButton
                         android:id="@+id/like_post"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_alignParentEnd="true"
                         android:layout_marginTop="5dp"
-                        android:src="@mipmap/ic_like" />
+                        app:icon_size="25dp"
+                        app:liked="true"
+                        android:clickable="false"
+                        app:is_enabled="false"
+                        app:icon_type="heart" />
 
                     <TextView
                         android:id="@+id/num_likes_post"
@@ -83,7 +87,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_below="@+id/like_post"
-                        android:paddingRight="6dp"
+                        android:paddingRight="8dp"
                         android:text="0 like" />
 
                 </RelativeLayout>
@@ -148,15 +152,48 @@
                 android:id="@+id/comment_content_post"
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
+                android:layout_gravity="center"
                 android:layout_margin="8dp">
 
-                <TextView
-                    android:id="@+id/comment_value_post"
+                <LinearLayout
+                    android:id="@+id/position_post"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    android:text="@string/lorem" />
+                    android:layout_marginBottom="8dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/testimonial" />
+
+                    <TextView
+                        android:id="@+id/position_post_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Presso 4 miglia"
+                        android:textSize="14sp" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/position_post">
+
+                    <TextView
+                        android:id="@+id/comment_value_post"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="8sp"
+                        android:text="@string/lorem"
+                        android:textColor="@color/blue_grey_900"
+                        android:textSize="18sp" />
+                </LinearLayout>
             </RelativeLayout>
 
         </LinearLayout>

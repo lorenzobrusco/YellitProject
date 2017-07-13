@@ -69,48 +69,26 @@
 
         </LinearLayout>
 
-        <android.support.design.widget.CoordinatorLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal">
-
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Remember" />
-
-            <CheckedTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center|right"
-                android:text="Clear all" />
-
-        </android.support.design.widget.CoordinatorLayout>
-
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btn_login"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp"
             android:background="@drawable/rounded_image"
             android:backgroundTint="@color/colorConfirm"
             android:elevation="2dp"
             android:text="Login"
             android:textColor="@color/white" />
 
-        <GridLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_columnWeight="1"
-            android:layout_gravity="fill"
-            android:columnCount="2">
-
+            android:layout_height="wrap_content">
 
             <com.facebook.login.widget.LoginButton
                 android:id="@+id/btn_fb_login_signup"
-                android:layout_columnWeight="1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="fill"
                 android:layout_marginBottom="16dp"
                 android:layout_marginRight="6dp"
@@ -121,20 +99,8 @@
                 android:paddingLeft="4dp"
                 android:paddingTop="15dp" />
 
-            <android.support.v7.widget.AppCompatButton
-                android:id="@+id/btn_gp_login"
-                android:layout_columnWeight="1"
-                android:layout_gravity="fill"
-                android:layout_marginLeft="6dp"
-                android:background="@drawable/rounded_image"
-                android:backgroundTint="@color/colorGoogle"
-                android:drawableLeft="@drawable/ic_camera"
-                android:elevation="2dp"
-                android:paddingLeft="4dp"
-                android:text="GOOGLE+"
-                android:textColor="@color/white" />
+        </LinearLayout>
 
-        </GridLayout>
     </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>
