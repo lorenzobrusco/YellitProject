@@ -1,9 +1,5 @@
 package unical.master.computerscience.yellit.graphic.Activities;
 
-/**
- * Created by Lorenzo on 13/08/2016.
- */
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -21,13 +17,14 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.io.File;
-
 import unical.master.computerscience.yellit.MainActivity;
 import unical.master.computerscience.yellit.R;
-import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.utilities.PrefManager;
 
+/**
+ * Activity show at the first launch and when user select it in the settings,
+ * it show what application does.
+ */
 public class WelcomeActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
@@ -36,7 +33,6 @@ public class WelcomeActivity extends AppCompatActivity {
     private TextView[] dots;
     private int[] layouts;
     private Button btnSkip, btnNext;
-    private PrefManager prefManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,55 +41,41 @@ public class WelcomeActivity extends AppCompatActivity {
         initActivity();
     }
 
-
+    /**
+     * add layouts of all welcome sliders
+     */
     private void initActivity() {
-
         if (!PrefManager.getInstace(getApplicationContext()).isFirstTimeLaunch()) {
             launchHomeScreen();
             finish();
         } else {
-
             setContentView(R.layout.activity_welcome);
-
             viewPager = (ViewPager) findViewById(R.id.view_pager);
             dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
             btnSkip = (Button) findViewById(R.id.btn_skip);
             btnNext = (Button) findViewById(R.id.btn_next);
-
-
-            // layouts of all welcome sliders
-            // add few more layouts if you want
             layouts = new int[]{
                     R.layout.fragment_welcome1,
                     R.layout.fragment_welcome2,
                     R.layout.fragment_welcome3,
                     R.layout.fragment_welcome4};
-
-            // adding bottom dots
             addBottomDots(0);
-
-            // making notification bar transparent
             changeStatusBarColor();
-
             myViewPagerAdapter = new MyViewPagerAdapter();
             viewPager.setAdapter(myViewPagerAdapter);
             viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
-
             btnSkip.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     launchHomeScreen();
                 }
             });
-
             btnNext.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // checking for last page
-                    // if last page home screen will be launched
+                    /** checking for last page if last page home screen will be launched */
                     int current = getItem(+1);
                     if (current < layouts.length) {
-                        // move to next screen
                         viewPager.setCurrentItem(current);
                     } else {
                         launchHomeScreen();
@@ -104,12 +86,14 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * add the dot at the end of page to undersent where is user.
+     * @param currentPage the position of slider pages
+     */
     private void addBottomDots(int currentPage) {
         dots = new TextView[layouts.length];
-
         int colorsActive = getResources().getColor(R.color.dot_light_screen);
         int colorsInactive = getResources().getColor(R.color.dot_dark_screen);
-
         dotsLayout.removeAllViews();
         for (int i = 0; i < dots.length; i++) {
             dots[i] = new TextView(this);
@@ -118,35 +102,44 @@ public class WelcomeActivity extends AppCompatActivity {
             dots[i].setTextColor(colorsInactive);
             dotsLayout.addView(dots[i]);
         }
-
         if (dots.length > 0)
             dots[currentPage].setTextColor(colorsActive);
     }
 
+    /**
+     * @param i the index
+     * @return the i-page
+     */
     private int getItem(int i) {
         return viewPager.getCurrentItem() + i;
     }
 
+    /**
+     * Call the main activity when user see all pages or skip it
+     */
     private void launchHomeScreen() {
         PrefManager.getInstace(getApplicationContext()).setFirstTimeLaunch(false);
         startActivity(new Intent(getApplicationContext(), MainActivity.class));
         finish();
     }
 
-    //  viewpager change listener
+
+    /**
+     * viewpager change listener
+     */
     ViewPager.OnPageChangeListener viewPagerPageChangeListener = new ViewPager.OnPageChangeListener() {
 
         @Override
         public void onPageSelected(int position) {
             addBottomDots(position);
 
-            // changing the next button text 'NEXT' / 'GOT IT'
+            /** changing the next button text 'NEXT' / 'GOT IT' */
             if (position == layouts.length - 1) {
-                // last page. make button text to GOT IT
+                /** last page. make button text to GOT IT */
                 btnNext.setText(getString(R.string.start));
                 btnSkip.setVisibility(View.GONE);
             } else {
-                // still pages are left
+                /** still pages are left */
                 btnNext.setText(getString(R.string.next));
                 btnSkip.setVisibility(View.VISIBLE);
             }

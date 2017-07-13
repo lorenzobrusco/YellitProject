@@ -438,7 +438,6 @@ public class MainActivity extends AppCompatActivity {
         startPoint.setLongitude(long1);
 
         Location endPoint = new Location("locationB");
-        //TODO replace the above code
         endPoint.setLatitude(lat2);
         endPoint.setLongitude(long2);
 

@@ -13,8 +13,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -22,9 +20,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
-
 import java.util.List;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -42,7 +38,7 @@ import unical.master.computerscience.yellit.utilities.BaseURL;
 import unical.master.computerscience.yellit.utilities.GenerateMainCategories;
 
 /**
- * Created by Lorenzo on 14/03/2017.
+ *  Post adapter
  */
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
@@ -50,11 +46,22 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     private Context mContext;
     private List<Post> mPosts;
 
+    /**
+     * Costructor
+     * @param context of activity
+     * @param posts list of posts
+     */
     public PostAdapter(final Context context, final List<Post> posts) {
         this.mContext = context;
         this.mPosts = posts;
     }
 
+    /**
+     *
+     * @param viewGroup
+     * @param viewType
+     * @return
+     */
     @Override
     public PostViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View mView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_post, null);
@@ -62,6 +69,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         return mPost;
     }
 
+    /**
+     *
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(PostViewHolder holder, final int position) {
         Post currPost = mPosts.get(position);
@@ -113,7 +125,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                     @Override
                     public void onResponse(Call<Like> call, Response<Like> response) {
 
-                        Like like = response.body();
+                       final Like like = response.body();
 
                     }
 

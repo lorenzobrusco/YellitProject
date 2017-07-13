@@ -93,35 +93,28 @@ public class SignUpFragment extends Fragment {
         final View view = inflater.inflate(R.layout.activity_signup, container, false);
         ButterKnife.bind(this, view);
         ButterKnife.bind(this, view);
-
         currentPhotoPath = "";
         ezPhotoPickStorage = new EZPhotoPickStorage(getActivity());
-
         choosePhotoDialog = buildDialogFilter();
-
         _signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 signup();
             }
         });
-
+        /** The below code is used to login with facebook */
         callbackManager = CallbackManager.Factory.create();
-
         _facebookSignButton.setReadPermissions(Arrays.asList(
                 "public_profile", "email", "user_birthday", "user_friends"));
         _facebookSignButton.setFragment(this);
-
         _facebookSignButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-
-                GraphRequest request = GraphRequest.newMeRequest(
+                final GraphRequest request = GraphRequest.newMeRequest(
                         loginResult.getAccessToken(),
                         new GraphRequest.GraphJSONObjectCallback() {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
-                                Log.v("LoginActivity", response.toString());
 
                                 try {
 
@@ -137,27 +130,24 @@ public class SignUpFragment extends Fragment {
                                     call.enqueue(new Callback<User>() {
                                         @Override
                                         public void onResponse(Call<User> call, Response<User> response) {
-
-                                            User profile = response.body();
+                                            final User profile = response.body();
                                             InfoManager.getInstance().setmUser(profile);
-                                            PrefManager.getInstace(SignUpFragment.this.getContext()).setUser(email+"#"+"NULL");
+                                            PrefManager.getInstace(SignUpFragment.this.getContext()).setUser(email + "#" + "NULL");
                                             if (profile.getEmail() == null) {
                                                 SignUpFragment.this.onSignupFailed();
-                                                Log.d("retrofit", "email o password errati");
+                                                Toast.makeText(getContext(),"Error during load facebook info",Toast.LENGTH_SHORT).show();
                                             } else {
-                                                Log.d("nick", profile.getNickname());
+                                                Toast.makeText(getContext(),"Error during load facebook info",Toast.LENGTH_SHORT).show();
                                                 onSignupSuccess(email);
                                             }
                                         }
-
                                         @Override
                                         public void onFailure(Call<User> call, Throwable t) {
-                                            Log.e("Facebook signin", "errore di signin");
+                                            Toast.makeText(getContext(),"Error during load facebook info",Toast.LENGTH_SHORT).show();
                                         }
                                     });
-
                                 } catch (JSONException e) {
-                                    e.printStackTrace();
+                                    Toast.makeText(getContext(),"Error during load facebook info",Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -166,18 +156,15 @@ public class SignUpFragment extends Fragment {
                 request.setParameters(parameters);
                 request.executeAsync();
             }
-
             @Override
             public void onCancel() {
                 Log.e("CANCEL", "vabbè");
             }
-
             @Override
             public void onError(FacebookException exception) {
                 Log.e("ERRORE", "mannaia");
             }
         });
-
         _profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -187,40 +174,39 @@ public class SignUpFragment extends Fragment {
         return view;
     }
 
+    /**
+     * @return dialog where user can choose how to get an image
+     * either from gallery or camera
+     */
     private Dialog buildDialogFilter() {
-
-        Dialog dialog = new Dialog(getContext());
+        //TODO Salvatore fix it because when we get an image and sign in it ignores the image
+        final Dialog dialog = new Dialog(getContext());
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.dialog_signin);
         dialog.setTitle("Load photo from..");
-
-        Button camButton = (Button) dialog.findViewById(R.id.signin_cam_button);
+        final Button camButton = (Button) dialog.findViewById(R.id.signin_cam_button);
         camButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 try {
-                    EZPhotoPickConfig config = new EZPhotoPickConfig();
+                    final EZPhotoPickConfig config = new EZPhotoPickConfig();
                     config.photoSource = PhotoSource.CAMERA;
                     config.storageDir = DEMO_PHOTO_PATH;
                     config.needToAddToGallery = true;
                     config.exportingSize = 1000;
                     EZPhotoPick.startPhotoPickActivity(SignUpFragment.this, config);
-
                 } catch (PhotoIntentException e) {
-                    e.printStackTrace();
+                    Toast.makeText(getContext(), "Error during load photo", Toast.LENGTH_SHORT).show();
                 }
 
             }
         });
-
-        Button gallButton = (Button) dialog.findViewById(R.id.signin_gall_button);
+        final Button gallButton = (Button) dialog.findViewById(R.id.signin_gall_button);
         gallButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-
-                    EZPhotoPickConfig config = new EZPhotoPickConfig();
+                    final EZPhotoPickConfig config = new EZPhotoPickConfig();
                     config.photoSource = PhotoSource.GALERY;
                     config.needToExportThumbnail = true;
                     config.isAllowMultipleSelect = true;
@@ -228,119 +214,108 @@ public class SignUpFragment extends Fragment {
                     config.exportingThumbSize = 200;
                     config.exportingSize = 1000;
                     EZPhotoPick.startPhotoPickActivity(SignUpFragment.this, config);
-
                 } catch (PhotoIntentException e) {
-                    e.printStackTrace();
+                    Toast.makeText(getContext(), "Error during get photo from gallery", Toast.LENGTH_SHORT).show();
                 }
             }
         });
-
         return dialog;
     }
 
-    public void signup() {
-        Log.d(TAG, "Signup");
-
-        /*if (!validate()) {
+    /**
+     * It used to take the credentials and calls the query to add user in the database
+     */
+    private void signup() {
+        if (!validate()) {
             onSignupFailed();
             return;
-        }*/
-
+        }
         _signupButton.setEnabled(false);
-
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Creating Account...");
         progressDialog.show();
-
         final String name = _nameText.getText().toString();
         final String email = _emailText.getText().toString();
         final String password = _passwordText.getText().toString();
-        final String reEnterPassword = _reEnterPasswordText.getText().toString();
-
-        //TODO: controllare se la password re-inserita è uguale alla password
-
-        Retrofit retrofit = new Retrofit.Builder()
+        final Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BaseURL.URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        SigninService signinService = retrofit.create(SigninService.class);
-        Call<User> call = signinService.createProfile(name, email, password);
+        final SigninService signinService = retrofit.create(SigninService.class);
+        final Call<User> call = signinService.createProfile(name, email, password);
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-
-                User profile = response.body();
+                final User profile = response.body();
                 InfoManager.getInstance().setmUser(profile);
                 if (profile.getEmail() == null) {
                     SignUpFragment.this.onSignupFailed();
-                    Log.d("retrofit", "email o password errati");
                 } else {
-                    PrefManager.getInstace(getContext()).setUser(email+"#"+password);
-                    Log.d("nick", profile.getNickname());
+                    PrefManager.getInstace(getContext()).setUser(email + "#" + password);
                     onSignupSuccess(null);
                 }
             }
-
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                Log.d("retrofit", "errore di log");
+                buildDialogFilter();
             }
         });
-
     }
 
-    public void onSignupSuccess(String name) {
+    /**
+     * It used to start the next activity because the sign in is successed
+     */
+    private void onSignupSuccess(String name) {
         _signupButton.setEnabled(true);
         getActivity().setResult(RESULT_OK, null);
-        PrefManager.getInstace(getContext()).setUser(name == null ?_emailText.getText().toString() : name);
+        PrefManager.getInstace(getContext()).setUser(name == null ? _emailText.getText().toString() : name);
         startActivity(new Intent(getContext(), MainActivity.class));
         getActivity().finish();
     }
 
+    /**
+     * It used when the sign in is failed and notify the user
+     */
     public void onSignupFailed() {
         Toast.makeText(getContext(), "Signin failed", Toast.LENGTH_LONG).show();
-
         _signupButton.setEnabled(true);
     }
 
+    /**
+     * It used to chack if the input is correct or not
+     */
+    //TODO fix validate
     public boolean validate() {
         boolean valid = true;
-
-        String name = _nameText.getText().toString();
-        String email = _emailText.getText().toString();
-        String password = _passwordText.getText().toString();
-        String reEnterPassword = _reEnterPasswordText.getText().toString();
-
+        final String name = _nameText.getText().toString();
+        final String email = _emailText.getText().toString();
+        final String password = _passwordText.getText().toString();
+        final String reEnterPassword = _reEnterPasswordText.getText().toString();
         if (name.isEmpty() || name.length() < 3) {
             _nameText.setError("at least 3 characters");
             valid = false;
         } else {
             _nameText.setError(null);
         }
-
-
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             _emailText.setError("enter a valid email address");
             valid = false;
         } else {
             _emailText.setError(null);
         }
-
         if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
             _passwordText.setError("between 4 and 10 alphanumeric characters");
             valid = false;
         } else {
             _passwordText.setError(null);
         }
-
         if (reEnterPassword.isEmpty() || reEnterPassword.length() < 4 || reEnterPassword.length() > 10 || !(reEnterPassword.equals(password))) {
             _reEnterPasswordText.setError("Password Do not match");
             valid = false;
         } else {
             _reEnterPasswordText.setError(null);
         }
-
         return valid;
     }
 
@@ -352,45 +327,30 @@ public class SignUpFragment extends Fragment {
             return;
         }
 
-        if(FacebookSdk.isFacebookRequestCode(requestCode))
-        {
-            if(resultCode == Activity.RESULT_OK) {
-                callbackManager.onActivityResult(requestCode, resultCode, data);
-            }
+        if (FacebookSdk.isFacebookRequestCode(requestCode)) {
+            callbackManager.onActivityResult(requestCode, resultCode, data);
         }
-
-
-        if(requestCode == EZPhotoPick.PHOTO_PICK_CAMERA_REQUEST_CODE)
-        {
+        if (requestCode == EZPhotoPick.PHOTO_PICK_CAMERA_REQUEST_CODE) {
             try {
-                ArrayList<String> pickedPhotoNames = data.getStringArrayListExtra(EZPhotoPick.PICKED_PHOTO_NAMES_KEY);
-                Bitmap pickedPhoto = ezPhotoPickStorage.loadLatestStoredPhotoBitmap(300);
-
+                final ArrayList<String> pickedPhotoNames = data.getStringArrayListExtra(EZPhotoPick.PICKED_PHOTO_NAMES_KEY);
+                final Bitmap pickedPhoto = ezPhotoPickStorage.loadLatestStoredPhotoBitmap(300);
                 _profileImage.setImageBitmap(pickedPhoto);
-
-                currentPhotoPath =  ezPhotoPickStorage.getAbsolutePathOfStoredPhoto(DEMO_PHOTO_PATH, pickedPhotoNames.get(0));
-
+                currentPhotoPath = ezPhotoPickStorage.getAbsolutePathOfStoredPhoto(DEMO_PHOTO_PATH, pickedPhotoNames.get(0));
             } catch (IOException e) {
-                e.printStackTrace();
+                Toast.makeText(getContext(), "Error during load photo", Toast.LENGTH_SHORT).show();
             }
-        }
-        else if(requestCode == EZPhotoPick.PHOTO_PICK_GALERY_REQUEST_CODE)
-        {
+        } else if (requestCode == EZPhotoPick.PHOTO_PICK_GALERY_REQUEST_CODE) {
             try {
-                ArrayList<String> pickedPhotoNames = data.getStringArrayListExtra(EZPhotoPick.PICKED_PHOTO_NAMES_KEY);
-                for (String photoName : pickedPhotoNames) {
-
-                    Bitmap pickedPhoto = ezPhotoPickStorage.loadStoredPhotoBitmap(DEMO_PHOTO_PATH, photoName, 300);
-
+                final ArrayList<String> pickedPhotoNames = data.getStringArrayListExtra(EZPhotoPick.PICKED_PHOTO_NAMES_KEY);
+                for (final String photoName : pickedPhotoNames) {
+                    final Bitmap pickedPhoto = ezPhotoPickStorage.loadStoredPhotoBitmap(DEMO_PHOTO_PATH, photoName, 300);
                     _profileImage.setImageBitmap(pickedPhoto);
-
-                    currentPhotoPath =  ezPhotoPickStorage.getAbsolutePathOfStoredPhoto(DEMO_PHOTO_PATH, photoName);
+                    currentPhotoPath = ezPhotoPickStorage.getAbsolutePathOfStoredPhoto(DEMO_PHOTO_PATH, photoName);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                Toast.makeText(getContext(), "Error during load photo", Toast.LENGTH_SHORT).show();
             }
         }
-
         choosePhotoDialog.dismiss();
     }
 }

@@ -45,9 +45,8 @@ import unical.master.computerscience.yellit.utilities.PrefManager;
 import static unical.master.computerscience.yellit.utilities.SystemUI.changeSystemBar;
 
 /**
- * Created by Lorenzo on 18/03/2017.
+ * The first activity, used to load many stuffs before to start.
  */
-
 public class LoadActivity extends AppCompatActivity {
 
     private static final String ROOT = "info";
@@ -82,6 +81,10 @@ public class LoadActivity extends AppCompatActivity {
         }
     }
 
+
+    /**
+     * Initialize the internal xml where it saved all user's information
+     */
     private void initXMLFile() {
         File mFile = new File(getFilesDir() + "/" + BaseURL.FILENAME + ".xml");
         if (!mFile.exists()) {

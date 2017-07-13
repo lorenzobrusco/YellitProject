@@ -1,6 +1,5 @@
 package unical.master.computerscience.yellit.graphic.Activities;
 
-import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,18 +8,14 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.TextView;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import unical.master.computerscience.yellit.R;
-
 import static unical.master.computerscience.yellit.utilities.SystemUI.changeSystemBar;
 
 /**
- * Created by Lorenzo on 02/05/2017.
+ * This is for the future developments
  */
-
 public class PlaceActivity extends AppCompatActivity {
 
     @Bind(R.id.toolbar)
@@ -43,7 +38,6 @@ public class PlaceActivity extends AppCompatActivity {
             mCollapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ExpandedAppBar);
             mCollapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.CollapsedAppBar);
         }
-        mCollapsingToolbarLayout.setTitle("McDonald's");
     }
 
     @Override
