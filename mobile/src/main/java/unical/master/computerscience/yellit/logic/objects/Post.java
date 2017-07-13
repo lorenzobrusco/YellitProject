@@ -23,7 +23,7 @@ public class Post {
     @SerializedName("type")
     private String type;
 
-    @SerializedName("location")
+    @SerializedName("position")
     private String location;
 
     @SerializedName("comment")
@@ -62,7 +62,6 @@ public class Post {
     public Post(String userName) {
         this.userName = userName;
     }
-
 
     public Integer getIdPost() {
         return idPost;
@@ -142,5 +141,21 @@ public class Post {
 
     public void setLikes(Integer likes) {
         this.likes = likes;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public double getLongi() {
+        return longi;
+    }
+
+    public void setLongi(double longi) {
+        this.longi = longi;
     }
 }

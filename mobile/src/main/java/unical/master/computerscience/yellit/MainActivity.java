@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int HOME_FRAG_BUTTON = 2;
     private static final int ADDPOST_FRAG_BUTTON = 3;
     private static final int OTHER_FRAG_BUTTON = 4;
-    private static final String FOODANDDRINK = "FoodandDrink";
+    private static final String FOODANDDRINK = "Food and Drink";
     private static final String INSIDE = "Inside";
     private static final String OUTSIDE = "Outside";
     private static final String TRAVEL = "Travel";
@@ -114,7 +114,6 @@ public class MainActivity extends AppCompatActivity {
         this.setupViews();
         GoogleApiClient.getInstance(this);
         GoogleApiClient.getInstance(this).getPlaceDetection(this);
-
     }
 
     @Override
@@ -152,10 +151,6 @@ public class MainActivity extends AppCompatActivity {
         mBottomNavigation.setCurrentItem(currentItem);
         mBottomNavigation.setColored(InfoManager.getInstance().isColorMode());
         mBottomNavigation.setNotificationBackgroundColor(ContextCompat.getColor(this, R.color.color_notification_back));
-
-        // Add or remove notification for each item
-//        mBottomNavigation.setNotification("1", PROFILE_FRAG_BUTTON);
-
         mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         mBottomSheetBehavior.setHideable(true);
         mBottomSheetBehavior.setPeekHeight(300);
@@ -420,37 +415,32 @@ public class MainActivity extends AppCompatActivity {
         final List<Post> posts = new ArrayList<>();
         for (Post post : InfoManager.getInstance().getmPostList()) {
             String type = GenerateMainCategories.getMacro(this, post.getType());
-            if (mFavoritesCatogories.contains(type))
-                posts.add(post);
-        }
-        Collections.sort(posts, new Comparator<Post>() {
-            @Override
-            public int compare(Post post2, Post post1)
-            {
-                return  post1.getDate().compareTo(post2.getDate());
+            if (mFavoritesCatogories.contains(type)) {
+                double d = distance(InfoManager.getInstance().getmPlaceData().latLongs.get(0).latitude,
+                        InfoManager.getInstance().getmPlaceData().latLongs.get(0).longitude, post.getLat(), post.getLongi());
+                Log.d("DISTANCEPOSITION","distance: "+ d);
+                if (mDistance <= d)
+                    posts.add(post);
             }
-        });
-        double distance = distance(InfoManager.getInstance().getmPlaceData().latLongs.get(0).latitude,InfoManager.getInstance().getmPlaceData().latLongs.get(0).longitude,0,0);
-        Toast.makeText(this,"distance : " + distance, Toast.LENGTH_LONG).show();
+        }
         InfoManager.getInstance().getmPostAdapter().changeList(posts);
         InfoManager.getInstance().getmPostAdapter().notifyDataSetChanged();
     }
 
     /**
      * @return the distance between two location
-     * */
+     */
     private double distance(double lat1, double long1, double lat2, double long2) {
+        if(lat2 == 0.00 || long2 == 0.00)
+            return mDistance;
         Location startPoint = new Location("locationA");
         startPoint.setLatitude(lat1);
         startPoint.setLongitude(long1);
 
         Location endPoint = new Location("locationB");
         //TODO replace the above code
-//        endPoint.setLatitude(lat2);
-//        endPoint.setLongitude(long2);
-        endPoint.setLatitude(17.375775);
-        endPoint.setLongitude(78.469218);
-
+        endPoint.setLatitude(lat2);
+        endPoint.setLongitude(long2);
 
         double distance = startPoint.distanceTo(endPoint);
         return distance;

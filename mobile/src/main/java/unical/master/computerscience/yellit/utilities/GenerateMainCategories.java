@@ -25,7 +25,7 @@ public class GenerateMainCategories {
             return "Outside";
         }
         else if(contains(context.getResources().getStringArray(R.array.sub_categories_4),micro)){
-            return "FoodandDrink";
+            return "Food and Drink";
         }
         else{
             return micro;

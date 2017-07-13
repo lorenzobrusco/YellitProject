@@ -13,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -48,12 +49,6 @@ public class LoginSignupActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_login_signup);
         ButterKnife.bind(this);
-        if (InfoManager.getInstance().getmUser() != null){
-            startActivity(new Intent(this, WelcomeActivity.class));
-            this.overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-            this.finish();
-        }
-
         this.mPages = new ArrayList<>();
         this.mTitlePages = new ArrayList<>();
         this.addPage(new LoginFragment(), "Login");

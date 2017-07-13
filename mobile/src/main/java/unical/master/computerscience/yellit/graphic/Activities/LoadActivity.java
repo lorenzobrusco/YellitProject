@@ -1,5 +1,6 @@
 package unical.master.computerscience.yellit.graphic.Activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -63,21 +64,9 @@ public class LoadActivity extends AppCompatActivity {
         initXMLFile();
         PrefManager.getInstace(this);
         InfoManager.getInstance().setColorMode(PrefManager.getInstace(this).isColorMode());
-        this.getUserWhetherExists();
-        final Handler handler = new Handler();
-        final Runnable runnable = new Runnable() {
-            public void run() {
-                /**
-                 * load the first 10 posts and also others stuff
-                 */
-                startActivity(new Intent(getApplicationContext(), SafeModeActivity.class));
-                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-                finish();
-            }
-        };
-        handler.postDelayed(runnable, 1000);
+        this.startNewActivity();
 
-        try{
+        try {
             PackageInfo info = getPackageManager().getPackageInfo(
                     "com.example.creeper", PackageManager.GET_SIGNATURES);
             for (Signature signature : info.signatures) {
@@ -111,26 +100,60 @@ public class LoadActivity extends AppCompatActivity {
         }
     }
 
-    private void getUserWhetherExists(){
+    /**
+     * Get the user info whether exists
+     */
+    private void getUserWhetherExists() {
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Loading...");
+        progressDialog.show();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BaseURL.URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
+        String user = PrefManager.getInstace(LoadActivity.this).getUser();
         final LoginService loginService = retrofit.create(LoginService.class);
-        Call<User> call = loginService.getProfile(PrefManager.getInstace(LoadActivity.this).getUser(), "");
+        Call<User> call = loginService.getProfile(user.split("#")[0], user.split("#")[1].equals("NULL") ? "" : user.split("#")[1]);
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
+                progressDialog.dismiss();
                 User profile = response.body();
                 InfoManager.getInstance().setmUser(profile);
-                Toast.makeText(LoadActivity.this,profile.getNickname(),Toast.LENGTH_LONG).show();
+                startActivity(new Intent(getApplicationContext(), SafeModeActivity.class));
+                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                finish();
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
                 Log.e("Facebook signin", "errore di signin");
+                progressDialog.dismiss();
+                startActivity(new Intent(getApplicationContext(), LoginSignupActivity.class));
+                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                finish();
             }
         });
+    }
 
+    /**
+     * halt this activity and call the new activity
+     */
+    private void startNewActivity() {
+        final Handler handler = new Handler();
+        final Runnable runnable = new Runnable() {
+            public void run() {
+                if (PrefManager.getInstace(LoadActivity.this).getUser() != null && !PrefManager.getInstace(LoadActivity.this).getUser().equals("")) {
+                    getUserWhetherExists();
+                } else {
+                    startActivity(new Intent(getApplicationContext(), LoginSignupActivity.class));
+                    overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                    finish();
+                }
+
+            }
+        };
+        handler.postDelayed(runnable, 1000);
     }
 }

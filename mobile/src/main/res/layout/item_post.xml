@@ -71,12 +71,12 @@
 
                     <com.like.LikeButton
                         android:id="@+id/like_post"
-                        app:icon_type="heart"
-                        app:icon_size="25dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:layout_alignParentEnd="true"
                         android:layout_marginTop="5dp"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"/>
+                        app:icon_size="25dp"
+                        app:icon_type="heart" />
 
                     <TextView
                         android:id="@+id/like_post_content"
@@ -109,18 +109,12 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="4dp"
-                        android:text="Stà" />
-
-                    <TextView
+                        android:id="@+id/type_post"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="4dp"
                         android:text="mangiando"
                         android:textColor="@android:color/black"
-                        android:id="@+id/type_post"
                         android:textSize="16dp" />
 
                 </LinearLayout>
@@ -147,11 +141,11 @@
 
                 <ImageView
                     android:id="@+id/image_value_post"
-                    android:scaleType="fitXY"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true" />
+                    android:layout_centerHorizontal="true"
+                    android:scaleType="fitXY" />
             </RelativeLayout>
 
 
@@ -169,42 +163,49 @@
                 android:id="@+id/comment_content_post"
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
+                android:layout_gravity="center"
                 android:layout_margin="8dp"
                 android:visibility="invisible">
 
                 <LinearLayout
                     android:id="@+id/position_post"
                     android:layout_width="wrap_content"
-                    android:layout_marginBottom="8dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:orientation="horizontal">
+
                     <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/testimonial"/>
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/testimonial" />
+
                     <TextView
                         android:id="@+id/position_post_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="presso 4 miglia"
-                        android:textColor="@color/black"
                         android:layout_gravity="center"
-                        android:layout_alignParentTop="true"
-                        android:layout_centerHorizontal="true"
-                         />
-
+                        android:text="Presso 4 miglia"
+                        android:textSize="14sp" />
 
 
                 </LinearLayout>
 
-                <TextView
-                    android:layout_margin="8sp"
-                    android:id="@+id/comment_value_post"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/lorem"
-                    android:layout_below="@+id/position_post"
-                    android:layout_alignParentStart="true" />
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/position_post">
+
+                    <TextView
+                        android:id="@+id/comment_value_post"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8sp"
+                        android:layout_gravity="center"
+                        android:text="@string/lorem"
+                        android:textColor="@color/blue_grey_900"
+                        android:textSize="18sp" />
+                </LinearLayout>
             </RelativeLayout>
 
         </LinearLayout>

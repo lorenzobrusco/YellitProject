@@ -53,6 +53,7 @@ import unical.master.computerscience.yellit.logic.GoogleApiClient;
 import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.logic.objects.Friend;
 import unical.master.computerscience.yellit.logic.objects.Post;
+import unical.master.computerscience.yellit.utilities.PrefManager;
 
 /**
  * Created by Lorenzo on 16/03/2017.
@@ -114,24 +115,25 @@ public class ProfileFragment extends Fragment {
     }
 
     private void setupInfo() {
-        Glide.with(this)
-                .load(InfoManager.getInstance().getmUser().getPathImg())
-                .listener(new RequestListener<String, GlideDrawable>() {
-                    @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                        return false;
-                    }
+        if(InfoManager.getInstance().getmUser().getPathImg() != null) {
+            Glide.with(this)
+                    .load(InfoManager.getInstance().getmUser().getPathImg())
+                    .listener(new RequestListener<String, GlideDrawable>() {
+                        @Override
+                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                            return false;
+                        }
 
-                    @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                        return false;
-                    }
+                        @Override
+                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                            return false;
+                        }
 
-                })
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(mPhotoProfile);
-
-       mFullNameProfile.setText(InfoManager.getInstance().getmUser().getFullname().toUpperCase());
+                    })
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(mPhotoProfile);
+        }
+       mFullNameProfile.setText(InfoManager.getInstance().getmUser().getFullname() == null ? PrefManager.getInstace(getContext()).getUser().split("#")[0].toUpperCase() : InfoManager.getInstance().getmUser().getFullname().toUpperCase());
     }
 
     private void setupButtonExpandLayout() {

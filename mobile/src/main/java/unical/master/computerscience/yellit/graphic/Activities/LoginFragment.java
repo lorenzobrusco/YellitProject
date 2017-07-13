@@ -122,9 +122,9 @@ public class LoginFragment extends Fragment {
                                     call.enqueue(new Callback<User>() {
                                         @Override
                                         public void onResponse(Call<User> call, Response<User> response) {
-
                                             User profile = response.body();
                                             InfoManager.getInstance().setmUser(profile);
+                                            PrefManager.getInstace(LoginFragment.this.getContext()).setUser(email+"#"+"NULL");
                                             if (profile.getEmail() == null) {
                                                 LoginFragment.this.onLoginFailed();
                                                 Log.d("retrofit", "email o password errati");
@@ -178,7 +178,6 @@ public class LoginFragment extends Fragment {
 
     public void onLoginSuccess(String name) {
         progressDialog.dismiss();
-        PrefManager.getInstace(getContext()).setUser(_emailText.getText().toString());
         startActivity(new Intent(getContext(), WelcomeActivity.class));
         getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
         getActivity().finish();
@@ -211,7 +210,7 @@ public class LoginFragment extends Fragment {
         return valid;
     }
 
-    private boolean login(String email, String password) {
+    private boolean login(final String email, final String password) {
         /** the method required this array*/
         final boolean[] correct = {false};
         Retrofit retrofit = new Retrofit.Builder()
@@ -226,7 +225,6 @@ public class LoginFragment extends Fragment {
 
                 User profile = response.body();
                 InfoManager.getInstance().setmUser(profile);
-                Toast.makeText(getContext(), profile.getEmail(), Toast.LENGTH_LONG).show();
                 if (profile.getEmail() == null) {
                     LoginFragment.this.buildErrorDialog();
                     Log.d("retrofit", "email o password errati");
@@ -234,6 +232,7 @@ public class LoginFragment extends Fragment {
                     correct[0] = false;
                 } else {
                     onLoginSuccess(null);
+                    PrefManager.getInstace(getContext()).setUser(email+"#"+password);
                     Log.d("nick", profile.getNickname());
                     correct[0] = true;
                 }

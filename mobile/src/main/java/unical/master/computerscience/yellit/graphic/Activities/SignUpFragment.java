@@ -140,6 +140,7 @@ public class SignUpFragment extends Fragment {
 
                                             User profile = response.body();
                                             InfoManager.getInstance().setmUser(profile);
+                                            PrefManager.getInstace(SignUpFragment.this.getContext()).setUser(email+"#"+"NULL");
                                             if (profile.getEmail() == null) {
                                                 SignUpFragment.this.onSignupFailed();
                                                 Log.d("retrofit", "email o password errati");
@@ -247,16 +248,15 @@ public class SignUpFragment extends Fragment {
 
         _signupButton.setEnabled(false);
 
-        final ProgressDialog progressDialog = new ProgressDialog(getContext(),
-                R.style.AppTheme_Dark_Dialog);
+        final ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Creating Account...");
         progressDialog.show();
 
-        String name = _nameText.getText().toString();
-        String email = _emailText.getText().toString();
-        String password = _passwordText.getText().toString();
-        String reEnterPassword = _reEnterPasswordText.getText().toString();
+        final String name = _nameText.getText().toString();
+        final String email = _emailText.getText().toString();
+        final String password = _passwordText.getText().toString();
+        final String reEnterPassword = _reEnterPasswordText.getText().toString();
 
         //TODO: controllare se la password re-inserita è uguale alla password
 
@@ -276,6 +276,7 @@ public class SignUpFragment extends Fragment {
                     SignUpFragment.this.onSignupFailed();
                     Log.d("retrofit", "email o password errati");
                 } else {
+                    PrefManager.getInstace(getContext()).setUser(email+"#"+password);
                     Log.d("nick", profile.getNickname());
                     onSignupSuccess(null);
                 }
@@ -287,16 +288,6 @@ public class SignUpFragment extends Fragment {
             }
         });
 
-       /* new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        // On complete call either onSignupSuccess or onSignupFailed
-                        // depending on success
-                        onSignupSuccess();
-                        // onSignupFailed();
-                        progressDialog.dismiss();
-                    }
-                }, 3000);*/
     }
 
     public void onSignupSuccess(String name) {
