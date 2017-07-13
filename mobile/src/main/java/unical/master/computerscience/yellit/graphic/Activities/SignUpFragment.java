@@ -123,7 +123,6 @@ public class SignUpFragment extends Fragment {
                             public void onCompleted(JSONObject object, GraphResponse response) {
 
                                 try {
-
                                     final String email = object.getString("email");
                                     final String nameFirst = object.getString("name");
                                     final String id = object.getString("id");
@@ -149,7 +148,7 @@ public class SignUpFragment extends Fragment {
                                                 Toast.makeText(getContext(), "Error during load facebook info", Toast.LENGTH_SHORT).show();
                                             } else {
                                                 Toast.makeText(getContext(), "Error during load facebook info", Toast.LENGTH_SHORT).show();
-                                                onSignupSuccess(email);
+                                                onSignupSuccess();
                                             }
                                         }
 
@@ -171,12 +170,12 @@ public class SignUpFragment extends Fragment {
 
             @Override
             public void onCancel() {
-                Log.e("CANCEL", "vabbè");
+                Toast.makeText(getContext(), "Error during load facebook info", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(FacebookException exception) {
-                Log.e("ERRORE", "mannaia");
+                Toast.makeText(getContext(), "Error during load facebook info", Toast.LENGTH_SHORT).show();
             }
         });
         _profileImage.setOnClickListener(new View.OnClickListener() {
@@ -268,7 +267,7 @@ public class SignUpFragment extends Fragment {
                 final User profile = response.body();
                 InfoManager.getInstance().setmUser(profile);
                 PrefManager.getInstace(getContext()).setUser(email + "#" + password);
-                onSignupSuccess(null);
+                onSignupSuccess();
 
             }
 
@@ -282,10 +281,9 @@ public class SignUpFragment extends Fragment {
     /**
      * It used to start the next activity because the sign in is successed
      */
-    private void onSignupSuccess(String name) {
+    private void onSignupSuccess() {
         _signupButton.setEnabled(true);
         getActivity().setResult(RESULT_OK, null);
-        PrefManager.getInstace(getContext()).setUser(name == null ? _emailText.getText().toString() : name);
         startActivity(new Intent(getContext(), MainActivity.class));
         getActivity().finish();
     }
