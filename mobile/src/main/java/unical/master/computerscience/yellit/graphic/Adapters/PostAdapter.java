@@ -65,6 +65,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     @Override
     public void onBindViewHolder(PostViewHolder holder, final int position) {
         Post currPost = mPosts.get(position);
+        if (position == 0) {
+            Toast.makeText(mContext, currPost.getUserImagePath() + "", Toast.LENGTH_SHORT).show();
+        }
         String likes = currPost.getLikes() + " Like";
         holder.personName.setText(currPost.getUserName());
         holder.commentText.setText(currPost.getComment());
@@ -181,34 +184,36 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         }
 
         public void setUserImage(String userImgPath) {
-            Glide.with(mContext)
-                    .load(userImgPath)
-                    .listener(new RequestListener<String, GlideDrawable>() {
-                        @Override
-                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                            progressBar.setVisibility(View.GONE);
-                            userInfo.setVisibility(View.VISIBLE);
-                            actionUser.setVisibility(View.VISIBLE);
-                            commentUser.setVisibility(View.VISIBLE);
-                            return false;
-                        }
+            if (userImgPath != null && !userImgPath.equals("")) {
+                Glide.with(mContext)
+                        .load(userImgPath)
+                        .listener(new RequestListener<String, GlideDrawable>() {
+                            @Override
+                            public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                                progressBar.setVisibility(View.GONE);
+                                userInfo.setVisibility(View.VISIBLE);
+                                actionUser.setVisibility(View.VISIBLE);
+                                commentUser.setVisibility(View.VISIBLE);
+                                return false;
+                            }
 
-                        @Override
-                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                            progressBar.setVisibility(View.GONE);
-                            userInfo.setVisibility(View.VISIBLE);
-                            actionUser.setVisibility(View.VISIBLE);
-                            commentUser.setVisibility(View.VISIBLE);
-                            return false;
-                        }
+                            @Override
+                            public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                                progressBar.setVisibility(View.GONE);
+                                userInfo.setVisibility(View.VISIBLE);
+                                actionUser.setVisibility(View.VISIBLE);
+                                commentUser.setVisibility(View.VISIBLE);
+                                return false;
+                            }
 
-                    })
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(userImage);
-
+                        })
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(userImage);
+            }
         }
 
         public void setImagePost(String imagePath) {
+
             Glide.with(mContext)
                     .load(imagePath)
                     .listener(new RequestListener<String, GlideDrawable>() {
@@ -232,6 +237,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                     })
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(imagePost);
+
         }
 
         public void hideAll() {
