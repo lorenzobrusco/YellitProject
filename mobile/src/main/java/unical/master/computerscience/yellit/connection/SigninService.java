@@ -18,5 +18,6 @@ public interface SigninService {
 
     @Multipart
     @POST("Signin")
-    Call<User> createProfile(@Query("nickname") String nickname, @Query("email") String email, @Query("password") String password, @Part MultipartBody.Part file, @Part("file") RequestBody name);
+    Call<User> createProfile(@Query("nickname") String nickname, @Query("email") String email,
+                             @Query("password") String password, @Part MultipartBody.Part file, @Part("file") RequestBody name);
 }

@@ -267,8 +267,8 @@ public class SignUpFragment extends Fragment {
                 final User profile = response.body();
                 InfoManager.getInstance().setmUser(profile);
                 PrefManager.getInstace(getContext()).setUser(email + "#" + password);
+                progressDialog.dismiss();
                 onSignupSuccess();
-
             }
 
             @Override
@@ -283,6 +283,7 @@ public class SignUpFragment extends Fragment {
      */
     private void onSignupSuccess() {
         _signupButton.setEnabled(true);
+
         getActivity().setResult(RESULT_OK, null);
         startActivity(new Intent(getContext(), MainActivity.class));
         getActivity().finish();
