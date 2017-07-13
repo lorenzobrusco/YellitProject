@@ -20,12 +20,9 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
-
 import java.io.IOException;
 import java.util.ArrayList;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import siclo.com.ezphotopicker.api.EZPhotoPick;
@@ -36,38 +33,22 @@ import siclo.com.ezphotopicker.models.PhotoIntentException;
 import unical.master.computerscience.yellit.R;
 
 /**
- * Created by Lorenzo on 15/03/2017.
+ * It used when user wants create a new post
  */
-
 public class CustomDialogBottomSheet extends BottomSheetDialogFragment {
 
-    /*
-        Esempio di utilizzo
-
-        CustomDialogBottomSheet c = CustomDialogBottomSheet.newInstance("");
-                c.show(getFragmentManager().beginTransaction(), "");
-    */
     private static final String DEMO_PHOTO_PATH = "MyDemoPhotoDir";
     private ArrayList<String> images;
+    private EZPhotoPickStorage ezPhotoPickStorage;
 
     @Bind(R.id.addpost_img)
     protected ImageView imageLoaded;
-
     @Bind(R.id.addpost_cam_button)
     protected Button camButton;
-
     @Bind(R.id.addpost_gall_button)
     protected Button galButton;
-
     @Bind(R.id.galleryGridView)
     protected GridView gallery;
-
-    private EZPhotoPickStorage ezPhotoPickStorage;
-
-    public static CustomDialogBottomSheet newInstance(String string) {
-        CustomDialogBottomSheet f = new CustomDialogBottomSheet();
-        return f;
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -178,10 +159,14 @@ public class CustomDialogBottomSheet extends BottomSheetDialogFragment {
         }
     }
 
+    /**
+     * Create a gridview in horizonal thah shows images
+     * @param gridview
+     */
     private void gridViewSetting(GridView gridview) {
 
         int size = 50;
-        // Calculated single Item Layout Width for each grid element ....
+        /**Calculated single Item Layout Width for each grid element */
         int width = 90;
 
         DisplayMetrics dm = new DisplayMetrics();
@@ -189,7 +174,6 @@ public class CustomDialogBottomSheet extends BottomSheetDialogFragment {
         float density = dm.density;
 
         int totalWidth = (int) (width * size * density);
-        int singleItemWidth = (int) (width * density);
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 totalWidth, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -259,21 +243,18 @@ public class CustomDialogBottomSheet extends BottomSheetDialogFragment {
          * @return ArrayList with images Path
          */
         private ArrayList<String> getAllShownImagesPath(Activity activity) {
-            Uri uri;
-            int column_index_data, column_index_folder_name;
-            ArrayList<String> listOfAllImages = new ArrayList<String>();
-            String absolutePathOfImage = null;
-            uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+            int column_index_data;
+            final ArrayList<String> listOfAllImages = new ArrayList<String>();
+            String absolutePathOfImage;
+            final Uri uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
 
-            String[] projection = {MediaStore.MediaColumns.DATA,
+            final String[] projection = {MediaStore.MediaColumns.DATA,
                     MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
             final Cursor cursor = getContext().getContentResolver()
                     .query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null,
                             null, MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC");
 
             column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-            column_index_folder_name = cursor
-                    .getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
             final int maxDim = 50;
             int index = 0;
             while (cursor.moveToNext()) {

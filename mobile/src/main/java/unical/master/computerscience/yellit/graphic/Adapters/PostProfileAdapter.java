@@ -7,29 +7,20 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.like.LikeButton;
-import com.squareup.picasso.Picasso;
-
 import java.util.List;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.logic.objects.Post;
-import unical.master.computerscience.yellit.utilities.BaseURL;
 
 /**
- * Created by Lorenzo on 09/04/2017.
+ *
  */
-
 public class PostProfileAdapter extends BaseAdapter {
 
     private List<Post> mMyPposts;

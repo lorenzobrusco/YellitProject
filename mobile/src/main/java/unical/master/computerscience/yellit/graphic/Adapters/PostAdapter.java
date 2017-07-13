@@ -40,7 +40,6 @@ import unical.master.computerscience.yellit.utilities.GenerateMainCategories;
 /**
  *  Post adapter
  */
-
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
 
     private Context mContext;
@@ -64,7 +63,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
      */
     @Override
     public PostViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        View mView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_post, null);
+        final View mView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_post, null);
         PostViewHolder mPost = new PostViewHolder(mView);
         return mPost;
     }
@@ -72,12 +71,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     /**
      *
      * @param holder
-     * @param position
+     * @param position of post in the list
      */
     @Override
     public void onBindViewHolder(PostViewHolder holder, final int position) {
-        Post currPost = mPosts.get(position);
-        String likes = currPost.getLikes() + " Like";
+        final Post currPost = mPosts.get(position);
+        final String likes = currPost.getLikes() + " Like";
         holder.personName.setText(currPost.getUserName());
         holder.commentText.setText(currPost.getComment());
         holder.setImagePost(currPost.getPostImagePost());
@@ -92,51 +91,45 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
                 Toast.makeText(mContext, position + " liked something", Toast.LENGTH_LONG
                 ).show();
-                Retrofit retrofit = new Retrofit.Builder()
+                final Retrofit retrofit = new Retrofit.Builder()
                         .baseUrl(BaseURL.URL)
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
-                LikeService likeService = retrofit.create(LikeService.class);
-                Call<Like> call = likeService.addLike(InfoManager.getInstance().getmUser().getEmail(), mPosts.get(position).getIdPost());
+                final LikeService likeService = retrofit.create(LikeService.class);
+                final Call<Like> call = likeService.addLike(InfoManager.getInstance().getmUser().getEmail(), mPosts.get(position).getIdPost(),mPosts.get(position).getUserName(),"1");
                 call.enqueue(new Callback<Like>() {
                     @Override
                     public void onResponse(Call<Like> call, Response<Like> response) {
-
                         final Like like = response.body();
-
                     }
 
                     @Override
                     public void onFailure(Call<Like> call, Throwable t) {
-                        Log.d("retrofit", "errore di like");
+                        Toast.makeText(mContext, "Error during add a like",Toast.LENGTH_SHORT).show();
                     }
                 });
             }
 
             @Override
             public void unLiked(LikeButton likeButton) {
-                Retrofit retrofit = new Retrofit.Builder()
+                final Retrofit retrofit = new Retrofit.Builder()
                         .baseUrl(BaseURL.URL)
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
-                LikeService likeService = retrofit.create(LikeService.class);
-                Call<Like> call = likeService.removeLike(InfoManager.getInstance().getmUser().getEmail(), mPosts.get(position).getIdPost());
+                final LikeService likeService = retrofit.create(LikeService.class);
+                final Call<Like> call = likeService.addLike(InfoManager.getInstance().getmUser().getEmail(), mPosts.get(position).getIdPost(),mPosts.get(position).getUserName(),"0");
                 call.enqueue(new Callback<Like>() {
                     @Override
                     public void onResponse(Call<Like> call, Response<Like> response) {
-
                        final Like like = response.body();
-
                     }
-
                     @Override
                     public void onFailure(Call<Like> call, Throwable t) {
-                        Log.d("retrofit", "errore di like");
+                        Toast.makeText(mContext, "Error during remove a like",Toast.LENGTH_SHORT).show();
                     }
                 });
             }
         });
-
     }
 
 
@@ -150,10 +143,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         super.onAttachedToRecyclerView(recyclerView);
     }
 
+    /**
+     * change the list of posts
+     * @param posts
+     */
     public void changeList(List<Post> posts) {
         this.mPosts = posts;
     }
 
+    /**
+     * Adpter
+     */
     class PostViewHolder extends RecyclerView.ViewHolder {
 
         @Bind(R.id.user_info_post)
@@ -248,9 +248,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                     .fitCenter()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(imagePost);
-
         }
 
+        /**
+         *  Show progress bar and hide all
+         */
         public void hideAll() {
             progressBar.setVisibility(View.VISIBLE);
             userInfo.setVisibility(View.INVISIBLE);
@@ -258,6 +260,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             commentUser.setVisibility(View.INVISIBLE);
         }
 
+        /**
+         *  Hide progress bar and show all
+         */
         public void showAll() {
             progressBar.setVisibility(View.GONE);
             userInfo.setVisibility(View.VISIBLE);

@@ -11,10 +11,8 @@ import unical.master.computerscience.yellit.logic.objects.Like;
  */
 public interface LikeService {
 
-    @GET("AddLike")
-    Call<Like> addLike(@Query("email") String email, @Query("idPost") Integer idPost);
+    @GET("Like")
+    Call<Like> addLike(@Query("email") String email, @Query("idPost") Integer idPost,
+                       @Query("emailPost") String emailPost, @Query("removeLikePost") String removeLikePost);
 
-
-    @GET("RemoveLike")
-    Call<Like> removeLike(@Query("email") String email, @Query("idPost") Integer idPost);
 }
