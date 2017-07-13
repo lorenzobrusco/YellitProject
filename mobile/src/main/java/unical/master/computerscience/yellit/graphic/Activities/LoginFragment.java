@@ -16,6 +16,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -24,9 +25,12 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.Arrays;
+
 import butterknife.ButterKnife;
 import butterknife.Bind;
 import retrofit2.Call;
@@ -71,7 +75,7 @@ public class LoginFragment extends Fragment {
                     progressDialog.setIndeterminate(true);
                     progressDialog.setMessage("Authenticating...");
                     progressDialog.show();
-                    login();
+                    login(false);
                 }
             }
         });
@@ -102,14 +106,12 @@ public class LoginFragment extends Fragment {
                                     User profile = response.body();
                                     InfoManager.getInstance().setmUser(profile);
                                     PrefManager.getInstace(LoginFragment.this.getContext()).setUser(email + "#" + "NULL");
-                                    if (profile.getEmail() == null) {
-                                        LoginFragment.this.onLoginFailed();
-                                    } else {
-                                        LoginFragment.this.onLoginSuccess();
-                                    }
+                                    LoginFragment.this.onLoginSuccess();
                                 }
+
                                 @Override
                                 public void onFailure(Call<User> call, Throwable t) {
+                                    Toast.makeText(getContext(),"facebook failure",Toast.LENGTH_SHORT).show();
                                     buildErrorDialog();
                                 }
                             });
@@ -156,13 +158,15 @@ public class LoginFragment extends Fragment {
     /**
      * It used to take the credentials and calls the query to check
      * whether user exists in the database
+     *
      * @return true if the login is correct otherwise false
      */
-    private boolean login() {
-        if (!validate()) {
-            onLoginFailed();
-            return false;
-        }
+    private boolean login(boolean facebook) {
+        if (facebook)
+            if (!validate()) {
+                onLoginFailed();
+                return false;
+            }
         final String email = _emailText.getText().toString();
         final String password = _passwordText.getText().toString();
         return this.login(email, password);
@@ -215,7 +219,7 @@ public class LoginFragment extends Fragment {
     }
 
     /**
-     * @param email user's email
+     * @param email    user's email
      * @param password user's passwords
      * @return true if login is correct otherwise false
      */

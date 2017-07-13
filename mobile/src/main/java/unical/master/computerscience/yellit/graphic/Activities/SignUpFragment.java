@@ -35,12 +35,18 @@ import com.facebook.login.widget.LoginButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import butterknife.ButterKnife;
 import butterknife.Bind;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -119,14 +125,19 @@ public class SignUpFragment extends Fragment {
                                 try {
 
                                     final String email = object.getString("email");
-                                    String nameFirst = object.getString("name"); // 01/31/1980 format
-
+                                    final String nameFirst = object.getString("name");
+                                    final String id = object.getString("id");
+                                    final String imageURL = "https://graph.facebook.com/" + id + "/picture?type=large";
+                                    final File file = new File(imageURL);
+                                    RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
+                                    MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
+                                    RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
                                     Retrofit retrofit = new Retrofit.Builder()
                                             .baseUrl(BaseURL.URL)
                                             .addConverterFactory(GsonConverterFactory.create())
                                             .build();
                                     SigninService signinService = retrofit.create(SigninService.class);
-                                    Call<User> call = signinService.createProfile(nameFirst, email, "");
+                                    Call<User> call = signinService.createProfile(nameFirst, email, "", fileToUpload, filename);
                                     call.enqueue(new Callback<User>() {
                                         @Override
                                         public void onResponse(Call<User> call, Response<User> response) {
@@ -135,19 +146,20 @@ public class SignUpFragment extends Fragment {
                                             PrefManager.getInstace(SignUpFragment.this.getContext()).setUser(email + "#" + "NULL");
                                             if (profile.getEmail() == null) {
                                                 SignUpFragment.this.onSignupFailed();
-                                                Toast.makeText(getContext(),"Error during load facebook info",Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(getContext(), "Error during load facebook info", Toast.LENGTH_SHORT).show();
                                             } else {
-                                                Toast.makeText(getContext(),"Error during load facebook info",Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(getContext(), "Error during load facebook info", Toast.LENGTH_SHORT).show();
                                                 onSignupSuccess(email);
                                             }
                                         }
+
                                         @Override
                                         public void onFailure(Call<User> call, Throwable t) {
-                                            Toast.makeText(getContext(),"Error during load facebook info",Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getContext(), "Error during load facebook info", Toast.LENGTH_SHORT).show();
                                         }
                                     });
                                 } catch (JSONException e) {
-                                    Toast.makeText(getContext(),"Error during load facebook info",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "Error during load facebook info", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -156,10 +168,12 @@ public class SignUpFragment extends Fragment {
                 request.setParameters(parameters);
                 request.executeAsync();
             }
+
             @Override
             public void onCancel() {
                 Log.e("CANCEL", "vabbè");
             }
+
             @Override
             public void onError(FacebookException exception) {
                 Log.e("ERRORE", "mannaia");
@@ -243,19 +257,21 @@ public class SignUpFragment extends Fragment {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         final SigninService signinService = retrofit.create(SigninService.class);
-        final Call<User> call = signinService.createProfile(name, email, password);
+        File file = new File(currentPhotoPath);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
+        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
+        RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
+        final Call<User> call = signinService.createProfile(name, email, password, fileToUpload, filename);
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 final User profile = response.body();
                 InfoManager.getInstance().setmUser(profile);
-                if (profile.getEmail() == null) {
-                    SignUpFragment.this.onSignupFailed();
-                } else {
-                    PrefManager.getInstace(getContext()).setUser(email + "#" + password);
-                    onSignupSuccess(null);
-                }
+                PrefManager.getInstace(getContext()).setUser(email + "#" + password);
+                onSignupSuccess(null);
+
             }
+
             @Override
             public void onFailure(Call<User> call, Throwable t) {
                 buildDialogFilter();
@@ -346,6 +362,7 @@ public class SignUpFragment extends Fragment {
                     final Bitmap pickedPhoto = ezPhotoPickStorage.loadStoredPhotoBitmap(DEMO_PHOTO_PATH, photoName, 300);
                     _profileImage.setImageBitmap(pickedPhoto);
                     currentPhotoPath = ezPhotoPickStorage.getAbsolutePathOfStoredPhoto(DEMO_PHOTO_PATH, photoName);
+                    Toast.makeText(getContext(), currentPhotoPath , Toast.LENGTH_SHORT).show();
                 }
             } catch (IOException e) {
                 Toast.makeText(getContext(), "Error during load photo", Toast.LENGTH_SHORT).show();
