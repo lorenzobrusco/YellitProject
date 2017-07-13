@@ -13,6 +13,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.like.LikeButton;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -20,6 +22,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import unical.master.computerscience.yellit.R;
+import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.logic.objects.Post;
 import unical.master.computerscience.yellit.utilities.BaseURL;
 
@@ -51,6 +54,11 @@ public class PostProfileAdapter extends BaseAdapter {
     @Bind(R.id.image_value_post)
     ImageView imagePost;
 
+    @Bind(R.id.like_post)
+    LikeButton mLike;
+
+    @Bind(R.id.position_post_text)
+    TextView mPosition;
 
     public PostProfileAdapter(List<Post> mMyPposts, Context mContext) {
         this.mMyPposts = mMyPposts;
@@ -78,41 +86,18 @@ public class PostProfileAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         final View mView = inflater.inflate(R.layout.item_post_profile, null);
         ButterKnife.bind(this, mView);
+        personName.setText(InfoManager.getInstance().getmUser().getNickname());
+        mComment.setText(mMyPposts.get(i).getComment());
+        mData.setText(mMyPposts.get(i).getDate());
+        mPosition.setText(mMyPposts.get(i).getLocation());
         Glide.with(mContext)
-                .load(BaseURL.URL + "Images/user.jpg")
-                .listener(new RequestListener<String, GlideDrawable>() {
-                    @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-
-                        return false;
-                    }
-
-                })
+                .load(InfoManager.getInstance().getmUser().getPathImg())
                 .fitCenter()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .error(mContext.getResources().getDrawable(R.mipmap.ic_launcher))
+                .error(mContext.getResources().getDrawable(R.drawable.default_user))
                 .into(userImage);
         Glide.with(mContext)
-                .load(BaseURL.URL + "Images/pizza.jpg")
-                .listener(new RequestListener<String, GlideDrawable>() {
-                    @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-
-                        return false;
-                    }
-                })
+                .load(mMyPposts.get(i).getPostImagePost())
                 .fitCenter()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .error(mContext.getResources().getDrawable(R.mipmap.ic_launcher))

@@ -60,5 +60,6 @@ dependencies {
     compile 'petrov.kristiyan:colorpicker-library:1.1.4'
     compile 'com.github.MatteoBattilana:WeatherView:1.2.0'
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
+    compile 'com.squareup.picasso:picasso:2.5.2'
     testCompile 'junit:junit:4.12'
 }

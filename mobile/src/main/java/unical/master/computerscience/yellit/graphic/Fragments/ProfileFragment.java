@@ -186,12 +186,12 @@ public class ProfileFragment extends Fragment {
 
     private List<Post> initList() {
         final List<Post> posts = new ArrayList<>();
-        posts.add(new Post("Lorenzo Brusco"));
-        posts.add(new Post("Salvatore Isabella"));
-        posts.add(new Post("Francesco Cosco"));
-        posts.add(new Post("Francesca Tassoni"));
-        posts.add(new Post("Eliana Cannella"));
-        posts.add(new Post("Paola Arcuri"));
+        for(Post post : InfoManager.getInstance().getmPostList()){
+            if(post.getUserName().equals(InfoManager.getInstance().getmUser().getEmail()) ||
+                    post.getUserName().equals(InfoManager.getInstance().getmUser().getNickname()) ||
+                        post.getUserName().equals(InfoManager.getInstance().getmUser().getFullname()) )
+                posts.add(post);
+        }
         return posts;
     }
 

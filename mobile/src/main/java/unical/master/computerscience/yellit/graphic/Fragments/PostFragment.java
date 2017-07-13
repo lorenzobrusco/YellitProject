@@ -56,6 +56,7 @@ public class PostFragment extends Fragment {
 
         mPosts.addItemDecoration(new PaddingItemDecoration(170));
         mPosts.setLayoutManager(new LinearLayoutManager(this.getContext()));
+
         return view;
     }
 
@@ -89,6 +90,13 @@ public class PostFragment extends Fragment {
                 InfoManager.getInstance().setmPostFilteredList(postsToShow);
                 final PostAdapter mPostAdapter = new PostAdapter(PostFragment.this.getContext(), postsToShow);
                 InfoManager.getInstance().setmPostAdapter(mPostAdapter);
+                mPosts.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Call smooth scroll
+                        mPosts.smoothScrollToPosition(mPostAdapter.getItemCount());
+                    }
+                });
                 mPosts.setAdapter(mPostAdapter);
 
             }

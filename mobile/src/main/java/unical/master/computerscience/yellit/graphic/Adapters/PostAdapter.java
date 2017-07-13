@@ -65,9 +65,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     @Override
     public void onBindViewHolder(PostViewHolder holder, final int position) {
         Post currPost = mPosts.get(position);
-        if (position == 0) {
-            Toast.makeText(mContext, currPost.getUserImagePath() + "", Toast.LENGTH_SHORT).show();
-        }
         String likes = currPost.getLikes() + " Like";
         holder.personName.setText(currPost.getUserName());
         holder.commentText.setText(currPost.getComment());
@@ -145,7 +142,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         this.mPosts = posts;
     }
 
-    public class PostViewHolder extends RecyclerView.ViewHolder {
+    class PostViewHolder extends RecyclerView.ViewHolder {
 
         @Bind(R.id.user_info_post)
         LinearLayout userInfo;
@@ -178,13 +175,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
         private boolean isLike = false;
 
-        public PostViewHolder(final View itemView) {
+        PostViewHolder(final View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
 
-        public void setUserImage(String userImgPath) {
-            if (userImgPath != null && !userImgPath.equals("")) {
+        void setUserImage(String userImgPath) {
+            if (userImgPath != null && !userImgPath.equals("") && !userImgPath.equals("NULL")) {
                 Glide.with(mContext)
                         .load(userImgPath)
                         .listener(new RequestListener<String, GlideDrawable>() {
@@ -207,13 +204,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                             }
 
                         })
+                        .fitCenter()
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .error(mContext.getResources().getDrawable(R.drawable.default_user))
                         .into(userImage);
             }
         }
 
-        public void setImagePost(String imagePath) {
-
+        void setImagePost(String imagePath) {
             Glide.with(mContext)
                     .load(imagePath)
                     .listener(new RequestListener<String, GlideDrawable>() {
@@ -235,6 +233,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                             return false;
                         }
                     })
+                    .fitCenter()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(imagePost);
 
