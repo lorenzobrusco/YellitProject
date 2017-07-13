@@ -25,7 +25,10 @@ import com.hookedonplay.decoviewlib.events.DecoEvent;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import im.dacer.androidcharts.LineView;
@@ -60,6 +63,8 @@ public class FitnessFragment extends Fragment {
     TextView mTemperature;
     @Bind(R.id.icon_weather)
     ImageView mIconWeather;
+    @Bind(R.id.day_weather)
+    TextView mDay;
     @Bind(R.id.image_weather)
     ImageView mImageWeather;
     @Bind(R.id.progressBar_weather)
@@ -151,6 +156,10 @@ public class FitnessFragment extends Fragment {
     private void initWeather(JSONObject data)
     {
         try {
+            Calendar c = Calendar.getInstance();
+            SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+            String formattedDate = df.format(c.getTime());
+            mDay.setText(formattedDate);
             mTypeWeatherTextView.setText(data.getString("weather"));
             mTemperature.setText(data.getString("temperature"));
             String weather = data.getString("weather");
