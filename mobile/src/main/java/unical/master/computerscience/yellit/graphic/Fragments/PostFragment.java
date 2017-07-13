@@ -9,10 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import retrofit2.Call;
@@ -56,7 +54,6 @@ public class PostFragment extends Fragment {
 
         mPosts.addItemDecoration(new PaddingItemDecoration(170));
         mPosts.setLayoutManager(new LinearLayoutManager(this.getContext()));
-
         return view;
     }
 
@@ -78,25 +75,17 @@ public class PostFragment extends Fragment {
 
                 Post[] posts = response.body();
 
-                /** Revert the posts in order to have it sorted*/
-                if (posts != null) {
-                    for (int i = posts.length-1; i >= 0; i--) {
-                        postsToShow.add(posts[i]);
-                    }
-                }
+                if (posts != null)
+                    for (Post p : posts) {
 
-                Log.d("Posters", posts.length + "");
+                        postsToShow.add(p);
+                    }
+
+                Log.d("Posters",posts.length+"");
                 InfoManager.getInstance().setmPostList(postsToShow);
                 InfoManager.getInstance().setmPostFilteredList(postsToShow);
                 final PostAdapter mPostAdapter = new PostAdapter(PostFragment.this.getContext(), postsToShow);
                 InfoManager.getInstance().setmPostAdapter(mPostAdapter);
-                mPosts.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        // Call smooth scroll
-                        mPosts.smoothScrollToPosition(mPostAdapter.getItemCount());
-                    }
-                });
                 mPosts.setAdapter(mPostAdapter);
 
             }
@@ -122,12 +111,6 @@ public class PostFragment extends Fragment {
         posts.add(new Post("Francesca Tassoni"));
         posts.add(new Post("Eliana Cannella"));
         posts.add(new Post("Paola Arcuri"));
-
-        InfoManager.getInstance().setmPostList(posts);
-        InfoManager.getInstance().setmPostFilteredList(posts);
-        final PostAdapter mPostAdapter = new PostAdapter(PostFragment.this.getContext(), posts);
-        InfoManager.getInstance().setmPostAdapter(mPostAdapter);
-        mPosts.setAdapter(mPostAdapter);
 
         return posts;
     }
