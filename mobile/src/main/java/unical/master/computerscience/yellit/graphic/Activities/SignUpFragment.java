@@ -47,6 +47,7 @@ import butterknife.Bind;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okio.Buffer;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -131,24 +132,26 @@ public class SignUpFragment extends Fragment {
                                     RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
                                     MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
                                     RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
+                                    RequestBody newName = RequestBody.create(MediaType.parse("text/plain"), nameFirst);
+                                    RequestBody newEmail = RequestBody.create(MediaType.parse("text/plain"), email);
+                                    RequestBody newPassword = RequestBody.create(MediaType.parse("text/plain"), "");
                                     Retrofit retrofit = new Retrofit.Builder()
                                             .baseUrl(BaseURL.URL)
                                             .addConverterFactory(GsonConverterFactory.create())
                                             .build();
                                     SigninService signinService = retrofit.create(SigninService.class);
-                                    Call<User> call = signinService.createProfile(nameFirst, email, "", fileToUpload, filename);
+                                    Call<User> call = signinService.createProfile(fileToUpload, filename, newName, newEmail, newPassword);
                                     call.enqueue(new Callback<User>() {
                                         @Override
                                         public void onResponse(Call<User> call, Response<User> response) {
                                             final User profile = response.body();
-                                            InfoManager.getInstance().setmUser(profile);
-                                            PrefManager.getInstace(SignUpFragment.this.getContext()).setUser(email + "#" + "NULL");
-                                            if (profile.getEmail() == null) {
+                                            if (profile == null) {
+                                                InfoManager.getInstance().setmUser(profile);
+                                                PrefManager.getInstace(SignUpFragment.this.getContext()).setUser(email + "#" + "NULL");
+                                                onSignupSuccess();
+                                            } else {
                                                 SignUpFragment.this.onSignupFailed();
                                                 Toast.makeText(getContext(), "Error during load facebook info", Toast.LENGTH_SHORT).show();
-                                            } else {
-                                                Toast.makeText(getContext(), "Error during load facebook info", Toast.LENGTH_SHORT).show();
-                                                onSignupSuccess();
                                             }
                                         }
 
@@ -251,24 +254,33 @@ public class SignUpFragment extends Fragment {
         final String name = _nameText.getText().toString();
         final String email = _emailText.getText().toString();
         final String password = _passwordText.getText().toString();
+        final File file = new File(currentPhotoPath);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
+        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
+        RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
+        RequestBody newName = RequestBody.create(MediaType.parse("text/plain"), name);
+        RequestBody newEmail = RequestBody.create(MediaType.parse("text/plain"), email);
+        RequestBody newPassword = RequestBody.create(MediaType.parse("text/plain"), password);
+        Toast.makeText(this.getContext(), bodyToString(newEmail), Toast.LENGTH_SHORT).show();
         final Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BaseURL.URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         final SigninService signinService = retrofit.create(SigninService.class);
-        File file = new File(currentPhotoPath);
-        RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
-        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
-        RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
-        final Call<User> call = signinService.createProfile(name, email, password, fileToUpload, filename);
+        final Call<User> call = signinService.createProfile(fileToUpload, filename, newName, newEmail, newPassword);
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 final User profile = response.body();
-                InfoManager.getInstance().setmUser(profile);
-                PrefManager.getInstace(getContext()).setUser(email + "#" + password);
-                progressDialog.dismiss();
-                onSignupSuccess();
+                if (profile != null) {
+                    InfoManager.getInstance().setmUser(profile);
+                    PrefManager.getInstace(getContext()).setUser(email + "#" + password);
+                    progressDialog.dismiss();
+                    onSignupSuccess();
+                } else {
+                    buildDialogFilter();
+                }
+
             }
 
             @Override
@@ -276,6 +288,18 @@ public class SignUpFragment extends Fragment {
                 buildDialogFilter();
             }
         });
+    }
+
+    //TODO remove it
+    private static String bodyToString(final RequestBody request) {
+        try {
+            final RequestBody copy = request;
+            final Buffer buffer = new Buffer();
+            copy.writeTo(buffer);
+            return buffer.readUtf8();
+        } catch (final IOException e) {
+            return "did not work";
+        }
     }
 
     /**
@@ -361,7 +385,7 @@ public class SignUpFragment extends Fragment {
                     final Bitmap pickedPhoto = ezPhotoPickStorage.loadStoredPhotoBitmap(DEMO_PHOTO_PATH, photoName, 300);
                     _profileImage.setImageBitmap(pickedPhoto);
                     currentPhotoPath = ezPhotoPickStorage.getAbsolutePathOfStoredPhoto(DEMO_PHOTO_PATH, photoName);
-                    Toast.makeText(getContext(), currentPhotoPath , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), currentPhotoPath, Toast.LENGTH_SHORT).show();
                 }
             } catch (IOException e) {
                 Toast.makeText(getContext(), "Error during load photo", Toast.LENGTH_SHORT).show();

@@ -130,6 +130,7 @@ public class ProfileFragment extends Fragment {
                         }
 
                     })
+                    .fitCenter()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(mPhotoProfile);
         }

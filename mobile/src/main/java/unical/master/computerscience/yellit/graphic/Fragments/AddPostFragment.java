@@ -341,7 +341,6 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         RequestBody newCategory = RequestBody.create(MediaType.parse("text/plain"), currentCategory);
         //TODO remove comment at the end
         RequestBody newUserMail = RequestBody.create(MediaType.parse("text/plain"), InfoManager.getInstance().getmUser().getEmail());
-//        RequestBody newUserMail = RequestBody.create(MediaType.parse("text/plain"), "lollo@gmail.com");
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BaseURL.URL)
@@ -350,7 +349,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
         PostGestureService getResponse = retrofit.create(PostGestureService.class);
 
-        Call<ServerResponse> call = getResponse.uploadFile(fileToUpload, filename, newUserMail, newComment, newPlace, newCategory, lat, longi);
+        Call<ServerResponse> call = getResponse.uploadPost(fileToUpload, filename, newUserMail, newComment, newPlace, newCategory, lat, longi, "adding");
         call.enqueue(new Callback<ServerResponse>() {
             @Override
             public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {

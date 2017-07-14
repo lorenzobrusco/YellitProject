@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,12 +72,12 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                if (validate()) {
-                    progressDialog.setIndeterminate(true);
-                    progressDialog.setMessage("Authenticating...");
-                    progressDialog.show();
-                    login(false);
-                }
+//                if (validate()) {
+                progressDialog.setIndeterminate(true);
+                progressDialog.setMessage("Authenticating...");
+                progressDialog.show();
+                login(false);
+//                }
             }
         });
 
@@ -104,14 +105,18 @@ public class LoginFragment extends Fragment {
                                 @Override
                                 public void onResponse(Call<User> call, Response<User> response) {
                                     User profile = response.body();
-                                    InfoManager.getInstance().setmUser(profile);
-                                    PrefManager.getInstace(LoginFragment.this.getContext()).setUser(email + "#" + "NULL");
-                                    LoginFragment.this.onLoginSuccess();
+                                    if (profile != null) {
+                                        InfoManager.getInstance().setmUser(profile);
+                                        PrefManager.getInstace(LoginFragment.this.getContext()).setUser(email + "#" + "NULL");
+                                        LoginFragment.this.onLoginSuccess();
+                                    } else {
+                                        buildErrorDialog();
+                                    }
                                 }
 
                                 @Override
                                 public void onFailure(Call<User> call, Throwable t) {
-                                    Toast.makeText(getContext(),"facebook failure",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "facebook failure", Toast.LENGTH_SHORT).show();
                                     buildErrorDialog();
                                 }
                             });
@@ -188,6 +193,7 @@ public class LoginFragment extends Fragment {
     public void onLoginFailed() {
         Toast.makeText(getContext(), "Login failed", Toast.LENGTH_LONG).show();
         _loginButton.setEnabled(true);
+        _facebookSignButton.setEnabled(true);
     }
 
     /**
@@ -238,14 +244,14 @@ public class LoginFragment extends Fragment {
 
                 final User profile = response.body();
                 InfoManager.getInstance().setmUser(profile);
-                if (profile.getEmail() == null) {
-                    LoginFragment.this.buildErrorDialog();
-                    buildErrorDialog();
-                    correct[0] = false;
-                } else {
+                if (profile != null) {
                     onLoginSuccess();
                     PrefManager.getInstace(getContext()).setUser(email + "#" + password);
                     correct[0] = true;
+                } else {
+                    LoginFragment.this.buildErrorDialog();
+                    buildErrorDialog();
+                    correct[0] = false;
                 }
             }
 

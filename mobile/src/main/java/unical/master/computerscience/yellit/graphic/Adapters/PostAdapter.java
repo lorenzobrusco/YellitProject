@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -20,7 +21,9 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
+
 import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -38,7 +41,7 @@ import unical.master.computerscience.yellit.utilities.BaseURL;
 import unical.master.computerscience.yellit.utilities.GenerateMainCategories;
 
 /**
- *  Post adapter
+ * Post adapter
  */
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
 
@@ -47,8 +50,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
     /**
      * Costructor
+     *
      * @param context of activity
-     * @param posts list of posts
+     * @param posts   list of posts
      */
     public PostAdapter(final Context context, final List<Post> posts) {
         this.mContext = context;
@@ -56,7 +60,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     }
 
     /**
-     *
      * @param viewGroup
      * @param viewType
      * @return
@@ -69,12 +72,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     }
 
     /**
-     *
      * @param holder
      * @param position of post in the list
      */
     @Override
-    public void onBindViewHolder(PostViewHolder holder, final int position) {
+    public void onBindViewHolder(final PostViewHolder holder, final int position) {
         final Post currPost = mPosts.get(position);
         final String likes = currPost.getLikes() + " Like";
         holder.personName.setText(currPost.getUserName());
@@ -85,29 +87,31 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         holder.mLikeContent.setText(likes);
         holder.mDataPost.setText(currPost.getDate());
         holder.mPosition.setText(currPost.getLocation());
+        holder.mLikeButton.setLiked(true);
+//        holder.setLike(this.isLike(InfoManager.getInstance().getmUser().getEmail(), mPosts.get(position).getIdPost()));
         holder.mLikeButton.setOnLikeListener(new OnLikeListener() {
             @Override
             public void liked(LikeButton likeButton) {
 
-                Toast.makeText(mContext, position + " liked something", Toast.LENGTH_LONG
-                ).show();
                 final Retrofit retrofit = new Retrofit.Builder()
                         .baseUrl(BaseURL.URL)
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
                 final LikeService likeService = retrofit.create(LikeService.class);
-                final Call<Like> call = likeService.addLike(InfoManager.getInstance().getmUser().getEmail(), mPosts.get(position).getIdPost(),mPosts.get(position).getUserName(),"1");
+                final Call<Like> call = likeService.addLike(InfoManager.getInstance().getmUser().getEmail(), mPosts.get(position).getIdPost()+"", mPosts.get(position).getUserName(), "1");
                 call.enqueue(new Callback<Like>() {
                     @Override
                     public void onResponse(Call<Like> call, Response<Like> response) {
                         final Like like = response.body();
+                        holder.setNumberOfLikes(like.getCount());
                     }
 
                     @Override
                     public void onFailure(Call<Like> call, Throwable t) {
-                        Toast.makeText(mContext, "Error during add a like",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "Error during add a like", Toast.LENGTH_SHORT).show();
                     }
                 });
+                InfoManager.getInstance().getmPostAdapter().notifyDataSetChanged();
             }
 
             @Override
@@ -117,21 +121,23 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
                 final LikeService likeService = retrofit.create(LikeService.class);
-                final Call<Like> call = likeService.addLike(InfoManager.getInstance().getmUser().getEmail(), mPosts.get(position).getIdPost(),mPosts.get(position).getUserName(),"0");
+                final Call<Like> call = likeService.addLike(InfoManager.getInstance().getmUser().getEmail(), mPosts.get(position).getIdPost()+"", mPosts.get(position).getUserName(), "0");
                 call.enqueue(new Callback<Like>() {
                     @Override
                     public void onResponse(Call<Like> call, Response<Like> response) {
-                       final Like like = response.body();
+                        final Like like = response.body();
+                        holder.setNumberOfLikes(like.getCount());
                     }
+
                     @Override
                     public void onFailure(Call<Like> call, Throwable t) {
-                        Toast.makeText(mContext, "Error during remove a like",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "Error during remove a like", Toast.LENGTH_SHORT).show();
                     }
                 });
+                InfoManager.getInstance().getmPostAdapter().notifyDataSetChanged();
             }
         });
     }
-
 
     @Override
     public int getItemCount() {
@@ -145,10 +151,46 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
     /**
      * change the list of posts
+     *
      * @param posts
      */
     public void changeList(List<Post> posts) {
         this.mPosts = posts;
+    }
+
+    /**
+     * Check if user likes this post
+     *
+     * @param email
+     * @param id
+     * @return
+     */
+    private boolean isLike(final String email, final Integer id) {
+        final boolean[] isLike = {false};
+        final Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BaseURL.URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        final LikeService likeService = retrofit.create(LikeService.class);
+        final Call<Like> call = likeService.isLike(email, id+"", "2");
+        call.enqueue(new Callback<Like>() {
+            @Override
+            public void onResponse(Call<Like> call, Response<Like> response) {
+                final Like like = response.body();
+                if (like != null) {
+                     if (like.getCount() == 1)
+                        isLike[0] = true;
+                } else
+                    isLike[0] = false;
+            }
+
+            @Override
+            public void onFailure(Call<Like> call, Throwable t) {
+                Toast.makeText(mContext, "Error during add a like", Toast.LENGTH_SHORT).show();
+                isLike[0] = false;
+            }
+        });
+        return isLike[0];
     }
 
     /**
@@ -190,6 +232,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         PostViewHolder(final View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+
+        void setLike(boolean isLike) {
+            mLikeButton.setLiked(isLike);
+        }
+
+        void setNumberOfLikes(int nLikes) {
+            mLikeContent.setText(nLikes + " Likes");
         }
 
         void setUserImage(String userImgPath) {
@@ -251,7 +301,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         }
 
         /**
-         *  Show progress bar and hide all
+         * Show progress bar and hide all
          */
         public void hideAll() {
             progressBar.setVisibility(View.VISIBLE);
@@ -261,7 +311,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         }
 
         /**
-         *  Hide progress bar and show all
+         * Hide progress bar and show all
          */
         public void showAll() {
             progressBar.setVisibility(View.GONE);

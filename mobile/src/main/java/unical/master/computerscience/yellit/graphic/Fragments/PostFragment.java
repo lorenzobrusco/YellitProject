@@ -81,8 +81,6 @@ public class PostFragment extends Fragment {
                     for (int i = posts.length - 1; i > 0; i--)
                         postsToShow.add(posts[i]);
 
-
-                Log.d("Posters", posts.length + "");
                 InfoManager.getInstance().setmPostList(postsToShow);
                 InfoManager.getInstance().setmPostFilteredList(postsToShow);
                 final PostAdapter mPostAdapter = new PostAdapter(PostFragment.this.getContext(), postsToShow);
