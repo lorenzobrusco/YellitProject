@@ -30,7 +30,9 @@ import com.facebook.login.widget.LoginButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.Bind;
@@ -41,6 +43,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.connection.LoginService;
+import unical.master.computerscience.yellit.connection.UsersService;
 import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.logic.objects.User;
 import unical.master.computerscience.yellit.utilities.BaseURL;
@@ -72,12 +75,12 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-//                if (validate()) {
-                progressDialog.setIndeterminate(true);
-                progressDialog.setMessage("Authenticating...");
-                progressDialog.show();
-                login(false);
-//                }
+                if (validate()) {
+                    progressDialog.setIndeterminate(true);
+                    progressDialog.setMessage("Authenticating...");
+                    progressDialog.show();
+                    login(false);
+                }
             }
         });
 
@@ -181,10 +184,36 @@ public class LoginFragment extends Fragment {
      * It used to start the next activity because the login is successed
      */
     private void onLoginSuccess() {
-        progressDialog.dismiss();
-        startActivity(new Intent(getContext(), WelcomeActivity.class));
-        getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-        getActivity().finish();
+        final Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BaseURL.URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        final UsersService loginService = retrofit.create(UsersService.class);
+        Call<User[]> call = loginService.getAllUsers("allUsers");
+        call.enqueue(new Callback<User[]>() {
+            @Override
+            public void onResponse(Call<User[]> call, Response<User[]> response) {
+                User[] users = response.body();
+                List<User> usersList = new ArrayList<User>();
+                for(User user : users){
+                    usersList.add(user);
+                    Toast.makeText(getContext(),user.getEmail(),Toast.LENGTH_LONG).show();
+                }
+                InfoManager.getInstance().setmAllUsers(usersList);
+                progressDialog.dismiss();
+                startActivity(new Intent(getContext(), WelcomeActivity.class));
+                getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                getActivity().finish();
+            }
+
+            @Override
+            public void onFailure(Call<User[]> call, Throwable t) {
+                progressDialog.dismiss();
+                startActivity(new Intent(getContext(), WelcomeActivity.class));
+                getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                getActivity().finish();
+            }
+        });
     }
 
     /**

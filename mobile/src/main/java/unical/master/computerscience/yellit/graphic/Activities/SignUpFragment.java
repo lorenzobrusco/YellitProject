@@ -5,21 +5,16 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Debug;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -37,10 +32,9 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.Bind;
@@ -60,8 +54,8 @@ import siclo.com.ezphotopicker.api.models.PhotoSource;
 import siclo.com.ezphotopicker.models.PhotoIntentException;
 import unical.master.computerscience.yellit.MainActivity;
 import unical.master.computerscience.yellit.R;
-import unical.master.computerscience.yellit.connection.LoginService;
 import unical.master.computerscience.yellit.connection.SigninService;
+import unical.master.computerscience.yellit.connection.UsersService;
 import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.logic.objects.User;
 import unical.master.computerscience.yellit.utilities.BaseURL;
@@ -78,7 +72,7 @@ public class SignUpFragment extends Fragment {
     private String currentPhotoPath;
     private CallbackManager callbackManager;
     private EZPhotoPickStorage ezPhotoPickStorage;
-
+    private ProgressDialog mProgressDialog;
     @Bind(R.id.profile_image_signup)
     protected ImageView _profileImage;
     @Bind(R.id.input_name_signup)
@@ -103,6 +97,7 @@ public class SignUpFragment extends Fragment {
         currentPhotoPath = "";
         ezPhotoPickStorage = new EZPhotoPickStorage(getActivity());
         choosePhotoDialog = buildDialogFilter();
+        mProgressDialog = new ProgressDialog(getContext());
         _signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -247,10 +242,9 @@ public class SignUpFragment extends Fragment {
             return;
         }
         _signupButton.setEnabled(false);
-        final ProgressDialog progressDialog = new ProgressDialog(getContext());
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Creating Account...");
-        progressDialog.show();
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setMessage("Creating Account...");
+        mProgressDialog.show();
         final String name = _nameText.getText().toString();
         final String email = _emailText.getText().toString();
         final String password = _passwordText.getText().toString();
@@ -275,7 +269,7 @@ public class SignUpFragment extends Fragment {
                 if (profile != null) {
                     InfoManager.getInstance().setmUser(profile);
                     PrefManager.getInstace(getContext()).setUser(email + "#" + password);
-                    progressDialog.dismiss();
+                    mProgressDialog.dismiss();
                     onSignupSuccess();
                 } else {
                     buildDialogFilter();
@@ -306,11 +300,40 @@ public class SignUpFragment extends Fragment {
      * It used to start the next activity because the sign in is successed
      */
     private void onSignupSuccess() {
-        _signupButton.setEnabled(true);
+        final Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BaseURL.URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        final UsersService loginService = retrofit.create(UsersService.class);
+        Call<User[]> call = loginService.getAllUsers("allUsers");
+        call.enqueue(new Callback<User[]>() {
+            @Override
+            public void onResponse(Call<User[]> call, Response<User[]> response) {
+                User[] users = response.body();
+                List<User> usersList = new ArrayList<>();
+                for(User user : users){
+                    usersList.add(user);
+                    Toast.makeText(getContext(),user.getEmail(),Toast.LENGTH_LONG).show();
+                }
+                InfoManager.getInstance().setmAllUsers(usersList);
+                mProgressDialog.dismiss();
+                _signupButton.setEnabled(true);
+                getActivity().setResult(RESULT_OK, null);
+                startActivity(new Intent(getContext(), MainActivity.class));
+                getActivity().finish();
+            }
 
-        getActivity().setResult(RESULT_OK, null);
-        startActivity(new Intent(getContext(), MainActivity.class));
-        getActivity().finish();
+            @Override
+            public void onFailure(Call<User[]> call, Throwable t) {
+                Toast.makeText(getContext(),"FAILED",Toast.LENGTH_LONG).show();
+                mProgressDialog.dismiss();
+                _signupButton.setEnabled(true);
+                getActivity().setResult(RESULT_OK, null);
+                startActivity(new Intent(getContext(), MainActivity.class));
+                getActivity().finish();
+            }
+        });
+
     }
 
     /**
