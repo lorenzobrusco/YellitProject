@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,13 +35,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -69,6 +73,7 @@ import unical.master.computerscience.yellit.utilities.BaseURL;
 import unical.master.computerscience.yellit.utilities.PrefManager;
 
 import static android.app.Activity.RESULT_OK;
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class SignUpFragment extends Fragment {
 
@@ -132,33 +137,12 @@ public class SignUpFragment extends Fragment {
 
                                     /** To get user image from facebook*/
                                     final String filenameImage ="https://graph.facebook.com/" + id + "/picture?type=large";
-                                    final URL imageURL = new URL(filenameImage);
-                                    String path = Environment.getExternalStorageDirectory().toString();
-                                    OutputStream fOut = null;
-                                    File file = new File(path, filenameImage); // the File to save , append increasing numeric counter to prevent files from getting overwritten.
-                                    fOut = new FileOutputStream(file);
-
-                                    Bitmap pictureBitmap = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream()); // obtaining the Bitmap
-                                    pictureBitmap.compress(Bitmap.CompressFormat.JPEG, 85, fOut); // saving the Bitmap to a file compressed as a JPEG with 85% compression rate
-                                    fOut.flush(); // Not really required
-                                    fOut.close(); // do not forget to close the stream
-
-                                    MediaStore.Images.Media.insertImage(getContext().getContentResolver(),file.getAbsolutePath(),file.getName(),file.getName());
-
-
-
-                                    RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
-                                    MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
-                                    RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
-                                    RequestBody newName = RequestBody.create(MediaType.parse("text/plain"), nameFirst);
-                                    RequestBody newEmail = RequestBody.create(MediaType.parse("text/plain"), email);
-                                    RequestBody newPassword = RequestBody.create(MediaType.parse("text/plain"), "");
                                     Retrofit retrofit = new Retrofit.Builder()
                                             .baseUrl(BaseURL.URL)
                                             .addConverterFactory(GsonConverterFactory.create())
                                             .build();
                                     SigninService signinService = retrofit.create(SigninService.class);
-                                    Call<User> call = signinService.createProfile(fileToUpload, filename, newName, newEmail, newPassword);
+                                    Call<User> call = signinService.createProfileWithoutFile(filenameImage, nameFirst, "", email, "");
                                     call.enqueue(new Callback<User>() {
                                         @Override
                                         public void onResponse(Call<User> call, Response<User> response) {
@@ -180,10 +164,6 @@ public class SignUpFragment extends Fragment {
                                     });
                                 } catch (JSONException e) {
                                     Toast.makeText(getContext(), "Error during load facebook info", Toast.LENGTH_SHORT).show();
-                                } catch (MalformedURLException e) {
-                                    e.printStackTrace();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
                                 }
                             }
                         });
@@ -211,6 +191,59 @@ public class SignUpFragment extends Fragment {
         });
         return view;
     }
+
+    /**
+     * Store image from facebook
+     * @param image
+     */
+    private void storeImage(Bitmap image) {
+        File pictureFile = getOutputMediaFile();
+        if (pictureFile == null) {
+            Log.d(TAG,
+                    "Error creating media file, check storage permissions: ");// e.getMessage());
+            return;
+        }
+        try {
+            FileOutputStream fos = new FileOutputStream(pictureFile);
+            image.compress(Bitmap.CompressFormat.PNG, 90, fos);
+            fos.close();
+        } catch (FileNotFoundException e) {
+            Log.d(TAG, "File not found: " + e.getMessage());
+        } catch (IOException e) {
+            Log.d(TAG, "Error accessing file: " + e.getMessage());
+        }
+    }
+
+
+    /**
+     * Create a File for saving an image
+     * @return file
+     */
+    private  File getOutputMediaFile(){
+        // To be safe, you should check that the SDCard is mounted
+        // using Environment.getExternalStorageState() before doing this.
+        File mediaStorageDir = new File(Environment.getExternalStorageDirectory()
+                + "/Android/data/"
+                + getApplicationContext().getPackageName()
+                + "/Files");
+
+        // This location works best if you want the created images to be shared
+        // between applications and persist after your app has been uninstalled.
+
+        // Create the storage directory if it does not exist
+        if (! mediaStorageDir.exists()){
+            if (! mediaStorageDir.mkdirs()){
+                return null;
+            }
+        }
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmm").format(new Date());
+        File mediaFile;
+        String mImageName="MI_"+ timeStamp +".jpg";
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator + mImageName);
+        return mediaFile;
+    }
+
 
     /**
      * @return dialog where user can choose how to get an image
