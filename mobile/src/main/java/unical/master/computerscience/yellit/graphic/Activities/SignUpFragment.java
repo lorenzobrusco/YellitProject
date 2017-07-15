@@ -163,7 +163,7 @@ public class SignUpFragment extends Fragment {
                                         @Override
                                         public void onResponse(Call<User> call, Response<User> response) {
                                             final User profile = response.body();
-                                            if (profile == null) {
+                                            if (profile != null && profile.getEmail() != null) {
                                                 InfoManager.getInstance().setmUser(profile);
                                                 PrefManager.getInstace(SignUpFragment.this.getContext()).setUser(email + "#" + "NULL");
                                                 onSignupSuccess();

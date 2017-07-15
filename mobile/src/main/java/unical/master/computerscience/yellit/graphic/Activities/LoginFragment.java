@@ -108,7 +108,7 @@ public class LoginFragment extends Fragment {
                                 @Override
                                 public void onResponse(Call<User> call, Response<User> response) {
                                     User profile = response.body();
-                                    if (profile != null) {
+                                    if (profile != null && profile.getEmail() != null) {
                                         InfoManager.getInstance().setmUser(profile);
                                         PrefManager.getInstace(LoginFragment.this.getContext()).setUser(email + "#" + "NULL");
                                         LoginFragment.this.onLoginSuccess();
