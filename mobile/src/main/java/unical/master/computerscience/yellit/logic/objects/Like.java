@@ -14,19 +14,19 @@ public class Like {
     @SerializedName("isLike")
     private int isLike;
 
-    public Integer getCount() {
+    public int getCount() {
         return count;
     }
 
-    public void setCount(Integer count) {
+    public void setCount(int count) {
         this.count = count;
     }
 
-    public Integer getIsLike() {
+    public int getIsLike() {
         return isLike;
     }
 
-    public void setIsLike(Integer isLike) {
+    public void setIsLike(int isLike) {
         this.isLike = isLike;
     }
 }

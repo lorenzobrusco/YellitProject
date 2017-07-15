@@ -82,7 +82,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         final String likes = currPost.getLikes() + " Like";
         holder.personName.setText(currPost.getUserName());
         holder.commentText.setText(currPost.getComment());
-        if(currPost.getComment() == null && currPost.getComment().equals(""))
+        if (currPost.getComment() == null && currPost.getComment().equals(""))
             holder.commentText.setVisibility(View.GONE);
         holder.setImagePost(currPost.getPostImagePost());
         holder.setUserImage(currPost.getUserImagePath());
@@ -90,7 +90,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         holder.mLikeContent.setText(likes);
         holder.mDataPost.setText(currPost.getDate());
         holder.mPosition.setText(currPost.getLocation());
-        holder.mLikeButton.setLiked(this.isLike(InfoManager.getInstance().getmUser().getEmail(),mPosts.get(position).getIdPost()));
+        this.isLike(InfoManager.getInstance().getmUser().getEmail(), mPosts.get(position).getIdPost(), holder);
         holder.mLikeButton.setOnLikeListener(new OnLikeListener() {
             @Override
             public void liked(LikeButton likeButton) {
@@ -100,7 +100,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
                 final LikeService likeService = retrofit.create(LikeService.class);
-                final Call<Like> call = likeService.addLike(InfoManager.getInstance().getmUser().getEmail(), mPosts.get(position).getIdPost()+"", mPosts.get(position).getUserName(), "1");
+                final Call<Like> call = likeService.addLike(InfoManager.getInstance().getmUser().getEmail(), mPosts.get(position).getIdPost() + "", mPosts.get(position).getUserName(), "1");
                 call.enqueue(new Callback<Like>() {
                     @Override
                     public void onResponse(Call<Like> call, Response<Like> response) {
@@ -122,7 +122,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
                 final LikeService likeService = retrofit.create(LikeService.class);
-                final Call<Like> call = likeService.addLike(InfoManager.getInstance().getmUser().getEmail(), mPosts.get(position).getIdPost()+"", mPosts.get(position).getUserName(), "0");
+                final Call<Like> call = likeService.addLike(InfoManager.getInstance().getmUser().getEmail(), mPosts.get(position).getIdPost() + "", mPosts.get(position).getUserName(), "0");
                 call.enqueue(new Callback<Like>() {
                     @Override
                     public void onResponse(Call<Like> call, Response<Like> response) {
@@ -165,29 +165,28 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
      * @param id
      * @return
      */
-    private boolean isLike(final String email, final Integer id) {
+    private boolean isLike(final String email, final Integer id, final PostViewHolder holder) {
         final boolean[] isLike = {false};
         final Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BaseURL.URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         final LikeService likeService = retrofit.create(LikeService.class);
-        final Call<Like> call = likeService.isLike(email, id+"", "2");
+        final Call<Like> call = likeService.isLike(email, id + "", "2");
         call.enqueue(new Callback<Like>() {
             @Override
             public void onResponse(Call<Like> call, Response<Like> response) {
                 final Like like = response.body();
                 if (like != null) {
-                     if (like.getIsLike() == 1)
-                        isLike[0] = true;
-                } else
-                    isLike[0] = false;
+                    if (like.getIsLike() == 1) {
+                        holder.setLike(true);
+                    }
+                }
             }
 
             @Override
             public void onFailure(Call<Like> call, Throwable t) {
                 Toast.makeText(mContext, "Error during add a like", Toast.LENGTH_SHORT).show();
-                isLike[0] = false;
             }
         });
         return isLike[0];
