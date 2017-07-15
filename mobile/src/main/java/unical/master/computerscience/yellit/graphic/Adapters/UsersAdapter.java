@@ -30,6 +30,7 @@ public class UsersAdapter extends BaseAdapter implements Filterable {
 
     private List<User> mUsers;
     private List<String> mUserNames;
+    private List<User> mStoredUsers;
     ValueFilter valueFilter;
     private LayoutInflater inflater;
     private Context mContext;
@@ -41,10 +42,11 @@ public class UsersAdapter extends BaseAdapter implements Filterable {
     public UsersAdapter(final Context mContext, final List<User> users) {
         this.mContext = mContext;
         this.mUsers = users;
+        this.mStoredUsers = users;
         this.mUserNames = new ArrayList<>();
         inflater = (LayoutInflater) mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        for(User user : mUsers){
+        for (User user : mUsers) {
             mUserNames.add(user.getEmail());
         }
 
@@ -102,8 +104,8 @@ public class UsersAdapter extends BaseAdapter implements Filterable {
                 results.count = filterList.size();
                 results.values = filterList;
             } else {
-                results.count = mUserNames.size();
-                results.values = mUserNames;
+                results.count = mUsers.size();
+                results.values = mUsers;
             }
             return results;
 
@@ -112,7 +114,10 @@ public class UsersAdapter extends BaseAdapter implements Filterable {
         @Override
         protected void publishResults(CharSequence constraint,
                                       FilterResults results) {
-            mUsers = (List) results.values;
+            if (results.values != null)
+                mUsers = (List) results.values;
+            else
+                mUsers = mStoredUsers;
             notifyDataSetChanged();
         }
 

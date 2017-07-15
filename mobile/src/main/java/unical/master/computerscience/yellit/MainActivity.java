@@ -17,8 +17,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.BaseAdapter;
@@ -84,21 +86,23 @@ public class MainActivity extends AppCompatActivity {
     private int mDistance;
     private UsersAdapter mUsersAdapter;
     @Bind(R.id.bottom_navigation_view)
-    AHBottomNavigation mBottomNavigation;
+    protected AHBottomNavigation mBottomNavigation;
     @Bind(R.id.bottom_sheet1)
-    View bottomSheet;
+    protected View bottomSheet;
     @Bind(R.id.setting_buttom_menu)
-    LinearLayout mSettingLayout;
+    protected LinearLayout mSettingLayout;
     @Bind(R.id.map_buttom_menu)
-    LinearLayout mMapLayout;
+    protected LinearLayout mMapLayout;
     @Bind(R.id.logout_buttom_menu)
-    LinearLayout mLogoutLayout;
+    protected LinearLayout mLogoutLayout;
     @Bind(R.id.custom_search_view)
-    SearchView mSearchView;
+    protected SearchView mSearchView;
     @Bind(R.id.post_filter)
-    ImageView filterImage;
+    protected ImageView filterImage;
     @Bind(R.id.users_search_bar_list)
-    ListView mUsersList;
+    protected ListView mUsersList;
+    @Bind(R.id.activityCatalogSearchContainer)
+    protected CardView mSearchBarCardView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,15 +113,8 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         mUsersAdapter = new UsersAdapter(this, InfoManager.getInstance().getmAllUsers());
         mUsersList.setAdapter(mUsersAdapter);
-        mSearchView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mUsersList.setVisibility(mUsersList.getVisibility()==View.VISIBLE ? View.INVISIBLE : View.VISIBLE);
-            }
-        });
         mSearchView.setFocusable(false);
         mSearchView.onActionViewExpanded();
-        mSearchView.clearFocus();
         mSearchView.requestFocusFromTouch();
         mSearchView.setQueryHint(" Search ");
         currentFragment = new PostFragment();
@@ -130,7 +127,12 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                mUsersAdapter.getFilter().filter(newText);
+                if(newText.length() > 0){
+                    mUsersList.setVisibility(View.VISIBLE);
+                    mUsersAdapter.getFilter().filter(newText);
+                } else {
+                    mUsersList.setVisibility(View.GONE);
+                }
                 return false;
             }
         });
@@ -387,6 +389,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
+        if (mUsersList.getVisibility() != View.GONE)
+            mUsersList.setVisibility(View.GONE);
         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         } else if (currentItem == 2) {
@@ -442,7 +446,7 @@ public class MainActivity extends AppCompatActivity {
             if (mFavoritesCatogories.contains(type)) {
                 double d = distance(InfoManager.getInstance().getmPlaceData().latLongs.get(0).latitude,
                         InfoManager.getInstance().getmPlaceData().latLongs.get(0).longitude, post.getLat(), post.getLongi());
-                Log.d("DISTANCEPOSITION","distance: "+ d);
+                Log.d("DISTANCEPOSITION", "distance: " + d);
                 if (mDistance <= d)
                     posts.add(post);
             }
@@ -455,7 +459,7 @@ public class MainActivity extends AppCompatActivity {
      * @return the distance between two location
      */
     private double distance(double lat1, double long1, double lat2, double long2) {
-        if(lat2 == 0.00 || long2 == 0.00)
+        if (lat2 == 0.00 || long2 == 0.00)
             return mDistance;
         Location startPoint = new Location("locationA");
         startPoint.setLatitude(lat1);

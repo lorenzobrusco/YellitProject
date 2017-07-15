@@ -89,7 +89,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         holder.mDataPost.setText(currPost.getDate());
         holder.mPosition.setText(currPost.getLocation());
         holder.mLikeButton.setLiked(this.isLike(InfoManager.getInstance().getmUser().getEmail(),mPosts.get(position).getIdPost()));
-        Toast.makeText(mContext,this.isLike(InfoManager.getInstance().getmUser().getEmail(),mPosts.get(position).getIdPost())+"",Toast.LENGTH_LONG).show();
         holder.mLikeButton.setOnLikeListener(new OnLikeListener() {
             @Override
             public void liked(LikeButton likeButton) {
