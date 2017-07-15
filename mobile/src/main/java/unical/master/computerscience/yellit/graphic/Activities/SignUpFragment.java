@@ -4,7 +4,10 @@ package unical.master.computerscience.yellit.graphic.Activities;
 import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.app.ProgressDialog;
@@ -31,7 +34,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -122,8 +129,24 @@ public class SignUpFragment extends Fragment {
                                     final String email = object.getString("email");
                                     final String nameFirst = object.getString("name");
                                     final String id = object.getString("id");
-                                    final String imageURL = "https://graph.facebook.com/" + id + "/picture?type=large";
-                                    final File file = new File(imageURL);
+
+                                    /** To get user image from facebook*/
+                                    final String filenameImage ="https://graph.facebook.com/" + id + "/picture?type=large";
+                                    final URL imageURL = new URL(filenameImage);
+                                    String path = Environment.getExternalStorageDirectory().toString();
+                                    OutputStream fOut = null;
+                                    File file = new File(path, filenameImage); // the File to save , append increasing numeric counter to prevent files from getting overwritten.
+                                    fOut = new FileOutputStream(file);
+
+                                    Bitmap pictureBitmap = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream()); // obtaining the Bitmap
+                                    pictureBitmap.compress(Bitmap.CompressFormat.JPEG, 85, fOut); // saving the Bitmap to a file compressed as a JPEG with 85% compression rate
+                                    fOut.flush(); // Not really required
+                                    fOut.close(); // do not forget to close the stream
+
+                                    MediaStore.Images.Media.insertImage(getContext().getContentResolver(),file.getAbsolutePath(),file.getName(),file.getName());
+
+
+
                                     RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
                                     MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
                                     RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
@@ -157,6 +180,10 @@ public class SignUpFragment extends Fragment {
                                     });
                                 } catch (JSONException e) {
                                     Toast.makeText(getContext(), "Error during load facebook info", Toast.LENGTH_SHORT).show();
+                                } catch (MalformedURLException e) {
+                                    e.printStackTrace();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
                                 }
                             }
                         });

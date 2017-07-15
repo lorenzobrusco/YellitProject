@@ -82,6 +82,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         final String likes = currPost.getLikes() + " Like";
         holder.personName.setText(currPost.getUserName());
         holder.commentText.setText(currPost.getComment());
+        if(currPost.getComment() == null && currPost.getComment().equals(""))
+            holder.commentText.setVisibility(View.GONE);
         holder.setImagePost(currPost.getPostImagePost());
         holder.setUserImage(currPost.getUserImagePath());
         holder.mType.setText(GenerateMainCategories.getMacro(mContext, currPost.getType()));
@@ -303,7 +305,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             progressBar.setVisibility(View.VISIBLE);
             userInfo.setVisibility(View.INVISIBLE);
             actionUser.setVisibility(View.INVISIBLE);
-            commentUser.setVisibility(View.INVISIBLE);
+            commentUser.setVisibility(View.GONE);
         }
 
         /**

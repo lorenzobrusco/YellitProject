@@ -90,7 +90,18 @@
 
                 </RelativeLayout>
             </LinearLayout>
+            <RelativeLayout
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
+                <ProgressBar
+                    android:id="@+id/load_post"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true" />
+            </RelativeLayout>
             <RelativeLayout
                 android:id="@+id/current_action_post"
                 android:layout_width="match_parent"
@@ -123,18 +134,6 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ProgressBar
-                    android:id="@+id/load_post"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true" />
-            </RelativeLayout>
-
-            <RelativeLayout
                 android:id="@+id/image_content_post"
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
@@ -155,7 +154,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:visibility="invisible">
+                android:visibility="gone">
 
 
             </RelativeLayout>
@@ -166,7 +165,7 @@
                 android:layout_height="fill_parent"
                 android:layout_gravity="center"
                 android:layout_margin="8dp"
-                android:visibility="invisible">
+                android:visibility="gone">
 
                 <LinearLayout
                     android:id="@+id/position_post"
