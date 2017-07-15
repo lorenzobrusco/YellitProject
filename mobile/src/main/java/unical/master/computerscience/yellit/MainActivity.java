@@ -21,10 +21,12 @@ import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -47,6 +49,7 @@ import unical.master.computerscience.yellit.graphic.Activities.LoadActivity;
 import unical.master.computerscience.yellit.graphic.Activities.LoginSignupActivity;
 import unical.master.computerscience.yellit.graphic.Activities.PlaceActivity;
 import unical.master.computerscience.yellit.graphic.Activities.SettingActivity;
+import unical.master.computerscience.yellit.graphic.Adapters.UsersAdapter;
 import unical.master.computerscience.yellit.graphic.Fragments.AddPostFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.FitnessFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.PostFragment;
@@ -75,7 +78,11 @@ public class MainActivity extends AppCompatActivity {
     private static final String FITNESS = "Fitness";
     private int currentItem = 2;
     private static final int REQUEST_ALL_MISSING_PERMISSIONS = 1;
-
+    private Fragment currentFragment;
+    private BottomSheetBehavior mBottomSheetBehavior;
+    private HashSet<String> mFavoritesCatogories;
+    private int mDistance;
+    private UsersAdapter mUsersAdapter;
     @Bind(R.id.bottom_navigation_view)
     AHBottomNavigation mBottomNavigation;
     @Bind(R.id.bottom_sheet1)
@@ -90,11 +97,8 @@ public class MainActivity extends AppCompatActivity {
     SearchView mSearchView;
     @Bind(R.id.post_filter)
     ImageView filterImage;
-    private Fragment currentFragment;
-    private BottomSheetBehavior mBottomSheetBehavior;
-    private HashSet<String> mFavoritesCatogories;
-    private int mDistance;
-
+    @Bind(R.id.users_search_bar_list)
+    ListView mUsersList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +107,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         getSupportActionBar().hide();
+        mUsersAdapter = new UsersAdapter(this, InfoManager.getInstance().getmAllUsers());
+        mUsersList.setAdapter(mUsersAdapter);
+        mSearchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mUsersList.setVisibility(mUsersList.getVisibility()==View.VISIBLE ? View.INVISIBLE : View.VISIBLE);
+            }
+        });
         mSearchView.setFocusable(false);
         mSearchView.onActionViewExpanded();
         mSearchView.clearFocus();
@@ -110,6 +122,18 @@ public class MainActivity extends AppCompatActivity {
         mSearchView.setQueryHint(" Search ");
         currentFragment = new PostFragment();
         mFavoritesCatogories = new HashSet<>();
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                mUsersAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
         this.setFragment(currentFragment);
         this.setupViews();
         GoogleApiClient.getInstance(this);

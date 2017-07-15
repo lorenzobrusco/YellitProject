@@ -197,7 +197,6 @@ public class LoginFragment extends Fragment {
                 List<User> usersList = new ArrayList<User>();
                 for(User user : users){
                     usersList.add(user);
-                    Toast.makeText(getContext(),user.getEmail(),Toast.LENGTH_LONG).show();
                 }
                 InfoManager.getInstance().setmAllUsers(usersList);
                 progressDialog.dismiss();

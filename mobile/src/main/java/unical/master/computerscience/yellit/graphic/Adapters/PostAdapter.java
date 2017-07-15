@@ -19,6 +19,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.google.gson.GsonBuilder;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
 
@@ -87,8 +88,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         holder.mLikeContent.setText(likes);
         holder.mDataPost.setText(currPost.getDate());
         holder.mPosition.setText(currPost.getLocation());
-        holder.mLikeButton.setLiked(true);
-//        holder.setLike(this.isLike(InfoManager.getInstance().getmUser().getEmail(), mPosts.get(position).getIdPost()));
+        holder.mLikeButton.setLiked(this.isLike(InfoManager.getInstance().getmUser().getEmail(),mPosts.get(position).getIdPost()));
+        Toast.makeText(mContext,this.isLike(InfoManager.getInstance().getmUser().getEmail(),mPosts.get(position).getIdPost())+"",Toast.LENGTH_LONG).show();
         holder.mLikeButton.setOnLikeListener(new OnLikeListener() {
             @Override
             public void liked(LikeButton likeButton) {
@@ -111,7 +112,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                         Toast.makeText(mContext, "Error during add a like", Toast.LENGTH_SHORT).show();
                     }
                 });
-                InfoManager.getInstance().getmPostAdapter().notifyDataSetChanged();
             }
 
             @Override
@@ -134,7 +134,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                         Toast.makeText(mContext, "Error during remove a like", Toast.LENGTH_SHORT).show();
                     }
                 });
-                InfoManager.getInstance().getmPostAdapter().notifyDataSetChanged();
             }
         });
     }
@@ -178,7 +177,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             public void onResponse(Call<Like> call, Response<Like> response) {
                 final Like like = response.body();
                 if (like != null) {
-                     if (like.getCount() == 1)
+                     if (like.getIsLike() == 1)
                         isLike[0] = true;
                 } else
                     isLike[0] = false;
@@ -226,8 +225,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         TextView mDataPost;
         @Bind(R.id.position_post_text)
         TextView mPosition;
-
-        private boolean isLike = false;
 
         PostViewHolder(final View itemView) {
             super(itemView);

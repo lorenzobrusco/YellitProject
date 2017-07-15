@@ -313,7 +313,6 @@ public class SignUpFragment extends Fragment {
                 List<User> usersList = new ArrayList<>();
                 for(User user : users){
                     usersList.add(user);
-                    Toast.makeText(getContext(),user.getEmail(),Toast.LENGTH_LONG).show();
                 }
                 InfoManager.getInstance().setmAllUsers(usersList);
                 mProgressDialog.dismiss();
@@ -325,7 +324,6 @@ public class SignUpFragment extends Fragment {
 
             @Override
             public void onFailure(Call<User[]> call, Throwable t) {
-                Toast.makeText(getContext(),"FAILED",Toast.LENGTH_LONG).show();
                 mProgressDialog.dismiss();
                 _signupButton.setEnabled(true);
                 getActivity().setResult(RESULT_OK, null);
