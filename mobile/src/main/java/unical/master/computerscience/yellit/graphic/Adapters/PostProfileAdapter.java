@@ -87,13 +87,13 @@ public class PostProfileAdapter extends BaseAdapter {
         Glide.with(mContext)
                 .load(InfoManager.getInstance().getmUser().getPathImg())
                 .fitCenter()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .error(mContext.getResources().getDrawable(R.drawable.default_user))
                 .into(userImage);
         Glide.with(mContext)
                 .load(mMyPposts.get(i).getPostImagePost())
                 .fitCenter()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(imagePost);
         return mView;
     }

@@ -1,6 +1,8 @@
 package unical.master.computerscience.yellit.graphic.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -35,12 +37,17 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import unical.master.computerscience.yellit.connection.LikeService;
+import unical.master.computerscience.yellit.graphic.Activities.LoadActivity;
+import unical.master.computerscience.yellit.graphic.Activities.LoginSignupActivity;
 import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.logic.objects.Like;
 import unical.master.computerscience.yellit.logic.objects.Post;
 import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.utilities.BaseURL;
 import unical.master.computerscience.yellit.utilities.GenerateMainCategories;
+import unical.master.computerscience.yellit.utilities.PrefManager;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Post adapter
@@ -79,14 +86,16 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
      */
     @Override
     public void onBindViewHolder(final PostViewHolder holder, final int position) {
+        holder.hideAll();
         final Post currPost = mPosts.get(position);
         final String likes = currPost.getLikes() + " Like";
-        holder.personName.setText(currPost.getUserName());
-        holder.commentText.setText(currPost.getComment());
-        if (currPost.getComment() == null || currPost.getComment().equals(""))
-            holder.commentText.setVisibility(View.GONE);
         holder.setImagePost(currPost.getPostImagePost());
         holder.setUserImage(currPost.getUserImagePath());
+        holder.personName.setText(currPost.getUserName());
+        holder.commentText.setText(currPost.getComment());
+        if (currPost.getComment() == null || currPost.getComment().equals("")) {
+            holder.commentText.setVisibility(View.GONE);
+        }
         holder.mType.setText(GenerateMainCategories.getMacro(mContext, currPost.getType()));
         holder.mLikeContent.setText(likes);
         holder.mDataPost.setText(currPost.getDate());
@@ -138,6 +147,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                 });
             }
         });
+        holder.showAll();
     }
 
     @Override
@@ -152,7 +162,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
     /**
      * change the list of posts
-     *
      * @param posts
      */
     public void changeList(List<Post> posts) {
@@ -161,7 +170,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
     /**
      * Check if user likes this post
-     *
      * @param email
      * @param id
      * @return
@@ -192,6 +200,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         });
         return isLike[0];
     }
+
+
 
     /**
      * Adpter
@@ -244,28 +254,15 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             Glide.with(mContext)
                     .load(userImgPath)
                     .fitCenter()
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(userImage);
         }
 
         void setImagePost(String imagePath) {
-            hideAll();
             Glide.with(mContext)
                     .load(imagePath)
-                    .listener(new RequestListener<String, GlideDrawable>() {
-                        @Override
-                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                            showAll();
-                            return false;
-                        }
-                    })
                     .fitCenter()
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(imagePost);
         }
 
@@ -280,6 +277,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             mLikeButton.setVisibility(View.INVISIBLE);
             actionUser.setVisibility(View.INVISIBLE);
             userImage.setVisibility(View.INVISIBLE);
+            imagePost.setVisibility(View.INVISIBLE);
             commentUser.setVisibility(View.INVISIBLE);
         }
 
@@ -293,9 +291,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             mLikeContent.setVisibility(View.VISIBLE);
             mLikeButton.setVisibility(View.VISIBLE);
             actionUser.setVisibility(View.VISIBLE);
+            userInfo.setVisibility(View.VISIBLE);
             userImage.setVisibility(View.VISIBLE);
+            imagePost.setVisibility(View.VISIBLE);
             commentUser.setVisibility(View.VISIBLE);
         }
+
     }
+
+
 
 }
