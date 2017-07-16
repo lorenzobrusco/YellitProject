@@ -142,7 +142,7 @@ public class SignUpFragment extends Fragment {
                                             .addConverterFactory(GsonConverterFactory.create())
                                             .build();
                                     SigninService signinService = retrofit.create(SigninService.class);
-                                    Call<User> call = signinService.createProfileWithoutFile(filenameImage, nameFirst, "", email, "");
+                                    Call<User> call = signinService.createProfileWithoutFile(filenameImage, nameFirst, email, email, "");
                                     call.enqueue(new Callback<User>() {
                                         @Override
                                         public void onResponse(Call<User> call, Response<User> response) {

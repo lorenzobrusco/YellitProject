@@ -13,7 +13,7 @@ public class Post {
 
     @SerializedName("user_nick")
     private String userName;
-
+    
     @SerializedName("user_image")
     private String userImagePath;
 
