@@ -17,14 +17,18 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -47,6 +51,7 @@ import unical.master.computerscience.yellit.graphic.Activities.LoadActivity;
 import unical.master.computerscience.yellit.graphic.Activities.LoginSignupActivity;
 import unical.master.computerscience.yellit.graphic.Activities.PlaceActivity;
 import unical.master.computerscience.yellit.graphic.Activities.SettingActivity;
+import unical.master.computerscience.yellit.graphic.Adapters.UsersAdapter;
 import unical.master.computerscience.yellit.graphic.Fragments.AddPostFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.FitnessFragment;
 import unical.master.computerscience.yellit.graphic.Fragments.PostFragment;
@@ -75,26 +80,29 @@ public class MainActivity extends AppCompatActivity {
     private static final String FITNESS = "Fitness";
     private int currentItem = 2;
     private static final int REQUEST_ALL_MISSING_PERMISSIONS = 1;
-
-    @Bind(R.id.bottom_navigation_view)
-    AHBottomNavigation mBottomNavigation;
-    @Bind(R.id.bottom_sheet1)
-    View bottomSheet;
-    @Bind(R.id.setting_buttom_menu)
-    LinearLayout mSettingLayout;
-    @Bind(R.id.map_buttom_menu)
-    LinearLayout mMapLayout;
-    @Bind(R.id.logout_buttom_menu)
-    LinearLayout mLogoutLayout;
-    @Bind(R.id.custom_search_view)
-    SearchView mSearchView;
-    @Bind(R.id.post_filter)
-    ImageView filterImage;
     private Fragment currentFragment;
     private BottomSheetBehavior mBottomSheetBehavior;
     private HashSet<String> mFavoritesCatogories;
     private int mDistance;
-
+    private UsersAdapter mUsersAdapter;
+    @Bind(R.id.bottom_navigation_view)
+    protected AHBottomNavigation mBottomNavigation;
+    @Bind(R.id.bottom_sheet1)
+    protected View bottomSheet;
+    @Bind(R.id.setting_buttom_menu)
+    protected LinearLayout mSettingLayout;
+    @Bind(R.id.map_buttom_menu)
+    protected LinearLayout mMapLayout;
+    @Bind(R.id.logout_buttom_menu)
+    protected LinearLayout mLogoutLayout;
+    @Bind(R.id.custom_search_view)
+    protected SearchView mSearchView;
+    @Bind(R.id.post_filter)
+    protected ImageView filterImage;
+    @Bind(R.id.users_search_bar_list)
+    protected ListView mUsersList;
+    @Bind(R.id.activityCatalogSearchContainer)
+    protected CardView mSearchBarCardView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,13 +111,31 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         getSupportActionBar().hide();
+        mUsersAdapter = new UsersAdapter(this, InfoManager.getInstance().getmAllUsers());
+        mUsersList.setAdapter(mUsersAdapter);
         mSearchView.setFocusable(false);
         mSearchView.onActionViewExpanded();
-        mSearchView.clearFocus();
         mSearchView.requestFocusFromTouch();
         mSearchView.setQueryHint(" Search ");
         currentFragment = new PostFragment();
         mFavoritesCatogories = new HashSet<>();
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if(newText.length() > 0){
+                    mUsersList.setVisibility(View.VISIBLE);
+                    mUsersAdapter.getFilter().filter(newText);
+                } else {
+                    mUsersList.setVisibility(View.GONE);
+                }
+                return false;
+            }
+        });
         this.setFragment(currentFragment);
         this.setupViews();
         GoogleApiClient.getInstance(this);
@@ -363,6 +389,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
+        if (mUsersList.getVisibility() != View.GONE)
+            mUsersList.setVisibility(View.GONE);
         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         } else if (currentItem == 2) {
@@ -418,7 +446,7 @@ public class MainActivity extends AppCompatActivity {
             if (mFavoritesCatogories.contains(type)) {
                 double d = distance(InfoManager.getInstance().getmPlaceData().latLongs.get(0).latitude,
                         InfoManager.getInstance().getmPlaceData().latLongs.get(0).longitude, post.getLat(), post.getLongi());
-                Log.d("DISTANCEPOSITION","distance: "+ d);
+                Log.d("DISTANCEPOSITION", "distance: " + d);
                 if (mDistance <= d)
                     posts.add(post);
             }
@@ -431,7 +459,7 @@ public class MainActivity extends AppCompatActivity {
      * @return the distance between two location
      */
     private double distance(double lat1, double long1, double lat2, double long2) {
-        if(lat2 == 0.00 || long2 == 0.00)
+        if (lat2 == 0.00 || long2 == 0.00)
             return mDistance;
         Location startPoint = new Location("locationA");
         startPoint.setLatitude(lat1);

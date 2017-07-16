@@ -4,14 +4,14 @@ package unical.master.computerscience.yellit.graphic.Activities;
 import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Debug;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +19,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -36,17 +35,24 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.Bind;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okio.Buffer;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -59,14 +65,15 @@ import siclo.com.ezphotopicker.api.models.PhotoSource;
 import siclo.com.ezphotopicker.models.PhotoIntentException;
 import unical.master.computerscience.yellit.MainActivity;
 import unical.master.computerscience.yellit.R;
-import unical.master.computerscience.yellit.connection.LoginService;
 import unical.master.computerscience.yellit.connection.SigninService;
+import unical.master.computerscience.yellit.connection.UsersService;
 import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.logic.objects.User;
 import unical.master.computerscience.yellit.utilities.BaseURL;
 import unical.master.computerscience.yellit.utilities.PrefManager;
 
 import static android.app.Activity.RESULT_OK;
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class SignUpFragment extends Fragment {
 
@@ -77,7 +84,7 @@ public class SignUpFragment extends Fragment {
     private String currentPhotoPath;
     private CallbackManager callbackManager;
     private EZPhotoPickStorage ezPhotoPickStorage;
-
+    private ProgressDialog mProgressDialog;
     @Bind(R.id.profile_image_signup)
     protected ImageView _profileImage;
     @Bind(R.id.input_name_signup)
@@ -102,6 +109,7 @@ public class SignUpFragment extends Fragment {
         currentPhotoPath = "";
         ezPhotoPickStorage = new EZPhotoPickStorage(getActivity());
         choosePhotoDialog = buildDialogFilter();
+        mProgressDialog = new ProgressDialog(getContext());
         _signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,29 +134,26 @@ public class SignUpFragment extends Fragment {
                                     final String email = object.getString("email");
                                     final String nameFirst = object.getString("name");
                                     final String id = object.getString("id");
-                                    final String imageURL = "https://graph.facebook.com/" + id + "/picture?type=large";
-                                    final File file = new File(imageURL);
-                                    RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
-                                    MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
-                                    RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
+
+                                    /** To get user image from facebook*/
+                                    final String filenameImage = "https://graph.facebook.com/" + id + "/picture?type=large";
                                     Retrofit retrofit = new Retrofit.Builder()
                                             .baseUrl(BaseURL.URL)
                                             .addConverterFactory(GsonConverterFactory.create())
                                             .build();
                                     SigninService signinService = retrofit.create(SigninService.class);
-                                    Call<User> call = signinService.createProfile(nameFirst, email, "", fileToUpload, filename);
+                                    Call<User> call = signinService.createProfileWithoutFile(filenameImage, nameFirst, email, email, "");
                                     call.enqueue(new Callback<User>() {
                                         @Override
                                         public void onResponse(Call<User> call, Response<User> response) {
                                             final User profile = response.body();
-                                            InfoManager.getInstance().setmUser(profile);
-                                            PrefManager.getInstace(SignUpFragment.this.getContext()).setUser(email + "#" + "NULL");
-                                            if (profile.getEmail() == null) {
+                                            if (profile != null && profile.getEmail() != null) {
+                                                InfoManager.getInstance().setmUser(profile);
+                                                PrefManager.getInstace(SignUpFragment.this.getContext()).setUser(email + "#" + "NULL");
+                                                onSignupSuccess();
+                                            } else {
                                                 SignUpFragment.this.onSignupFailed();
                                                 Toast.makeText(getContext(), "Error during load facebook info", Toast.LENGTH_SHORT).show();
-                                            } else {
-                                                Toast.makeText(getContext(), "Error during load facebook info", Toast.LENGTH_SHORT).show();
-                                                onSignupSuccess();
                                             }
                                         }
 
@@ -186,6 +191,7 @@ public class SignUpFragment extends Fragment {
         });
         return view;
     }
+
 
     /**
      * @return dialog where user can choose how to get an image
@@ -244,48 +250,127 @@ public class SignUpFragment extends Fragment {
             return;
         }
         _signupButton.setEnabled(false);
-        final ProgressDialog progressDialog = new ProgressDialog(getContext());
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Creating Account...");
-        progressDialog.show();
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.setMessage("Creating Account...");
+        mProgressDialog.show();
         final String name = _nameText.getText().toString();
         final String email = _emailText.getText().toString();
         final String password = _passwordText.getText().toString();
-        final Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BaseURL.URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        final SigninService signinService = retrofit.create(SigninService.class);
-        File file = new File(currentPhotoPath);
-        RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
-        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
-        RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
-        final Call<User> call = signinService.createProfile(name, email, password, fileToUpload, filename);
-        call.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                final User profile = response.body();
-                InfoManager.getInstance().setmUser(profile);
-                PrefManager.getInstace(getContext()).setUser(email + "#" + password);
-                onSignupSuccess();
+        if(!currentPhotoPath.equals("")){
+            final File file = new File(currentPhotoPath);
+            RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
+            MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
+            RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
+            RequestBody newName = RequestBody.create(MediaType.parse("text/plain"), name);
+            RequestBody newEmail = RequestBody.create(MediaType.parse("text/plain"), email);
+            RequestBody newPassword = RequestBody.create(MediaType.parse("text/plain"), password);
+            final Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(BaseURL.URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+            final SigninService signinService = retrofit.create(SigninService.class);
+            final Call<User> call = signinService.createProfile(fileToUpload, filename, newName, newEmail, newPassword);
+            call.enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    final User profile = response.body();
+                    if (profile != null) {
+                        InfoManager.getInstance().setmUser(profile);
+                        PrefManager.getInstace(getContext()).setUser(email + "#" + password);
+                        mProgressDialog.dismiss();
+                        onSignupSuccess();
+                    } else {
+                        buildDialogFilter();
+                    }
 
-            }
+                }
 
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                buildDialogFilter();
-            }
-        });
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+                    buildDialogFilter();
+                }
+            });
+        } else {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(BaseURL.URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+            SigninService signinService = retrofit.create(SigninService.class);
+            Call<User> call = signinService.createProfileWithoutFile("", name, "", email, password);
+            call.enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    final User profile = response.body();
+                    if (profile != null && profile.getEmail() != null) {
+                        InfoManager.getInstance().setmUser(profile);
+                        PrefManager.getInstace(SignUpFragment.this.getContext()).setUser(email + "#" + password);
+                        onSignupSuccess();
+                    } else {
+                        SignUpFragment.this.onSignupFailed();
+                        Toast.makeText(getContext(), "Error during load facebook info", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+                    Toast.makeText(getContext(), "Error during load facebook info", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+
+    }
+
+    //TODO remove it
+    private static String bodyToString(final RequestBody request) {
+        try {
+            final RequestBody copy = request;
+            final Buffer buffer = new Buffer();
+            copy.writeTo(buffer);
+            return buffer.readUtf8();
+        } catch (final IOException e) {
+            return "did not work";
+        }
     }
 
     /**
      * It used to start the next activity because the sign in is successed
      */
     private void onSignupSuccess() {
-        _signupButton.setEnabled(true);
-        getActivity().setResult(RESULT_OK, null);
-        startActivity(new Intent(getContext(), MainActivity.class));
-        getActivity().finish();
+        final Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BaseURL.URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        final UsersService loginService = retrofit.create(UsersService.class);
+        Call<User[]> call = loginService.getAllUsers("allUsers");
+        call.enqueue(new Callback<User[]>() {
+            @Override
+            public void onResponse(Call<User[]> call, Response<User[]> response) {
+                User[] users = response.body();
+                List<User> usersList = new ArrayList<>();
+                for (User user : users) {
+                    usersList.add(user);
+                }
+                InfoManager.getInstance().setmAllUsers(usersList);
+                mProgressDialog.dismiss();
+                _signupButton.setEnabled(true);
+                getActivity().setResult(RESULT_OK, null);
+                startActivity(new Intent(getContext(), MainActivity.class));
+                getActivity().finish();
+            }
+
+            @Override
+            public void onFailure(Call<User[]> call, Throwable t) {
+                mProgressDialog.dismiss();
+                _signupButton.setEnabled(true);
+                getActivity().setResult(RESULT_OK, null);
+                startActivity(new Intent(getContext(), MainActivity.class));
+                getActivity().finish();
+            }
+        });
+
     }
 
     /**
@@ -342,6 +427,11 @@ public class SignUpFragment extends Fragment {
         }
 
         if (FacebookSdk.isFacebookRequestCode(requestCode)) {
+            mProgressDialog.setIndeterminate(true);
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.setCanceledOnTouchOutside(false);
+            mProgressDialog.setMessage("Getting info from Facebook");
+            mProgressDialog.show();
             callbackManager.onActivityResult(requestCode, resultCode, data);
         }
         if (requestCode == EZPhotoPick.PHOTO_PICK_CAMERA_REQUEST_CODE) {
@@ -360,7 +450,7 @@ public class SignUpFragment extends Fragment {
                     final Bitmap pickedPhoto = ezPhotoPickStorage.loadStoredPhotoBitmap(DEMO_PHOTO_PATH, photoName, 300);
                     _profileImage.setImageBitmap(pickedPhoto);
                     currentPhotoPath = ezPhotoPickStorage.getAbsolutePathOfStoredPhoto(DEMO_PHOTO_PATH, photoName);
-                    Toast.makeText(getContext(), currentPhotoPath , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), currentPhotoPath, Toast.LENGTH_SHORT).show();
                 }
             } catch (IOException e) {
                 Toast.makeText(getContext(), "Error during load photo", Toast.LENGTH_SHORT).show();

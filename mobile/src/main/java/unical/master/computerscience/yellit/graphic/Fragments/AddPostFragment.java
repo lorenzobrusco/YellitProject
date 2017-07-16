@@ -143,15 +143,11 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         View view = inflater.inflate(R.layout.fragment_add_post, container, false);
         ButterKnife.bind(this, view);
         GoogleApiClient.getInstance((AppCompatActivity) getActivity()).getPlaceDetection(getContext());
-
         this.progressDialog = new ProgressDialog(this.getContext());
         buildVariousStuff();
-
         buildMainMenu();
-
         ezPhotoPickStorage = new EZPhotoPickStorage(getActivity());
         buildButtonsCallback();
-
         setupImagePicker(null);
         changePriorityOfScroll();
 
@@ -179,22 +175,12 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(View bottomSheet, int newState) {
-                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-
-                } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-
+                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
                     sendPostFloatButton.setVisibility(View.VISIBLE);
-                    //animate().scaleX(1).scaleY(1).setDuration(300).start();
-
-
                 } else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-
                     sendPostFloatButton.setVisibility(View.INVISIBLE);
                     transparentLayer.setVisibility(View.GONE);
-
-                    resetBottomSheet();
-
-                    //.animate().scaleX(0).scaleY(0).setDuration(300).start();
+                    resetBottomSheet(true);
 
                 }
             }
@@ -212,12 +198,12 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         });
     }
 
-    private void resetBottomSheet() {
+    private void resetBottomSheet(boolean all) {
         mainMenu.highlightValues(null);
         mainMenu.invalidate();
-
-        mCommentText.setText("");
-
+        if (all)
+            mCommentText.setText("");
+        currentPhotoPath = null;
         this.setupImagePicker(null);
     }
 
@@ -323,6 +309,8 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
      */
     private void createPostForUpload(String comment, String place) {
         progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setMessage("Publication...");
         progressDialog.show();
         int pos = positionLocation(place) == -1 ? -1 : positionLocation(place);
@@ -341,7 +329,6 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         RequestBody newCategory = RequestBody.create(MediaType.parse("text/plain"), currentCategory);
         //TODO remove comment at the end
         RequestBody newUserMail = RequestBody.create(MediaType.parse("text/plain"), InfoManager.getInstance().getmUser().getEmail());
-//        RequestBody newUserMail = RequestBody.create(MediaType.parse("text/plain"), "lollo@gmail.com");
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BaseURL.URL)
@@ -350,7 +337,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
         PostGestureService getResponse = retrofit.create(PostGestureService.class);
 
-        Call<ServerResponse> call = getResponse.uploadFile(fileToUpload, filename, newUserMail, newComment, newPlace, newCategory, lat, longi);
+        Call<ServerResponse> call = getResponse.uploadPost(fileToUpload, filename, newUserMail, newComment, newPlace, newCategory, lat, longi, "adding");
         call.enqueue(new Callback<ServerResponse>() {
             @Override
             public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
@@ -386,7 +373,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
     private int positionLocation(String place) {
         int i = 0;
-        if(place.contains("places") && place.contains("detected") )
+        if (place.contains("places") && place.contains("detected"))
             return -1;
         for (String s : InfoManager.getInstance().getmPlaceData().place) {
             if (s.equals(place))
@@ -474,7 +461,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
         mainMenu.getLegend().setEnabled(false);
 
-        // entry label styling
+        /** entry label styling */
         mainMenu.setEntryLabelColor(Color.WHITE);
         mainMenu.setEntryLabelTypeface(mTfRegular);
         mainMenu.setEntryLabelTextSize(11f);
@@ -499,27 +486,17 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         ArrayList<PieEntry> entries = new ArrayList<PieEntry>();
 
         for (int i = 0; i < labels.length; i++) {
-
-            entries.add(
-                    new PieEntry(20,
-                            labels[i]));
+            entries.add(new PieEntry(20, labels[i]));
         }
 
         PieDataSet dataSet = new PieDataSet(entries, "");
-
         dataSet.setDrawValues(false);
-
         dataSet.setSliceSpace(3f);
-        //dataSet.setIconsOffset(new MPPointF(0, 40));
         dataSet.setSelectionShift(11f);
-
         ArrayList<Integer> colors = new ArrayList<Integer>();
-
         for (int c : colorz)
             colors.add(c);
-
         dataSet.setColors(colors);
-
         PieData data = new PieData(dataSet);
         data.setValueFormatter(new PercentFormatter());
         data.setValueTextSize(40f);
@@ -527,21 +504,12 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         data.setValueTypeface(mTfLight);
         mainMenu.setData(data);
 
-        // undo all highlights
+        /** undo all highlights */
         mainMenu.highlightValues(null);
 
         mainMenu.invalidate();
     }
 
-    /*
-        Log.i("VAL SELECTED", "Value: " + e.getX() + ", index: " + h.getX() + ", DataSet index: " + h.getDataSetIndex());
-
-        In base all'index del bottone premuto carichiamo uno specifico sub menù, secondo l'ordine:
-
-        Category 1 = Index 0
-        Category 2 = Index 1
-        etc
-     */
     @Override
     public void onValueSelected(Entry e, Highlight h) {
 
@@ -569,16 +537,14 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
             switch (index) {
                 case 0:
                     openBottomSheet();
-                    //subCategoryLabels = getResources().getStringArray(R.array.sub_categories_1);
-                    //subCategoryColors = getResources().getIntArray(R.array.sub_colors_1);
                     break;
                 case 1:
-                    subCategoryLabels = getResources().getStringArray(R.array.sub_categories_3);
-                    subCategoryColors = getResources().getIntArray(R.array.sub_colors_3);
-                    break;
-                case 2:
                     subCategoryLabels = getResources().getStringArray(R.array.sub_categories_2);
                     subCategoryColors = getResources().getIntArray(R.array.sub_colors_2);
+                    break;
+                case 2:
+                    subCategoryLabels = getResources().getStringArray(R.array.sub_categories_3);
+                    subCategoryColors = getResources().getIntArray(R.array.sub_colors_3);
                     break;
                 case 3:
                     subCategoryLabels = getResources().getStringArray(R.array.sub_categories_4);
@@ -586,8 +552,6 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                     break;
                 case 4:
                     openBottomSheet();
-                    //subCategoryLabels = getResources().getStringArray(R.array.sub_categories_5);
-                    //subCategoryColors = getResources().getIntArray(R.array.sub_colors_5);
                     break;
             }
 
@@ -609,7 +573,6 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
             case 0:
                 openBottomSheet();
-
             case 1:
             case 2:
             case 3:
@@ -708,45 +671,26 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode != Activity.RESULT_OK) {
-            Toast.makeText(this.getContext(), "Sono in questo IF improbabile", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (requestCode == EZPhotoPick.PHOTO_PICK_GALERY_REQUEST_CODE) {
 
-            try {
-                ArrayList<String> pickedPhotoNames = data.getStringArrayListExtra(EZPhotoPick.PICKED_PHOTO_NAMES_KEY);
-                for (String photoName : pickedPhotoNames) {
-
-                    Bitmap pickedPhoto = ezPhotoPickStorage.loadStoredPhotoBitmap(DEMO_PHOTO_PATH, photoName, 300);
-
-                    setupImagePicker(ezPhotoPickStorage.getAbsolutePathOfStoredPhoto(DEMO_PHOTO_PATH, photoName));
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
+            ArrayList<String> pickedPhotoNames = data.getStringArrayListExtra(EZPhotoPick.PICKED_PHOTO_NAMES_KEY);
+            setupImagePicker(ezPhotoPickStorage.getAbsolutePathOfStoredPhoto(DEMO_PHOTO_PATH, pickedPhotoNames.get(0)));
         } else if (requestCode == EZPhotoPick.PHOTO_PICK_CAMERA_REQUEST_CODE) {
-
-            try {
-                ArrayList<String> pickedPhotoNames = data.getStringArrayListExtra(EZPhotoPick.PICKED_PHOTO_NAMES_KEY);
-                Bitmap pickedPhoto = ezPhotoPickStorage.loadLatestStoredPhotoBitmap(300);
-
-                setupImagePicker(ezPhotoPickStorage.getAbsolutePathOfStoredPhoto(DEMO_PHOTO_PATH, pickedPhotoNames.get(0)));
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            ArrayList<String> pickedPhotoNames = data.getStringArrayListExtra(EZPhotoPick.PICKED_PHOTO_NAMES_KEY);
+            setupImagePicker(ezPhotoPickStorage.getAbsolutePathOfStoredPhoto(DEMO_PHOTO_PATH, pickedPhotoNames.get(0)));
+            resetBottomSheet(false);
         }
     }
 
     private void gridViewSetting(GridView gridview) {
 
         int size = 50;
-        // Calculated single Item Layout Width for each grid element ....
+        /** Calculated single Item Layout Width for each grid element ....*/
         int width = 90;
 
         DisplayMetrics dm = new DisplayMetrics();

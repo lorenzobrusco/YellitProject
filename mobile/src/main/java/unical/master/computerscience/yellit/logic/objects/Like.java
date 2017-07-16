@@ -9,19 +9,24 @@ import com.google.gson.annotations.SerializedName;
 public class Like {
 
     @SerializedName("likes")
-    private Integer count;
+    private int count;
 
-    public Like(Integer count, Integer idPost) {
-        this.count = count;
+    @SerializedName("isLike")
+    private int isLike;
 
-    }
-
-    public Integer getCount() {
+    public int getCount() {
         return count;
     }
 
-    public void setCount(Integer count) {
+    public void setCount(int count) {
         this.count = count;
     }
 
+    public int getIsLike() {
+        return isLike;
+    }
+
+    public void setIsLike(int isLike) {
+        this.isLike = isLike;
+    }
 }

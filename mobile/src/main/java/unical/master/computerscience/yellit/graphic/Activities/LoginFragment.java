@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,9 @@ import com.facebook.login.widget.LoginButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.Bind;
@@ -40,6 +43,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.connection.LoginService;
+import unical.master.computerscience.yellit.connection.UsersService;
 import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.logic.objects.User;
 import unical.master.computerscience.yellit.utilities.BaseURL;
@@ -73,6 +77,8 @@ public class LoginFragment extends Fragment {
             public void onClick(View v) {
                 if (validate()) {
                     progressDialog.setIndeterminate(true);
+                    progressDialog.setCanceledOnTouchOutside(false);
+                    progressDialog.setCancelable(false);
                     progressDialog.setMessage("Authenticating...");
                     progressDialog.show();
                     login(false);
@@ -104,14 +110,18 @@ public class LoginFragment extends Fragment {
                                 @Override
                                 public void onResponse(Call<User> call, Response<User> response) {
                                     User profile = response.body();
-                                    InfoManager.getInstance().setmUser(profile);
-                                    PrefManager.getInstace(LoginFragment.this.getContext()).setUser(email + "#" + "NULL");
-                                    LoginFragment.this.onLoginSuccess();
+                                    if (profile != null && profile.getEmail() != null) {
+                                        InfoManager.getInstance().setmUser(profile);
+                                        PrefManager.getInstace(LoginFragment.this.getContext()).setUser(email + "#" + "NULL");
+                                        LoginFragment.this.onLoginSuccess();
+                                    } else {
+                                        buildErrorDialog();
+                                    }
                                 }
 
                                 @Override
                                 public void onFailure(Call<User> call, Throwable t) {
-                                    Toast.makeText(getContext(),"facebook failure",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "facebook failure", Toast.LENGTH_SHORT).show();
                                     buildErrorDialog();
                                 }
                             });
@@ -150,6 +160,11 @@ public class LoginFragment extends Fragment {
         }
 
         if (FacebookSdk.isFacebookRequestCode(requestCode)) {
+            progressDialog.setIndeterminate(true);
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.setCancelable(false);
+            progressDialog.setMessage("Authenticating...");
+            progressDialog.show();
             callbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }
@@ -176,10 +191,35 @@ public class LoginFragment extends Fragment {
      * It used to start the next activity because the login is successed
      */
     private void onLoginSuccess() {
-        progressDialog.dismiss();
-        startActivity(new Intent(getContext(), WelcomeActivity.class));
-        getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-        getActivity().finish();
+        final Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BaseURL.URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        final UsersService loginService = retrofit.create(UsersService.class);
+        Call<User[]> call = loginService.getAllUsers("allUsers");
+        call.enqueue(new Callback<User[]>() {
+            @Override
+            public void onResponse(Call<User[]> call, Response<User[]> response) {
+                User[] users = response.body();
+                List<User> usersList = new ArrayList<User>();
+                for(User user : users){
+                    usersList.add(user);
+                }
+                InfoManager.getInstance().setmAllUsers(usersList);
+                progressDialog.dismiss();
+                startActivity(new Intent(getContext(), WelcomeActivity.class));
+                getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                getActivity().finish();
+            }
+
+            @Override
+            public void onFailure(Call<User[]> call, Throwable t) {
+                progressDialog.dismiss();
+                startActivity(new Intent(getContext(), WelcomeActivity.class));
+                getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                getActivity().finish();
+            }
+        });
     }
 
     /**
@@ -188,6 +228,7 @@ public class LoginFragment extends Fragment {
     public void onLoginFailed() {
         Toast.makeText(getContext(), "Login failed", Toast.LENGTH_LONG).show();
         _loginButton.setEnabled(true);
+        _facebookSignButton.setEnabled(true);
     }
 
     /**
@@ -238,14 +279,14 @@ public class LoginFragment extends Fragment {
 
                 final User profile = response.body();
                 InfoManager.getInstance().setmUser(profile);
-                if (profile.getEmail() == null) {
-                    LoginFragment.this.buildErrorDialog();
-                    buildErrorDialog();
-                    correct[0] = false;
-                } else {
+                if (profile != null) {
                     onLoginSuccess();
                     PrefManager.getInstace(getContext()).setUser(email + "#" + password);
                     correct[0] = true;
+                } else {
+                    LoginFragment.this.buildErrorDialog();
+                    buildErrorDialog();
+                    correct[0] = false;
                 }
             }
 

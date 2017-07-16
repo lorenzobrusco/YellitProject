@@ -26,7 +26,6 @@
                 android:id="@+id/user_info_post"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:layout_margin="8dp"
                 android:orientation="horizontal"
                 android:visibility="invisible">
@@ -49,7 +48,6 @@
                         android:layout_centerVertical="true"
                         android:layout_toEndOf="@+id/image_profile_post"
                         android:paddingLeft="8dp"
-                        android:text="Name and Surname"
                         android:textColor="@android:color/black"
                         android:textSize="14dp" />
 
@@ -61,7 +59,6 @@
                         android:layout_marginTop="18dp"
                         android:layout_toEndOf="@+id/image_profile_post"
                         android:paddingLeft="8dp"
-                        android:text="Adesso"
                         android:textSize="10dp" />
 
                 </RelativeLayout>
@@ -76,6 +73,7 @@
                         android:layout_height="40dp"
                         android:layout_alignParentEnd="true"
                         android:layout_marginTop="5dp"
+                        android:visibility="invisible"
                         app:icon_size="25dp"
                         app:icon_type="heart" />
 
@@ -85,11 +83,24 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_below="@+id/like_post"
-                        android:paddingRight="8dp"
-                        android:text="0 like" />
+                        android:paddingRight="8dp" />
 
                 </RelativeLayout>
             </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+
+                <ProgressBar
+                    android:id="@+id/load_post"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:visibility="invisible" />
+            </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/current_action_post"
@@ -123,18 +134,6 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ProgressBar
-                    android:id="@+id/load_post"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true" />
-            </RelativeLayout>
-
-            <RelativeLayout
                 android:id="@+id/image_content_post"
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
@@ -146,7 +145,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
-                    android:scaleType="fitXY" />
+                    android:scaleType="fitXY"
+                    android:visibility="invisible"
+                    android:src="@color/grey_100" />
             </RelativeLayout>
 
 
@@ -155,7 +156,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:visibility="invisible">
+                android:visibility="gone">
 
 
             </RelativeLayout>
@@ -166,7 +167,7 @@
                 android:layout_height="fill_parent"
                 android:layout_gravity="center"
                 android:layout_margin="8dp"
-                android:visibility="invisible">
+                android:visibility="gone">
 
                 <LinearLayout
                     android:id="@+id/position_post"

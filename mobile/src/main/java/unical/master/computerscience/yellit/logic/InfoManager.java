@@ -23,6 +23,7 @@ public class InfoManager {
     private PlaceData mPlaceData;
     private List<Post> mPostList;
     private List<Post> mPostFilteredList;
+    private List<User> mAllUsers;
     private PostAdapter mPostAdapter;
     private boolean isColorMode;
 
@@ -32,6 +33,7 @@ public class InfoManager {
         mPlaceData.place = new ArrayList<>();
         mPostList = new ArrayList<>();
         mPostFilteredList = new ArrayList<>();
+        mAllUsers = new ArrayList<>();
     }
 
     public static InfoManager getInstance() {
@@ -122,5 +124,13 @@ public class InfoManager {
 
     public void setColorMode(boolean colorMode) {
         isColorMode = colorMode;
+    }
+
+    public List<User> getmAllUsers() {
+        return mAllUsers;
+    }
+
+    public void setmAllUsers(List<User> mAllUsers) {
+        this.mAllUsers = mAllUsers;
     }
 }

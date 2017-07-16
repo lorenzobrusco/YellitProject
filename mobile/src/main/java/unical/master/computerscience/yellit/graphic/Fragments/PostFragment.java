@@ -78,11 +78,9 @@ public class PostFragment extends Fragment {
                 Post[] posts = response.body();
 
                 if (posts != null)
-                    for (int i = posts.length - 1; i > 0; i--)
+                    for (int i = posts.length - 1; i >= 0; i--)
                         postsToShow.add(posts[i]);
 
-
-                Log.d("Posters", posts.length + "");
                 InfoManager.getInstance().setmPostList(postsToShow);
                 InfoManager.getInstance().setmPostFilteredList(postsToShow);
                 final PostAdapter mPostAdapter = new PostAdapter(PostFragment.this.getContext(), postsToShow);

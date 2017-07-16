@@ -64,21 +64,6 @@ public class LoadActivity extends AppCompatActivity {
         PrefManager.getInstace(this);
         InfoManager.getInstance().setColorMode(PrefManager.getInstace(this).isColorMode());
         this.startNewActivity();
-
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo(
-                    "com.example.creeper", PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-
-        } catch (NoSuchAlgorithmException e) {
-
-        }
     }
 
 
@@ -147,12 +132,12 @@ public class LoadActivity extends AppCompatActivity {
         final Handler handler = new Handler();
         final Runnable runnable = new Runnable() {
             public void run() {
-                if (PrefManager.getInstace(LoadActivity.this).getUser() != null && !PrefManager.getInstace(LoadActivity.this).getUser().equals("")) {
-                    getUserWhetherExists();
-                } else {
+                if (PrefManager.getInstace(LoadActivity.this).getUser() == null || PrefManager.getInstace(LoadActivity.this).getUser().equals("")) {
                     startActivity(new Intent(getApplicationContext(), LoginSignupActivity.class));
                     overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
                     finish();
+                } else {
+                    getUserWhetherExists();
                 }
 
             }
