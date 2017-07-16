@@ -7,10 +7,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.like.LikeButton;
+
 import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -77,19 +80,21 @@ public class PostProfileAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         final View mView = inflater.inflate(R.layout.item_post_profile, null);
         ButterKnife.bind(this, mView);
-        final String likes = mMyPposts.get(i).getLikes()+" Likes";
-        final String position = mMyPposts.get(i).getLocation()+"";
+        final String likes = mMyPposts.get(i).getLikes() + " Likes";
+        final String position = mMyPposts.get(i).getLocation() + "";
         personName.setText(InfoManager.getInstance().getmUser().getNickname());
         mComment.setText(mMyPposts.get(i).getComment());
         mData.setText(mMyPposts.get(i).getDate());
         mPosition.setText(position);
         nNumLikes.setText(likes);
-        Glide.with(mContext)
-                .load(InfoManager.getInstance().getmUser().getPathImg())
-                .fitCenter()
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                .error(mContext.getResources().getDrawable(R.drawable.default_user))
-                .into(userImage);
+        if (!InfoManager.getInstance().getmUser().getPathImg().equals(""))
+            Glide.with(mContext)
+                    .load(InfoManager.getInstance().getmUser().getPathImg())
+                    .fitCenter()
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .error(mContext.getResources().getDrawable(R.drawable.default_user))
+                    .into(userImage);
+
         Glide.with(mContext)
                 .load(mMyPposts.get(i).getPostImagePost())
                 .fitCenter()

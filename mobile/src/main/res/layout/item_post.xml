@@ -39,7 +39,7 @@
                         android:id="@+id/image_profile_post"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
-                        android:src="@color/grey_100" />
+                        android:src="@drawable/default_user" />
 
                     <TextView
                         android:id="@+id/full_name_post"

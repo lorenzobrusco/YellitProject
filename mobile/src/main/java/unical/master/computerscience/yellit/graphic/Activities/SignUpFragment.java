@@ -258,40 +258,69 @@ public class SignUpFragment extends Fragment {
         final String name = _nameText.getText().toString();
         final String email = _emailText.getText().toString();
         final String password = _passwordText.getText().toString();
-        final File file = new File(currentPhotoPath);
-        RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
-        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
-        RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
-        RequestBody newName = RequestBody.create(MediaType.parse("text/plain"), name);
-        RequestBody newEmail = RequestBody.create(MediaType.parse("text/plain"), email);
-        RequestBody newPassword = RequestBody.create(MediaType.parse("text/plain"), password);
-        Toast.makeText(this.getContext(), bodyToString(newEmail), Toast.LENGTH_SHORT).show();
-        final Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BaseURL.URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        final SigninService signinService = retrofit.create(SigninService.class);
-        final Call<User> call = signinService.createProfile(fileToUpload, filename, newName, newEmail, newPassword);
-        call.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                final User profile = response.body();
-                if (profile != null) {
-                    InfoManager.getInstance().setmUser(profile);
-                    PrefManager.getInstace(getContext()).setUser(email + "#" + password);
-                    mProgressDialog.dismiss();
-                    onSignupSuccess();
-                } else {
-                    buildDialogFilter();
+        if(!currentPhotoPath.equals("")){
+            final File file = new File(currentPhotoPath);
+            RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
+            MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
+            RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
+            RequestBody newName = RequestBody.create(MediaType.parse("text/plain"), name);
+            RequestBody newEmail = RequestBody.create(MediaType.parse("text/plain"), email);
+            RequestBody newPassword = RequestBody.create(MediaType.parse("text/plain"), password);
+            final Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(BaseURL.URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+            final SigninService signinService = retrofit.create(SigninService.class);
+            final Call<User> call = signinService.createProfile(fileToUpload, filename, newName, newEmail, newPassword);
+            call.enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    final User profile = response.body();
+                    if (profile != null) {
+                        InfoManager.getInstance().setmUser(profile);
+                        PrefManager.getInstace(getContext()).setUser(email + "#" + password);
+                        mProgressDialog.dismiss();
+                        onSignupSuccess();
+                    } else {
+                        buildDialogFilter();
+                    }
+
                 }
 
-            }
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+                    buildDialogFilter();
+                }
+            });
+        } else {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(BaseURL.URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+            SigninService signinService = retrofit.create(SigninService.class);
+            Call<User> call = signinService.createProfileWithoutFile("", name, "", email, password);
+            call.enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    final User profile = response.body();
+                    if (profile != null && profile.getEmail() != null) {
+                        InfoManager.getInstance().setmUser(profile);
+                        PrefManager.getInstace(SignUpFragment.this.getContext()).setUser(email + "#" + password);
+                        onSignupSuccess();
+                    } else {
+                        SignUpFragment.this.onSignupFailed();
+                        Toast.makeText(getContext(), "Error during load facebook info", Toast.LENGTH_SHORT).show();
+                    }
+                }
 
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                buildDialogFilter();
-            }
-        });
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+                    Toast.makeText(getContext(), "Error during load facebook info", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+
     }
 
     //TODO remove it

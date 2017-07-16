@@ -30,6 +30,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import cz.msebera.android.httpclient.client.cache.Resource;
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -90,7 +91,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         final Post currPost = mPosts.get(position);
         final String likes = currPost.getLikes() + " Like";
         holder.setImagePost(currPost.getPostImagePost());
-        holder.setUserImage(currPost.getUserImagePath());
+        if (!currPost.getUserImagePath().equals(""))
+            holder.setUserImage(currPost.getUserImagePath());
         holder.personName.setText(currPost.getUserName());
         holder.commentText.setText(currPost.getComment());
         if (currPost.getComment() == null || currPost.getComment().equals("")) {
@@ -99,7 +101,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         holder.mType.setText(GenerateMainCategories.getMacro(mContext, currPost.getType()));
         holder.mLikeContent.setText(likes);
         holder.mDataPost.setText(currPost.getDate());
-        holder.mPosition.setText(currPost.getLocation());
+        if (currPost.getLocation() == null || currPost.getLocation().equals(""))
+            holder.mPositionPost.setVisibility(View.GONE);
+        else
+            holder.mPosition.setText(currPost.getLocation());
         this.isLike(InfoManager.getInstance().getmUser().getEmail(), mPosts.get(position).getIdPost(), holder);
         holder.mLikeButton.setOnLikeListener(new OnLikeListener() {
             @Override
@@ -162,6 +167,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
     /**
      * change the list of posts
+     *
      * @param posts
      */
     public void changeList(List<Post> posts) {
@@ -170,6 +176,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
     /**
      * Check if user likes this post
+     *
      * @param email
      * @param id
      * @return
@@ -202,7 +209,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     }
 
 
-
     /**
      * Adpter
      */
@@ -230,6 +236,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         LikeButton mLikeButton;
         @Bind(R.id.like_post_content)
         TextView mLikeContent;
+        @Bind(R.id.position_post)
+        LinearLayout mPositionPost;
         @Bind(R.id.type_post)
         TextView mType;
         @Bind(R.id.data_post)
@@ -298,7 +306,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         }
 
     }
-
 
 
 }
