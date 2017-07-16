@@ -202,7 +202,7 @@ public class LoginFragment extends Fragment {
             public void onResponse(Call<User[]> call, Response<User[]> response) {
                 User[] users = response.body();
                 List<User> usersList = new ArrayList<User>();
-                for(User user : users){
+                for (User user : users) {
                     usersList.add(user);
                 }
                 InfoManager.getInstance().setmAllUsers(usersList);
@@ -249,7 +249,7 @@ public class LoginFragment extends Fragment {
             _emailText.setError(null);
         }
 
-        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
+        if (password.isEmpty() || password.length() < 4) {
             _passwordText.setError("between 4 and 10 alphanumeric characters");
             valid = false;
         } else {
@@ -276,15 +276,17 @@ public class LoginFragment extends Fragment {
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-
                 final User profile = response.body();
-                InfoManager.getInstance().setmUser(profile);
                 if (profile != null) {
-                    onLoginSuccess();
-                    PrefManager.getInstace(getContext()).setUser(email + "#" + password);
-                    correct[0] = true;
+                    if (profile.getEmail() == null) {
+                        buildErrorDialog();
+                    } else {
+                        onLoginSuccess();
+                        InfoManager.getInstance().setmUser(profile);
+                        PrefManager.getInstace(getContext()).setUser(email + "#" + password);
+                        correct[0] = true;
+                    }
                 } else {
-                    LoginFragment.this.buildErrorDialog();
                     buildErrorDialog();
                     correct[0] = false;
                 }
