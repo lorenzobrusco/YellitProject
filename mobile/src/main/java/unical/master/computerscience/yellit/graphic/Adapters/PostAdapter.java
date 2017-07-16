@@ -22,6 +22,7 @@ import com.bumptech.glide.request.target.Target;
 import com.google.gson.GsonBuilder;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -82,7 +83,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         final String likes = currPost.getLikes() + " Like";
         holder.personName.setText(currPost.getUserName());
         holder.commentText.setText(currPost.getComment());
-        if (currPost.getComment() == null && currPost.getComment().equals(""))
+        if (currPost.getComment() == null || currPost.getComment().equals(""))
             holder.commentText.setVisibility(View.GONE);
         holder.setImagePost(currPost.getPostImagePost());
         holder.setUserImage(currPost.getUserImagePath());
@@ -240,55 +241,26 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         }
 
         void setUserImage(String userImgPath) {
-            if (userImgPath != null && !userImgPath.equals("") && !userImgPath.equals("NULL")) {
-                Glide.with(mContext)
-                        .load(userImgPath)
-                        .listener(new RequestListener<String, GlideDrawable>() {
-                            @Override
-                            public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                                progressBar.setVisibility(View.GONE);
-                                userInfo.setVisibility(View.VISIBLE);
-                                actionUser.setVisibility(View.VISIBLE);
-                                commentUser.setVisibility(View.VISIBLE);
-                                return false;
-                            }
-
-                            @Override
-                            public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                                progressBar.setVisibility(View.GONE);
-                                userInfo.setVisibility(View.VISIBLE);
-                                actionUser.setVisibility(View.VISIBLE);
-                                commentUser.setVisibility(View.VISIBLE);
-                                return false;
-                            }
-
-                        })
-                        .fitCenter()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .error(mContext.getResources().getDrawable(R.drawable.default_user))
-                        .into(userImage);
-            }
+            Glide.with(mContext)
+                    .load(userImgPath)
+                    .fitCenter()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(userImage);
         }
 
         void setImagePost(String imagePath) {
+            hideAll();
             Glide.with(mContext)
                     .load(imagePath)
                     .listener(new RequestListener<String, GlideDrawable>() {
                         @Override
                         public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                            progressBar.setVisibility(View.GONE);
-                            userInfo.setVisibility(View.VISIBLE);
-                            actionUser.setVisibility(View.VISIBLE);
-                            commentUser.setVisibility(View.VISIBLE);
                             return false;
                         }
 
                         @Override
                         public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                            progressBar.setVisibility(View.GONE);
-                            userInfo.setVisibility(View.VISIBLE);
-                            actionUser.setVisibility(View.VISIBLE);
-                            commentUser.setVisibility(View.VISIBLE);
+                            showAll();
                             return false;
                         }
                     })
@@ -302,9 +274,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
          */
         public void hideAll() {
             progressBar.setVisibility(View.VISIBLE);
-            userInfo.setVisibility(View.INVISIBLE);
+            personName.setVisibility(View.INVISIBLE);
+            mDataPost.setVisibility(View.INVISIBLE);
+            mLikeContent.setVisibility(View.INVISIBLE);
+            mLikeButton.setVisibility(View.INVISIBLE);
             actionUser.setVisibility(View.INVISIBLE);
-            commentUser.setVisibility(View.GONE);
+            userImage.setVisibility(View.INVISIBLE);
+            commentUser.setVisibility(View.INVISIBLE);
         }
 
         /**
@@ -312,8 +288,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
          */
         public void showAll() {
             progressBar.setVisibility(View.GONE);
-            userInfo.setVisibility(View.VISIBLE);
+            personName.setVisibility(View.VISIBLE);
+            mDataPost.setVisibility(View.VISIBLE);
+            mLikeContent.setVisibility(View.VISIBLE);
+            mLikeButton.setVisibility(View.VISIBLE);
             actionUser.setVisibility(View.VISIBLE);
+            userImage.setVisibility(View.VISIBLE);
             commentUser.setVisibility(View.VISIBLE);
         }
     }

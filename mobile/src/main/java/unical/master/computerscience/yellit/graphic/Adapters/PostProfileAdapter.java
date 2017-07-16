@@ -78,10 +78,11 @@ public class PostProfileAdapter extends BaseAdapter {
         final View mView = inflater.inflate(R.layout.item_post_profile, null);
         ButterKnife.bind(this, mView);
         final String likes = mMyPposts.get(i).getLikes()+" Likes";
+        final String position = mMyPposts.get(i).getLocation()+"";
         personName.setText(InfoManager.getInstance().getmUser().getNickname());
         mComment.setText(mMyPposts.get(i).getComment());
         mData.setText(mMyPposts.get(i).getDate());
-        mPosition.setText(mMyPposts.get(i).getLocation());
+        mPosition.setText(position);
         nNumLikes.setText(likes);
         Glide.with(mContext)
                 .load(InfoManager.getInstance().getmUser().getPathImg())
@@ -93,7 +94,6 @@ public class PostProfileAdapter extends BaseAdapter {
                 .load(mMyPposts.get(i).getPostImagePost())
                 .fitCenter()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .error(mContext.getResources().getDrawable(R.mipmap.ic_launcher))
                 .into(imagePost);
         return mView;
     }

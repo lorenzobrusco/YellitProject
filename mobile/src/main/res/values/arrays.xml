@@ -11,10 +11,10 @@
     <!--> Categorie e Sottocategorie <-->
     <array name="main_categories">
         <item>Fitness</item>
-        <item>Food and Drink</item>
         <item>Inside</item>
         <item>Outside</item>
-        <item>Travel</item>
+        <item>Food and Drink</item>
+        <item>Others</item>
     </array>
 
 
@@ -45,7 +45,7 @@
     </array>
 
 
-    <!--Travel-->
+    <!--Fitness-->
     <array name="sub_categories_1">
     </array>
 
@@ -63,6 +63,7 @@
         <item>Films</item>
         <item>Reading</item>
         <item>Cooking</item>
+        <item>Studing</item>
         <item>Back</item>
     </array>
 
@@ -70,6 +71,7 @@
         <item>@color/blue_800</item>
         <item>@color/blue_900</item>
         <item>@color/blue_600</item>
+        <item>@color/blue_700</item>
         <item>@color/blue_500</item>
         <item>@color/page4</item>
     </array>
@@ -107,7 +109,7 @@
         <item>@color/page4</item>
     </array>
 
-    <!-- Fitness-->
+    <!-- Others-->
     <array name="sub_categories_5">
     </array>
 

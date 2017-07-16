@@ -77,6 +77,8 @@ public class LoginFragment extends Fragment {
             public void onClick(View v) {
                 if (validate()) {
                     progressDialog.setIndeterminate(true);
+                    progressDialog.setCanceledOnTouchOutside(false);
+                    progressDialog.setCancelable(false);
                     progressDialog.setMessage("Authenticating...");
                     progressDialog.show();
                     login(false);
@@ -158,6 +160,11 @@ public class LoginFragment extends Fragment {
         }
 
         if (FacebookSdk.isFacebookRequestCode(requestCode)) {
+            progressDialog.setIndeterminate(true);
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.setCancelable(false);
+            progressDialog.setMessage("Authenticating...");
+            progressDialog.show();
             callbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }

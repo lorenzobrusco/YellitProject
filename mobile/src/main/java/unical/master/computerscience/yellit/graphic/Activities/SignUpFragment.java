@@ -136,7 +136,7 @@ public class SignUpFragment extends Fragment {
                                     final String id = object.getString("id");
 
                                     /** To get user image from facebook*/
-                                    final String filenameImage ="https://graph.facebook.com/" + id + "/picture?type=large";
+                                    final String filenameImage = "https://graph.facebook.com/" + id + "/picture?type=large";
                                     Retrofit retrofit = new Retrofit.Builder()
                                             .baseUrl(BaseURL.URL)
                                             .addConverterFactory(GsonConverterFactory.create())
@@ -190,58 +190,6 @@ public class SignUpFragment extends Fragment {
             }
         });
         return view;
-    }
-
-    /**
-     * Store image from facebook
-     * @param image
-     */
-    private void storeImage(Bitmap image) {
-        File pictureFile = getOutputMediaFile();
-        if (pictureFile == null) {
-            Log.d(TAG,
-                    "Error creating media file, check storage permissions: ");// e.getMessage());
-            return;
-        }
-        try {
-            FileOutputStream fos = new FileOutputStream(pictureFile);
-            image.compress(Bitmap.CompressFormat.PNG, 90, fos);
-            fos.close();
-        } catch (FileNotFoundException e) {
-            Log.d(TAG, "File not found: " + e.getMessage());
-        } catch (IOException e) {
-            Log.d(TAG, "Error accessing file: " + e.getMessage());
-        }
-    }
-
-
-    /**
-     * Create a File for saving an image
-     * @return file
-     */
-    private  File getOutputMediaFile(){
-        // To be safe, you should check that the SDCard is mounted
-        // using Environment.getExternalStorageState() before doing this.
-        File mediaStorageDir = new File(Environment.getExternalStorageDirectory()
-                + "/Android/data/"
-                + getApplicationContext().getPackageName()
-                + "/Files");
-
-        // This location works best if you want the created images to be shared
-        // between applications and persist after your app has been uninstalled.
-
-        // Create the storage directory if it does not exist
-        if (! mediaStorageDir.exists()){
-            if (! mediaStorageDir.mkdirs()){
-                return null;
-            }
-        }
-        // Create a media file name
-        String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmm").format(new Date());
-        File mediaFile;
-        String mImageName="MI_"+ timeStamp +".jpg";
-        mediaFile = new File(mediaStorageDir.getPath() + File.separator + mImageName);
-        return mediaFile;
     }
 
 
@@ -303,6 +251,8 @@ public class SignUpFragment extends Fragment {
         }
         _signupButton.setEnabled(false);
         mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setCanceledOnTouchOutside(false);
         mProgressDialog.setMessage("Creating Account...");
         mProgressDialog.show();
         final String name = _nameText.getText().toString();
@@ -371,7 +321,7 @@ public class SignUpFragment extends Fragment {
             public void onResponse(Call<User[]> call, Response<User[]> response) {
                 User[] users = response.body();
                 List<User> usersList = new ArrayList<>();
-                for(User user : users){
+                for (User user : users) {
                     usersList.add(user);
                 }
                 InfoManager.getInstance().setmAllUsers(usersList);
@@ -448,6 +398,11 @@ public class SignUpFragment extends Fragment {
         }
 
         if (FacebookSdk.isFacebookRequestCode(requestCode)) {
+            mProgressDialog.setIndeterminate(true);
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.setCanceledOnTouchOutside(false);
+            mProgressDialog.setMessage("Getting info from Facebook");
+            mProgressDialog.show();
             callbackManager.onActivityResult(requestCode, resultCode, data);
         }
         if (requestCode == EZPhotoPick.PHOTO_PICK_CAMERA_REQUEST_CODE) {
