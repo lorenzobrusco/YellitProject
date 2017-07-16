@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -23,6 +24,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -119,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
         mSearchView.setQueryHint(" Search ");
         currentFragment = new PostFragment();
         mFavoritesCatogories = new HashSet<>();
+
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -127,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if(newText.length() > 0){
+                if(newText.length() >= 0){
                     mUsersList.setVisibility(View.VISIBLE);
                     mUsersAdapter.getFilter().filter(newText);
                 } else {
