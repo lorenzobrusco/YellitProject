@@ -679,10 +679,8 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         if (requestCode == EZPhotoPick.PHOTO_PICK_GALERY_REQUEST_CODE) {
 
             ArrayList<String> pickedPhotoNames = data.getStringArrayListExtra(EZPhotoPick.PICKED_PHOTO_NAMES_KEY);
-            for (String photoName : pickedPhotoNames) {
-                setupImagePicker(ezPhotoPickStorage.getAbsolutePathOfStoredPhoto(DEMO_PHOTO_PATH, photoName));
-                resetBottomSheet(false);
-            }
+            setupImagePicker(ezPhotoPickStorage.getAbsolutePathOfStoredPhoto(DEMO_PHOTO_PATH, pickedPhotoNames.get(0)));
+//            resetBottomSheet(false);
         } else if (requestCode == EZPhotoPick.PHOTO_PICK_CAMERA_REQUEST_CODE) {
 
             ArrayList<String> pickedPhotoNames = data.getStringArrayListExtra(EZPhotoPick.PICKED_PHOTO_NAMES_KEY);

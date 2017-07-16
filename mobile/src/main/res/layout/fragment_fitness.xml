@@ -18,17 +18,44 @@
             <ImageView
                 android:id="@+id/image_weather"
                 android:layout_width="match_parent"
-                android:scaleType="fitXY"
                 android:layout_height="160dp"
-                android:layout_marginBottom="4dp" />
+                android:layout_marginBottom="4dp"
+                android:scaleType="fitXY" />
 
             <include layout="@layout/card_weather_fitness" />
 
             <include layout="@layout/card_fitness_circle_progress_bar" />
 
-            <include layout="@layout/card_fitness_horizontal_progress_bar" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical">
 
-            <include layout="@layout/card_fitness_repo_monthly" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="serif"
+                    android:text="Coming soon"
+                    android:id="@+id/coming_soon_fitness"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/fitness_info_more_one_day"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <include layout="@layout/card_fitness_horizontal_progress_bar" />
+                    <include layout="@layout/card_fitness_repo_monthly" />
+                </LinearLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

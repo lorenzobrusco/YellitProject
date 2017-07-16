@@ -78,7 +78,7 @@ public class PostFragment extends Fragment {
                 Post[] posts = response.body();
 
                 if (posts != null)
-                    for (int i = posts.length - 1; i > 0; i--)
+                    for (int i = posts.length - 1; i >= 0; i--)
                         postsToShow.add(posts[i]);
 
                 InfoManager.getInstance().setmPostList(postsToShow);

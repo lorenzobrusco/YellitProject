@@ -11,7 +11,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -69,6 +72,11 @@ public class FitnessFragment extends Fragment {
     ImageView mImageWeather;
     @Bind(R.id.progressBar_weather)
     ProgressBar mWeatherProgressBar;
+    @Bind(R.id.coming_soon_fitness)
+    TextView mComingSoon;
+    @Bind(R.id.fitness_info_more_one_day)
+    LinearLayout mInfoMoreOneDay;
+    private Animation mAnimationDown;
     private int mBackIndex;
     private int mSeries1Index;
     private int mSeries2Index;
@@ -84,10 +92,22 @@ public class FitnessFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_fitness, container, false);
         ButterKnife.bind(this, view);
         createBackSeries();
+        //TODO Cosco non gli passare la città a mano ma fattela calcolare
         updateWeatherData("Cosenza");
+        mAnimationDown = AnimationUtils.loadAnimation(this.getContext(), R.anim.slide_down);
+
+        mComingSoon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAnimationDown.reset();
+                mInfoMoreOneDay.clearAnimation();
+                mInfoMoreOneDay.startAnimation(mAnimationDown);
+                mInfoMoreOneDay.setVisibility(mInfoMoreOneDay.isShown()
+                        ? View.GONE : View.VISIBLE);
+            }
+        });
         GoogleApiClient.getInstance((AppCompatActivity) getActivity()).readFitnessHistory(getContext());
         GoogleApiClient.getInstance((AppCompatActivity) getActivity()).readFitnessGoal(getContext());
-//        GoogleApiClient.getInstance((AppCompatActivity) getActivity()).unsubscribeAllFitnessRecord(getContext());
         createDataSeries1();
         createDataSeries2();
         createDataSeries3();
@@ -101,7 +121,7 @@ public class FitnessFragment extends Fragment {
 
     private void updateWeatherData(final String city) {
 
-        new AsyncTask<String, Void, JSONObject>(){
+        new AsyncTask<String, Void, JSONObject>() {
 
             @Override
             protected void onPreExecute() {
@@ -153,8 +173,7 @@ public class FitnessFragment extends Fragment {
         super.onStop();
     }
 
-    private void initWeather(JSONObject data)
-    {
+    private void initWeather(JSONObject data) {
         try {
             Calendar c = Calendar.getInstance();
             SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
@@ -170,29 +189,25 @@ public class FitnessFragment extends Fragment {
         }
     }
 
-    private void setWeatherIcon(String weather)
-    {
-        if(weather.contains("thunderstorm")) {
+    private void setWeatherIcon(String weather) {
+        if (weather.contains("thunderstorm")) {
             mIconWeather.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_storm));
             mImageWeather.setImageDrawable(getContext().getResources().getDrawable(R.drawable.lightning));
-        }
-        else if(weather.contains("snow")) {
+        } else if (weather.contains("snow")) {
             mIconWeather.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_snow));
             mImageWeather.setImageDrawable(getContext().getResources().getDrawable(R.drawable.snow));
-        }
-        else if(weather.contains("cloud")) {
+        } else if (weather.contains("cloud")) {
             mIconWeather.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_cloudy));
             mImageWeather.setImageDrawable(getContext().getResources().getDrawable(R.drawable.cloud));
-        }
-        else if(weather.contains("clear")) {
+        } else if (weather.contains("clear")) {
             mIconWeather.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_clear));
             mImageWeather.setImageDrawable(getContext().getResources().getDrawable(R.drawable.sun));
-        }
-        else if(weather.contains("rain")) {
+        } else if (weather.contains("rain")) {
             mIconWeather.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_rain));
             mImageWeather.setImageDrawable(getContext().getResources().getDrawable(R.drawable.rain));
         }
     }
+
     private void initLineView(LineView lineView) {
         ArrayList<String> test = new ArrayList<>();
         for (int i = 0; i < randomint; i++) {
@@ -204,7 +219,6 @@ public class FitnessFragment extends Fragment {
         lineView.setShowPopup(LineView.SHOW_POPUPS_NONE);
 
     }
-
 
 
     private void randomSet(LineView lineViewFloat) {
@@ -278,7 +292,7 @@ public class FitnessFragment extends Fragment {
         seriesItem.addArcSeriesItemListener(new SeriesItem.SeriesItemListener() {
             @Override
             public void onSeriesItemAnimationProgress(float percentComplete, float currentPosition) {
-                textActivity1.setText(String.format("%.0f Steps",(float) InfoManager.getInstance().getmFitnessSessionData().steps));
+                textActivity1.setText(String.format("%.0f Steps", (float) InfoManager.getInstance().getmFitnessSessionData().steps));
             }
 
             @Override
@@ -300,7 +314,7 @@ public class FitnessFragment extends Fragment {
         seriesItem.addArcSeriesItemListener(new SeriesItem.SeriesItemListener() {
             @Override
             public void onSeriesItemAnimationProgress(float percentComplete, float currentPosition) {
-                textActivity2.setText(String.format("%.2f Kcal",InfoManager.getInstance().getmFitnessSessionData().calories));
+                textActivity2.setText(String.format("%.2f Kcal", InfoManager.getInstance().getmFitnessSessionData().calories));
             }
 
             @Override
