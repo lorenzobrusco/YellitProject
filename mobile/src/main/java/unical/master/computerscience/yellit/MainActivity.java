@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if(newText.length() >= 0){
+                if(newText.length() > 0){
                     mUsersList.setVisibility(View.VISIBLE);
                     mUsersAdapter.getFilter().filter(newText);
                 } else {

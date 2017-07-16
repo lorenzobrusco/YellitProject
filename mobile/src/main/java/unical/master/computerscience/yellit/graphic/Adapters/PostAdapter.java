@@ -92,11 +92,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         final Post currPost = mPosts.get(position);
         final String likes = currPost.getLikes() + " Like";
         holder.setImagePost(currPost.getPostImagePost());
-        if (!currPost.getUserImagePath().equals(""))
-            holder.setUserImage(currPost.getUserImagePath());
+        holder.setUserImage(currPost.getUserImagePath());
         holder.personName.setText(currPost.getUserName());
         holder.commentText.setText(currPost.getComment());
-        if (currPost.getComment() == null || currPost.getComment().equals("")) {
+        if (currPost.getComment() == null) {
             holder.commentText.setVisibility(View.GONE);
         }
         holder.mType.setText(GenerateMainCategories.getMacro(mContext, currPost.getType()));
@@ -262,10 +261,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         void setUserImage(String userImgPath) {
             Glide.with(mContext)
                     .load(userImgPath)
-                    .fitCenter()
                     .crossFade()
-                    .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .placeholder(R.drawable.default_user)
+                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .into(userImage);
         }
 
@@ -273,9 +271,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             Glide.with(mContext)
                     .load(imagePath)
                     .fitCenter()
-                    .crossFade()
-                    .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .into(imagePost);
         }
 
