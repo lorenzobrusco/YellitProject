@@ -56,7 +56,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="serif"
-            android:text="Today, May 10"
             android:textColor="@color/black"
             android:textSize="20dp"
             app:layout_constraintBottom_toTopOf="@+id/type_weather"

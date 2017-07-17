@@ -53,6 +53,7 @@ import unical.master.computerscience.yellit.logic.GoogleApiClient;
 import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.logic.objects.Friend;
 import unical.master.computerscience.yellit.logic.objects.Post;
+import unical.master.computerscience.yellit.logic.objects.User;
 import unical.master.computerscience.yellit.utilities.PrefManager;
 
 /**
@@ -94,7 +95,7 @@ public class ProfileFragment extends Fragment {
     @Bind(R.id.full_name_profile)
     protected TextView mFullNameProfile;
 
-    private List<Friend> mFriends;
+    private List<User> mFriends;
 
     private Animation mAnimationDown;
 
@@ -115,7 +116,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void setupInfo() {
-        if(InfoManager.getInstance().getmUser().getPathImg() != null) {
+        if (InfoManager.getInstance().getmUser().getPathImg() != null) {
             Glide.with(this)
                     .load(InfoManager.getInstance().getmUser().getPathImg())
                     .listener(new RequestListener<String, GlideDrawable>() {
@@ -134,7 +135,7 @@ public class ProfileFragment extends Fragment {
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(mPhotoProfile);
         }
-       mFullNameProfile.setText(InfoManager.getInstance().getmUser().getFullname() == null ? PrefManager.getInstace(getContext()).getUser().split("#")[0].toUpperCase() : InfoManager.getInstance().getmUser().getFullname().toUpperCase());
+        mFullNameProfile.setText(InfoManager.getInstance().getmUser().getFullname() == null ? PrefManager.getInstace(getContext()).getUser().split("#")[0].toUpperCase() : InfoManager.getInstance().getmUser().getFullname().toUpperCase());
     }
 
     private void setupButtonExpandLayout() {
@@ -187,42 +188,13 @@ public class ProfileFragment extends Fragment {
 
     private List<Post> initList() {
         final List<Post> posts = new ArrayList<>();
-        for(Post post : InfoManager.getInstance().getmPostList()){
-            if(post.getUserName().equals(InfoManager.getInstance().getmUser().getEmail()) ||
+        for (Post post : InfoManager.getInstance().getmPostList()) {
+            if (post.getUserName().equals(InfoManager.getInstance().getmUser().getEmail()) ||
                     post.getUserName().equals(InfoManager.getInstance().getmUser().getNickname()) ||
-                        post.getUserName().equals(InfoManager.getInstance().getmUser().getFullname()) )
+                    post.getUserName().equals(InfoManager.getInstance().getmUser().getFullname()))
                 posts.add(post);
         }
         return posts;
-    }
-
-    private List<Friend> initFriends() {
-        final List<Friend> friends = new ArrayList<>();
-        friends.add(new Friend("Lorenzo Brusco", ""));
-        friends.add(new Friend("Salvatore Isabella", ""));
-        friends.add(new Friend("Francesco Cosco", ""));
-        friends.add(new Friend("Francesca Tassoni", ""));
-        friends.add(new Friend("Eliana Cannella", ""));
-        friends.add(new Friend("Paola Arcuri", ""));
-        friends.add(new Friend("Lorenzo Brusco", ""));
-        friends.add(new Friend("Salvatore Isabella", ""));
-        friends.add(new Friend("Francesco Cosco", ""));
-        friends.add(new Friend("Francesca Tassoni", ""));
-        friends.add(new Friend("Eliana Cannella", ""));
-        friends.add(new Friend("Paola Arcuri", ""));
-        friends.add(new Friend("Lorenzo Brusco", ""));
-        friends.add(new Friend("Salvatore Isabella", ""));
-        friends.add(new Friend("Francesco Cosco", ""));
-        friends.add(new Friend("Francesca Tassoni", ""));
-        friends.add(new Friend("Eliana Cannella", ""));
-        friends.add(new Friend("Paola Arcuri", ""));
-        friends.add(new Friend("Lorenzo Brusco", ""));
-        friends.add(new Friend("Salvatore Isabella", ""));
-        friends.add(new Friend("Francesco Cosco", ""));
-        friends.add(new Friend("Francesca Tassoni", ""));
-        friends.add(new Friend("Eliana Cannella", ""));
-        friends.add(new Friend("Paola Arcuri", ""));
-        return friends;
     }
 
     private void setupRadar() {
@@ -318,7 +290,7 @@ public class ProfileFragment extends Fragment {
 
 
     private void setupFriendGridView() {
-        this.mFriends = this.initFriends();
+        this.mFriends = InfoManager.getInstance().getmAllUsers();
         mFriendsGridView.setAdapter(new ImageAdapter(getActivity()));
         this.gridViewSetting(this.mFriendsGridView);
     }
@@ -392,11 +364,17 @@ public class ProfileFragment extends Fragment {
             layout.setLayoutParams(new GridView.LayoutParams(200, 200));
             final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             picturesView.setLayoutParams(layoutParams);
-            Glide.with(context).load(mFriends.get(position).getPath())
-                    .centerCrop()
-                    .error(getResources().getDrawable(R.mipmap.ic_launcher))
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(picturesView);
+            if (mFriends.get(position).getPathImg() == null || mFriends.get(position).getPathImg().equals("")) {
+                Glide.with(context).load(R.drawable.default_user)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .override(170, 170)
+                        .into(picturesView);
+            } else {
+                Glide.with(context).load(mFriends.get(position).getPathImg())
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .override(170, 170)
+                        .into(picturesView);
+            }
             layout.addView(picturesView);
             layout.addView(name);
             return layout;

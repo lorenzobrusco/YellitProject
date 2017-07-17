@@ -38,8 +38,12 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.connection.LoginService;
+import unical.master.computerscience.yellit.connection.PostGestureService;
 import unical.master.computerscience.yellit.connection.UsersService;
+import unical.master.computerscience.yellit.graphic.Adapters.PostAdapter;
+import unical.master.computerscience.yellit.graphic.Fragments.PostFragment;
 import unical.master.computerscience.yellit.logic.InfoManager;
+import unical.master.computerscience.yellit.logic.objects.Post;
 import unical.master.computerscience.yellit.logic.objects.User;
 import unical.master.computerscience.yellit.utilities.BaseURL;
 import unical.master.computerscience.yellit.utilities.BuilderFile;
@@ -87,7 +91,7 @@ public class LoadActivity extends AppCompatActivity {
             if (doc.getElementById(ROOT) == null)
                 BuilderFile.getInstance().newXMLFile(this, BaseURL.FILENAME);
         } catch (ParserConfigurationException e) {
-            Toast.makeText(this,"Error from xml",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error from xml", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -95,10 +99,10 @@ public class LoadActivity extends AppCompatActivity {
      * Get the user info whether exists
      */
     private void getUserWhetherExists() {
-        final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Loading...");
-        progressDialog.show();
+//        final ProgressDialog progressDialog = new ProgressDialog(this);
+//        progressDialog.setIndeterminate(true);
+//        progressDialog.setMessage("Loading...");
+//        progressDialog.show();
         this.getUsers();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BaseURL.URL)
@@ -110,7 +114,6 @@ public class LoadActivity extends AppCompatActivity {
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                progressDialog.dismiss();
                 User profile = response.body();
                 InfoManager.getInstance().setmUser(profile);
                 startActivity(new Intent(getApplicationContext(), SafeModeActivity.class));
@@ -121,7 +124,6 @@ public class LoadActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<User> call, Throwable t) {
                 Log.e("Facebook signin", "errore di signin");
-                progressDialog.dismiss();
                 startActivity(new Intent(getApplicationContext(), LoginSignupActivity.class));
                 overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
                 finish();
@@ -133,6 +135,7 @@ public class LoadActivity extends AppCompatActivity {
      * halt this activity and call the new activity
      */
     private void startNewActivity() {
+        getAllPost();
         final Handler handler = new Handler();
         final Runnable runnable = new Runnable() {
             public void run() {
@@ -146,10 +149,10 @@ public class LoadActivity extends AppCompatActivity {
 
             }
         };
-        handler.postDelayed(runnable, 1000);
+        handler.postDelayed(runnable, 2000);
     }
 
-    private void getUsers(){
+    private void getUsers() {
         final Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BaseURL.URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -171,5 +174,49 @@ public class LoadActivity extends AppCompatActivity {
             public void onFailure(Call<User[]> call, Throwable t) {
             }
         });
+    }
+
+    /**
+     * Initi list of posts
+     *
+     * @return
+     */
+    private List<Post> getAllPost() {
+
+        final List<Post> postsToShow = new ArrayList<>();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BaseURL.URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        PostGestureService postService = retrofit.create(PostGestureService.class);
+        Call<Post[]> call = postService.getAllPosts("getAll");
+        call.enqueue(new Callback<Post[]>() {
+            @Override
+            public void onResponse(Call<Post[]> call, Response<Post[]> response) {
+
+                Post[] posts = response.body();
+
+                if (posts != null)
+                    for (int i = posts.length - 1; i >= 0; i--) {
+                        postsToShow.add(posts[i]);
+                    }
+
+                InfoManager.getInstance().setmPostList(postsToShow);
+                InfoManager.getInstance().setmPostFilteredList(postsToShow);
+                final PostAdapter mPostAdapter = new PostAdapter(getBaseContext(), InfoManager.getInstance().getmPostFilteredList());
+                InfoManager.getInstance().setmPostAdapter(mPostAdapter);
+            }
+
+            @Override
+            public void onFailure(Call<Post[]> call, Throwable t) {
+
+                Log.e("On failure", "Post looking for");
+                t.printStackTrace();
+            }
+        });
+
+        return postsToShow;
     }
 }

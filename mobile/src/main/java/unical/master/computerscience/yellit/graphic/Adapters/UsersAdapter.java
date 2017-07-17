@@ -18,6 +18,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.logic.objects.User;
@@ -35,7 +36,7 @@ public class UsersAdapter extends BaseAdapter implements Filterable {
     private LayoutInflater inflater;
     private Context mContext;
     @Bind(R.id.image_user_search_bar)
-    RoundedImageView mUserImage;
+    CircleImageView mUserImage;
     @Bind(R.id.email_search_bar)
     TextView mEmailSearchBar;
 

@@ -88,7 +88,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
      */
     @Override
     public void onBindViewHolder(final PostViewHolder holder, final int position) {
-        holder.hideAll();
         final Post currPost = mPosts.get(position);
         final String likes = currPost.getLikes() + " Like";
         holder.setImagePost(currPost.getPostImagePost());
@@ -155,6 +154,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                 });
             }
         });
+
         holder.showAll();
     }
 
@@ -266,7 +266,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                     .load(userImgPath)
                     .fitCenter()
                     .placeholder(R.drawable.default_user)
-                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(userImage);
         }
 
@@ -274,23 +274,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             Glide.with(mContext)
                     .load(imagePath)
                     .fitCenter()
-                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(imagePost);
-        }
-
-        /**
-         * Show progress bar and hide all
-         */
-        public void hideAll() {
-            progressBar.setVisibility(View.VISIBLE);
-            personName.setVisibility(View.INVISIBLE);
-            mDataPost.setVisibility(View.INVISIBLE);
-            mLikeContent.setVisibility(View.INVISIBLE);
-            mLikeButton.setVisibility(View.INVISIBLE);
-            actionUser.setVisibility(View.INVISIBLE);
-            userImage.setVisibility(View.INVISIBLE);
-            imagePost.setVisibility(View.INVISIBLE);
-            commentUser.setVisibility(View.INVISIBLE);
         }
 
         /**

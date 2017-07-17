@@ -1,6 +1,9 @@
 package unical.master.computerscience.yellit.graphic.Fragments;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,12 +24,15 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import unical.master.computerscience.yellit.connection.PostGestureService;
+import unical.master.computerscience.yellit.graphic.Activities.LoadActivity;
+import unical.master.computerscience.yellit.graphic.Activities.LoginSignupActivity;
 import unical.master.computerscience.yellit.graphic.custom.PaddingItemDecoration;
 import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.logic.objects.Post;
 import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.graphic.Adapters.PostAdapter;
 import unical.master.computerscience.yellit.utilities.BaseURL;
+import unical.master.computerscience.yellit.utilities.PrefManager;
 
 /**
  * Created by Lorenzo on 14/03/2017.
@@ -42,76 +48,13 @@ public class PostFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_posts, container, false);
         ButterKnife.bind(this, view);
-
-        /**
-         * Decomment to have actual posts from database
-         */
-
-        this.initList();
-        /**
-         * Decomment to have fake posts for debugging purpose
-         * final PostAdapter mPostAdapter = new PostAdapter(PostFragment.this.getContext(), FAKE_initList());
-         * mPosts.setAdapter(mPostAdapter);
-         */
-
+        mPosts.setAdapter(InfoManager.getInstance().getmPostAdapter());
         mPosts.addItemDecoration(new PaddingItemDecoration(170));
         mPosts.setLayoutManager(new LinearLayoutManager(this.getContext()));
         return view;
     }
 
 
-    private List<Post> initList() {
 
-        final List<Post> postsToShow = new ArrayList<>();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BaseURL.URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        PostGestureService postService = retrofit.create(PostGestureService.class);
-        Call<Post[]> call = postService.getAllPosts("getAll");
-        call.enqueue(new Callback<Post[]>() {
-            @Override
-            public void onResponse(Call<Post[]> call, Response<Post[]> response) {
-
-                Post[] posts = response.body();
-
-                if (posts != null)
-                    for (int i = posts.length - 1; i >= 0; i--)
-                        postsToShow.add(posts[i]);
-
-                InfoManager.getInstance().setmPostList(postsToShow);
-                InfoManager.getInstance().setmPostFilteredList(postsToShow);
-                final PostAdapter mPostAdapter = new PostAdapter(PostFragment.this.getContext(), postsToShow);
-                InfoManager.getInstance().setmPostAdapter(mPostAdapter);
-                mPosts.setAdapter(mPostAdapter);
-
-            }
-
-            @Override
-            public void onFailure(Call<Post[]> call, Throwable t) {
-
-                Log.e("On failure", "Post looking for");
-                t.printStackTrace();
-            }
-        });
-
-        return postsToShow;
-    }
-
-    private List<Post> FAKE_initList() {
-
-        List<Post> posts = new ArrayList<Post>();
-
-        posts.add(new Post("Lorenzo Brusco"));
-        posts.add(new Post("Salvatore Isabella"));
-        posts.add(new Post("Francesco Cosco"));
-        posts.add(new Post("Francesca Tassoni"));
-        posts.add(new Post("Eliana Cannella"));
-        posts.add(new Post("Paola Arcuri"));
-
-        return posts;
-    }
 
 }

@@ -91,7 +91,7 @@ import unical.master.computerscience.yellit.utilities.BaseURL;
  */
 public class AddPostFragment extends Fragment implements OnChartValueSelectedListener {
 
-    private static final String DEMO_PHOTO_PATH = "Yellit";
+    private static final String DEMO_PHOTO_PATH = "MyDemoPhotoDir";
 
     @Bind(R.id.pie_menu)
     protected PieChart mainMenu;
@@ -113,8 +113,8 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
     protected ImageView transparentLayer;
     @Bind(R.id.tv_location_text)
     protected MaterialSpinner mLocationSpinner;
-    private ProgressDialog progressDialog;
 
+    private ProgressDialog progressDialog;
     private Typeface mTfRegular;
     private Typeface mTfLight;
     private String[] mainCategoryLabels;
@@ -183,7 +183,6 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                     sendPostFloatButton.setVisibility(View.INVISIBLE);
                     transparentLayer.setVisibility(View.GONE);
                     resetBottomSheet(true);
-
                 }
             }
 
@@ -640,7 +639,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         if (requestCode == EZPhotoPick.PHOTO_PICK_GALERY_REQUEST_CODE || requestCode == EZPhotoPick.PHOTO_PICK_CAMERA_REQUEST_CODE) {
             String photoName = data.getStringExtra(EZPhotoPick.PICKED_PHOTO_NAME_KEY);
             String photoPath = ezPhotoPickStorage.getAbsolutePathOfStoredPhoto(DEMO_PHOTO_PATH, photoName);
-            Toast.makeText(getContext(),photoPath,Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), photoPath, Toast.LENGTH_LONG).show();
             setupImagePicker(photoPath);
         }
 
