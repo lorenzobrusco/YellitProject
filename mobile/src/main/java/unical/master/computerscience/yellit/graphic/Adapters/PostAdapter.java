@@ -92,11 +92,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         final Post currPost = mPosts.get(position);
         final String likes = currPost.getLikes() + " Like";
         holder.setImagePost(currPost.getPostImagePost());
-        holder.setUserImage(currPost.getUserImagePath());
         holder.personName.setText(currPost.getUserName());
         holder.commentText.setText(currPost.getComment());
         if (currPost.getComment() == null) {
             holder.commentText.setVisibility(View.GONE);
+        } if(currPost.getUserImagePath() != null){
+            if(!currPost.getUserImagePath().equals("")){
+                holder.setUserImage(currPost.getUserImagePath());
+            }
         }
         holder.mType.setText(GenerateMainCategories.getMacro(mContext, currPost.getType()));
         holder.mLikeContent.setText(likes);
@@ -261,7 +264,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         void setUserImage(String userImgPath) {
             Glide.with(mContext)
                     .load(userImgPath)
-                    .crossFade()
+                    .fitCenter()
                     .placeholder(R.drawable.default_user)
                     .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .into(userImage);

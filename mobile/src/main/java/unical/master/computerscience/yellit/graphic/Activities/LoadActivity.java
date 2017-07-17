@@ -22,6 +22,8 @@ import org.w3c.dom.Document;
 import java.io.File;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -36,6 +38,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.connection.LoginService;
+import unical.master.computerscience.yellit.connection.UsersService;
 import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.logic.objects.User;
 import unical.master.computerscience.yellit.utilities.BaseURL;
@@ -84,7 +87,7 @@ public class LoadActivity extends AppCompatActivity {
             if (doc.getElementById(ROOT) == null)
                 BuilderFile.getInstance().newXMLFile(this, BaseURL.FILENAME);
         } catch (ParserConfigurationException e) {
-
+            Toast.makeText(this,"Error from xml",Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -96,6 +99,7 @@ public class LoadActivity extends AppCompatActivity {
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Loading...");
         progressDialog.show();
+        this.getUsers();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BaseURL.URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -143,5 +147,29 @@ public class LoadActivity extends AppCompatActivity {
             }
         };
         handler.postDelayed(runnable, 1000);
+    }
+
+    private void getUsers(){
+        final Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BaseURL.URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        final UsersService loginService = retrofit.create(UsersService.class);
+        Call<User[]> call = loginService.getAllUsers("allUsers");
+        call.enqueue(new Callback<User[]>() {
+            @Override
+            public void onResponse(Call<User[]> call, Response<User[]> response) {
+                User[] users = response.body();
+                List<User> usersList = new ArrayList<User>();
+                for (User user : users) {
+                    usersList.add(user);
+                }
+                InfoManager.getInstance().setmAllUsers(usersList);
+            }
+
+            @Override
+            public void onFailure(Call<User[]> call, Throwable t) {
+            }
+        });
     }
 }

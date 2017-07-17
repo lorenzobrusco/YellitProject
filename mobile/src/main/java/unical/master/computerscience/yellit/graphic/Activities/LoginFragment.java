@@ -75,14 +75,14 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                if (validate()) {
-                    progressDialog.setIndeterminate(true);
-                    progressDialog.setCanceledOnTouchOutside(false);
-                    progressDialog.setCancelable(false);
-                    progressDialog.setMessage("Authenticating...");
-                    progressDialog.show();
-                    login(false);
-                }
+
+                progressDialog.setIndeterminate(true);
+                progressDialog.setCanceledOnTouchOutside(false);
+                progressDialog.setCancelable(false);
+                progressDialog.setMessage("Authenticating...");
+                progressDialog.show();
+                login(false);
+
             }
         });
 

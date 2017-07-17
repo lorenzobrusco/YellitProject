@@ -3,19 +3,24 @@ package unical.master.computerscience.yellit.graphic.Activities;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -88,13 +93,13 @@ public class SignUpFragment extends Fragment {
     @Bind(R.id.profile_image_signup)
     protected ImageView _profileImage;
     @Bind(R.id.input_name_signup)
-    protected EditText _nameText;
+    protected TextInputEditText _nameText;
     @Bind(R.id.input_email_signup)
-    protected EditText _emailText;
+    protected TextInputEditText _emailText;
     @Bind(R.id.input_password_signup)
-    protected EditText _passwordText;
+    protected TextInputEditText _passwordText;
     @Bind(R.id.input_password_again_signup)
-    protected EditText _reEnterPasswordText;
+    protected TextInputEditText _reEnterPasswordText;
     @Bind(R.id.btn_login_signup)
     protected Button _signupButton;
     @Bind(R.id.btn_fb_login_signup)
@@ -323,18 +328,6 @@ public class SignUpFragment extends Fragment {
 
     }
 
-    //TODO remove it
-    private static String bodyToString(final RequestBody request) {
-        try {
-            final RequestBody copy = request;
-            final Buffer buffer = new Buffer();
-            copy.writeTo(buffer);
-            return buffer.readUtf8();
-        } catch (final IOException e) {
-            return "did not work";
-        }
-    }
-
     /**
      * It used to start the next activity because the sign in is successed
      */
@@ -355,7 +348,6 @@ public class SignUpFragment extends Fragment {
                 }
                 InfoManager.getInstance().setmAllUsers(usersList);
                 mProgressDialog.dismiss();
-                _signupButton.setEnabled(true);
                 getActivity().setResult(RESULT_OK, null);
                 startActivity(new Intent(getContext(), MainActivity.class));
                 getActivity().finish();
@@ -364,7 +356,6 @@ public class SignUpFragment extends Fragment {
             @Override
             public void onFailure(Call<User[]> call, Throwable t) {
                 mProgressDialog.dismiss();
-                _signupButton.setEnabled(true);
                 getActivity().setResult(RESULT_OK, null);
                 startActivity(new Intent(getContext(), MainActivity.class));
                 getActivity().finish();
@@ -377,12 +368,12 @@ public class SignUpFragment extends Fragment {
      * It used when the sign in is failed and notify the user
      */
     public void onSignupFailed() {
+        buildErrorDialog();
         Toast.makeText(getContext(), "Signin failed", Toast.LENGTH_LONG).show();
-        _signupButton.setEnabled(true);
     }
 
     /**
-     * It used to chack if the input is correct or not
+     * It used to check if the input is correct or not
      */
     //TODO fix validate
     public boolean validate() {
@@ -392,28 +383,18 @@ public class SignUpFragment extends Fragment {
         final String password = _passwordText.getText().toString();
         final String reEnterPassword = _reEnterPasswordText.getText().toString();
         if (name.isEmpty() || name.length() < 3) {
-            _nameText.setError("at least 3 characters");
             valid = false;
-        } else {
-            _nameText.setError(null);
         }
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            _emailText.setError("enter a valid email address");
             valid = false;
-        } else {
-            _emailText.setError(null);
         }
-        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            _passwordText.setError("between 4 and 10 alphanumeric characters");
+        if (password.isEmpty() ) {
             valid = false;
-        } else {
-            _passwordText.setError(null);
         }
-        if (reEnterPassword.isEmpty() || reEnterPassword.length() < 4 || reEnterPassword.length() > 10 || !(reEnterPassword.equals(password))) {
+        if (!(reEnterPassword.equals(password))) {
             _reEnterPasswordText.setError("Password Do not match");
+            Toast.makeText(getContext(),"Password Do not match",Toast.LENGTH_SHORT).show();
             valid = false;
-        } else {
-            _reEnterPasswordText.setError(null);
         }
         return valid;
     }
@@ -458,4 +439,29 @@ public class SignUpFragment extends Fragment {
         }
         choosePhotoDialog.dismiss();
     }
+
+
+    /**
+     * It called to create a dialog that notify to the user an error incontrato during the login
+     */
+    private void buildErrorDialog() {
+        mProgressDialog.dismiss();
+        new AlertDialog.Builder(getContext())
+                .setTitle("Sign in  failed")
+                .setMessage(R.string.signin_constraint)
+                .setCancelable(false)
+                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .show();
+        this._emailText.setText("");
+        this._passwordText.setText("");
+        final InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+
+    }
+
+
 }

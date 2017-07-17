@@ -87,5 +87,6 @@
     </string-array>
 
     <string name="facebook_app_id">314270565670185</string>
+    <string name="signin_constraint" >To register you should respect the following constraints\nEmail correct\nNick name non empty\nPassword with at leat 4 characters</string>
 
 </resources>

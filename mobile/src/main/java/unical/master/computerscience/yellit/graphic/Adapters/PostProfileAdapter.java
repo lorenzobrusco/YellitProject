@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -54,6 +55,9 @@ public class PostProfileAdapter extends BaseAdapter {
     @Bind(R.id.position_post_text)
     TextView mPosition;
 
+    @Bind(R.id.position_post)
+    LinearLayout commentText;
+
     public PostProfileAdapter(List<Post> mMyPposts, Context mContext) {
         this.mMyPposts = mMyPposts;
         this.mContext = mContext;
@@ -84,6 +88,8 @@ public class PostProfileAdapter extends BaseAdapter {
         final String position = mMyPposts.get(i).getLocation() + "";
         personName.setText(InfoManager.getInstance().getmUser().getNickname());
         mComment.setText(mMyPposts.get(i).getComment());
+        if (mMyPposts.get(i).getComment() == null)
+            commentText.setVisibility(View.GONE);
         mData.setText(mMyPposts.get(i).getDate());
         mPosition.setText(position);
         nNumLikes.setText(likes);

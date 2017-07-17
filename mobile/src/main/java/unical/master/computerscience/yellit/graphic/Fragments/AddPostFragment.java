@@ -10,6 +10,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
@@ -55,6 +56,7 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -89,7 +91,7 @@ import unical.master.computerscience.yellit.utilities.BaseURL;
  */
 public class AddPostFragment extends Fragment implements OnChartValueSelectedListener {
 
-    private static final String DEMO_PHOTO_PATH = "MyDemoPhotoDir";
+    private static final String DEMO_PHOTO_PATH = "Yellit";
 
     @Bind(R.id.pie_menu)
     protected PieChart mainMenu;
@@ -265,10 +267,8 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                     EZPhotoPickConfig config = new EZPhotoPickConfig();
                     config.photoSource = PhotoSource.CAMERA;
                     config.storageDir = DEMO_PHOTO_PATH;
-                    config.needToAddToGallery = true;
                     config.exportingSize = 1000;
                     EZPhotoPick.startPhotoPickActivity(AddPostFragment.this, config);
-
                 } catch (PhotoIntentException e) {
                     e.printStackTrace();
                 }
@@ -365,7 +365,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
             @Override
             public void onFailure(Call<ServerResponse> call, Throwable t) {
-                Toast.makeText(getContext(), "Fallimento " + call.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Error to create new post ", Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -565,28 +565,6 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         }
     }
 
-    private void handleSubMenu(Entry e, Highlight h) {
-
-        int index = (int) h.getX();
-
-        switch (index) {
-
-            case 0:
-                openBottomSheet();
-            case 1:
-            case 2:
-            case 3:
-
-                break;
-
-            default:
-                isSubMenu = false;
-                lastSubMenu = -1;
-                mainMenu.startAnimation(expandIn);
-                break;
-        }
-    }
-
     private void openBottomSheet() {
 
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
@@ -597,25 +575,13 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
             places.add("No places detected");
         }
         mLocationSpinner.setItems(places);
-        mLocationSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
-            @Override
-            public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
 
-                Snackbar.make(view, "Clicked " + item + " at " + position, Snackbar.LENGTH_LONG).show();
-                Snackbar.make(view, InfoManager.getInstance().getmPlaceData().latLongs.get(position).latitude + " lat", Snackbar.LENGTH_LONG).show();
-            }
-        });
     }
 
     private void handleSubMenuCategory2(Entry e, Highlight h) {
 
         int index = (int) h.getX();
-
         switch (index) {
-
-            case 0:
-            case 1:
-            case 2:
             case 4:
                 openBottomSheet();
                 break;
@@ -632,8 +598,6 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         int index = (int) h.getX();
 
         switch (index) {
-            case 0:
-            case 1:
             case 2:
                 openBottomSheet();
                 break;
@@ -650,9 +614,6 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         int index = (int) h.getX();
 
         switch (index) {
-            case 0:
-            case 1:
-            case 2:
             case 3:
                 openBottomSheet();
                 break;
@@ -676,16 +637,53 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
             return;
         }
 
-        if (requestCode == EZPhotoPick.PHOTO_PICK_GALERY_REQUEST_CODE) {
-            ArrayList<String> pickedPhotoNames = data.getStringArrayListExtra(EZPhotoPick.PICKED_PHOTO_NAMES_KEY);
-            setupImagePicker(ezPhotoPickStorage.getAbsolutePathOfStoredPhoto(DEMO_PHOTO_PATH, pickedPhotoNames.get(0)));
-        } else if (requestCode == EZPhotoPick.PHOTO_PICK_CAMERA_REQUEST_CODE) {
-                ArrayList<String> pickedPhotoNames = data.getStringArrayListExtra(EZPhotoPick.PICKED_PHOTO_NAMES_KEY);
-                setupImagePicker(ezPhotoPickStorage.getAbsolutePathOfStoredPhoto(DEMO_PHOTO_PATH, pickedPhotoNames.get(0)));
-                resetBottomSheet(false);
-
+        if (requestCode == EZPhotoPick.PHOTO_PICK_GALERY_REQUEST_CODE || requestCode == EZPhotoPick.PHOTO_PICK_CAMERA_REQUEST_CODE) {
+            String photoName = data.getStringExtra(EZPhotoPick.PICKED_PHOTO_NAME_KEY);
+            String photoPath = ezPhotoPickStorage.getAbsolutePathOfStoredPhoto(DEMO_PHOTO_PATH, photoName);
+            Toast.makeText(getContext(),photoPath,Toast.LENGTH_LONG).show();
+            setupImagePicker(photoPath);
         }
+
+//        if (requestCode == EZPhotoPick.PHOTO_PICK_GALERY_REQUEST_CODE) {
+//            ArrayList<String> pickedPhotoNames = data.getStringArrayListExtra(EZPhotoPick.PICKED_PHOTO_NAMES_KEY);
+//            setupImagePicker(ezPhotoPickStorage.getAbsolutePathOfStoredPhoto(DEMO_PHOTO_PATH, pickedPhotoNames.get(0)));
+//        } else if (requestCode == EZPhotoPick.PHOTO_PICK_CAMERA_REQUEST_CODE) {
+//                ArrayList<String> pickedPhotoNames = data.getStringArrayListExtra(EZPhotoPick.PICKED_PHOTO_NAMES_KEY);
+//                setupImagePicker(ezPhotoPickStorage.getAbsolutePathOfStoredPhoto(DEMO_PHOTO_PATH, pickedPhotoNames.get(0)));
+//                resetBottomSheet(false);
+//
+//        }
+
     }
+
+    /**
+     * Save image
+     *
+     * @param finalBitmap
+     */
+    private String saveImage(String name, Bitmap finalBitmap) {
+
+        String root = Environment.getExternalStorageDirectory().getAbsolutePath();
+        File myDir = new File(root + "/Yellit_Media");
+        myDir.mkdirs();
+
+        String fname = name + ".jpg";
+        File file = new File(myDir, fname);
+        if (file.exists())
+            file.delete();
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+            out.flush();
+            out.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return file.getAbsolutePath();
+
+    }
+
 
     private void gridViewSetting(GridView gridview) {
 
