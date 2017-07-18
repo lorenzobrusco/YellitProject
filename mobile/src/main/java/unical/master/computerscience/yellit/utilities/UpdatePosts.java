@@ -52,6 +52,9 @@ public class UpdatePosts {
 
                 InfoManager.getInstance().setmPostList(postsToShow);
                 InfoManager.getInstance().setmPostFilteredList(postsToShow);
+                final PostAdapter mPostAdapter = new PostAdapter(context, postsToShow);
+                InfoManager.getInstance().setmPostAdapter(mPostAdapter);
+
             }
 
             @Override
@@ -82,22 +85,20 @@ public class UpdatePosts {
             public void onResponse(Call<Post[]> call, Response<Post[]> response) {
 
                 Post[] posts = response.body();
-
+                int new_pos = 0;
                 if (posts != null)
                     for (int i = posts.length - 1; i >= 0; i--) {
-                        if(!containsIdPost(posts[i].getIdPost())){
-                            postsToShow.add(posts[i]);
-                            Log.e("UpdtePosts", posts[i].getIdPost()+"");
-                        }
-                        else {
+                        if (!containsIdPost(posts[i].getIdPost())) {
+                            postsToShow.add(new_pos, posts[i]);
+                            new_pos++;
+                        } else {
                             break;
                         }
                     }
 
                 InfoManager.getInstance().setmPostList(postsToShow);
                 InfoManager.getInstance().setmPostFilteredList(postsToShow);
-                final PostAdapter mPostAdapter = new PostAdapter(context, postsToShow);
-                InfoManager.getInstance().setmPostAdapter(mPostAdapter);
+                InfoManager.getInstance().getmPostAdapter().notifyDataSetChanged();
             }
 
             @Override
@@ -109,9 +110,9 @@ public class UpdatePosts {
     }
 
 
-    private static boolean containsIdPost(int newIdPost){
-        for(Post post : InfoManager.getInstance().getmPostFilteredList()){
-            if(post.getIdPost() == newIdPost)
+    private static boolean containsIdPost(int newIdPost) {
+        for (Post post : InfoManager.getInstance().getmPostFilteredList()) {
+            if (post.getIdPost() == newIdPost)
                 return true;
         }
         return false;

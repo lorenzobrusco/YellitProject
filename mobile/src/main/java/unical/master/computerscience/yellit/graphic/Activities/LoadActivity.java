@@ -100,10 +100,6 @@ public class LoadActivity extends AppCompatActivity {
      * Get the user info whether exists
      */
     private void getUserWhetherExists() {
-//        final ProgressDialog progressDialog = new ProgressDialog(this);
-//        progressDialog.setIndeterminate(true);
-//        progressDialog.setMessage("Loading...");
-//        progressDialog.show();
         this.getUsers();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BaseURL.URL)
@@ -136,7 +132,7 @@ public class LoadActivity extends AppCompatActivity {
      * halt this activity and call the new activity
      */
     private void startNewActivity() {
-        UpdatePosts.loadAllPost(getBaseContext());
+        UpdatePosts.getAllPost(getBaseContext());
         final Handler handler = new Handler();
         final Runnable runnable = new Runnable() {
             public void run() {

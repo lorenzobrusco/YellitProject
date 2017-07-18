@@ -89,7 +89,6 @@ public class PostFragment extends Fragment implements SensorEventListener {
                 refreshItems();
             }
         });
-        this.setupShakeToUpdate();
         return view;
     }
 
@@ -100,11 +99,23 @@ public class PostFragment extends Fragment implements SensorEventListener {
         this.mSensorManager.unregisterListener(this);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        this.setupShakeToUpdate();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        this.setupShakeToUpdate();
+    }
+
     /**
      * Refresh post
      */
     private void refreshItems() {
-        UpdatePosts.getAllPost(getContext());
+        UpdatePosts.loadAllPost(getContext());
         onItemsLoadComplete();
     }
 
@@ -132,7 +143,9 @@ public class PostFragment extends Fragment implements SensorEventListener {
                  * enable to shake
                  */
                 Vibrator vibrator = (Vibrator) getContext().getSystemService(getContext().VIBRATOR_SERVICE);
-                vibrator.vibrate(1000);
+                vibrator.vibrate(100);
+                Toast.makeText(getContext(),"Update posts",Toast.LENGTH_SHORT).show();
+                UpdatePosts.loadAllPost(getContext());
 
             }
         });

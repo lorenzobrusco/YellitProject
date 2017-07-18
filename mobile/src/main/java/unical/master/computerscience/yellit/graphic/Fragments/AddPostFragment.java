@@ -152,28 +152,25 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         buildButtonsCallback();
         setupImagePicker(null);
         changePriorityOfScroll();
-
         return view;
     }
 
+    /**
+     * Initialize many views
+     */
     private void buildVariousStuff() {
 
         mainCategoryLabels = getResources().getStringArray(R.array.main_categories);
         mainCategoryColors = getResources().getIntArray(R.array.main_colors);
-
         mTfRegular = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Regular.ttf");
         mTfLight = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Light.ttf");
-
         isSubMenu = false;
         lastSubMenu = -1;
-
         buildAnimationCallback();
-
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetAddPost);
         mBottomSheetBehavior.setHideable(true);
         mBottomSheetBehavior.setPeekHeight(450);
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-
         mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(View bottomSheet, int newState) {
@@ -182,7 +179,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                 } else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
                     sendPostFloatButton.setVisibility(View.INVISIBLE);
                     transparentLayer.setVisibility(View.GONE);
-                    resetBottomSheet(true);
+                    resetBottomSheet();
                 }
             }
 
@@ -190,8 +187,6 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
             public void onSlide(View bottomSheet, float slideOffset) {
             }
         });
-
-
         transparentLayer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -199,24 +194,27 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         });
     }
 
-    private void resetBottomSheet(boolean all) {
+    /**
+     * Reset add post view
+     */
+    private void resetBottomSheet() {
         mainMenu.highlightValues(null);
         mainMenu.invalidate();
-        if (all)
-            mCommentText.setText("");
+        mCommentText.setText("");
         currentPhotoPath = null;
         this.setupImagePicker(null);
     }
 
+    /**
+     * Used to scroll edit text or add post views
+     */
     private void changePriorityOfScroll() {
-
         mBottomSheetAddPost.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View p_v, MotionEvent p_event) {
                 mCommentText.getParent().requestDisallowInterceptTouchEvent(false);
                 return false;
             }
         });
-
         mCommentText.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View p_v, MotionEvent p_event) {
                 p_v.getParent().requestDisallowInterceptTouchEvent(true);
@@ -225,6 +223,10 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         });
     }
 
+    /**
+     * Setup grif images
+     * @param path if not null add new image at the beginnings
+     */
     private void setupImagePicker(final String path) {
         if (path == null) {
             gallery.setAdapter(new ImageAdapter(getActivity()));
@@ -236,6 +238,9 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         this.gridViewSetting(gallery);
     }
 
+    /**
+     *
+     */
     private void buildButtonsCallback() {
 
         sendPostFloatButton.setOnClickListener(new View.OnClickListener() {
@@ -265,6 +270,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                 try {
                     EZPhotoPickConfig config = new EZPhotoPickConfig();
                     config.photoSource = PhotoSource.CAMERA;
+                    config.isGenerateUniqueName = true;
                     config.storageDir = DEMO_PHOTO_PATH;
                     config.exportingSize = 1000;
                     EZPhotoPick.startPhotoPickActivity(AddPostFragment.this, config);
@@ -304,7 +310,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
     }
 
     /**
-     * Gestire casi di variabili NULLE ma quando comunque il post può essere inviato
+     * Create post
      */
     private void createPostForUpload(String comment, String place) {
         progressDialog.setIndeterminate(true);
@@ -326,7 +332,6 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         RequestBody newComment = RequestBody.create(MediaType.parse("text/plain"), comment);
         RequestBody newPlace = RequestBody.create(MediaType.parse("text/plain"), place);
         RequestBody newCategory = RequestBody.create(MediaType.parse("text/plain"), currentCategory);
-        //TODO remove comment at the end
         RequestBody newUserMail = RequestBody.create(MediaType.parse("text/plain"), InfoManager.getInstance().getmUser().getEmail());
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -371,6 +376,11 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         });
     }
 
+    /**
+     * Get index of position
+     * @param place
+     * @return
+     */
     private int positionLocation(String place) {
         int i = 0;
         if (place.contains("places") && place.contains("detected"))
@@ -383,6 +393,9 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         return -1;
     }
 
+    /**
+     *
+     */
     private void buildAnimationCallback() {
         expandIn = AnimationUtils.loadAnimation(getContext(), R.anim.expand_in);
         expandOut = AnimationUtils.loadAnimation(getContext(), R.anim.expand_out);
@@ -391,40 +404,33 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
             @Override
             public void onAnimationStart(Animation animation) {
-
             }
 
             @Override
             public void onAnimationRepeat(Animation animation) {
-
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
 
                 if (isSubMenu) {
-
                     currentCategory = mainCategoryLabels[lastSubMenu];
-
                     mainMenu.setCenterText(currentCategory);
                     setPieMenuData(subCategoryLabels, subCategoryColors);
-
                 } else {
-
                     currentCategory = "";
-
                     mainMenu.setCenterText(generateCenterSpannableText());
                     setPieMenuData(mainCategoryLabels, mainCategoryColors);
-
                 }
-
                 mainMenu.startAnimation(expandOut);
             }
         };
-
         expandIn.setAnimationListener(animation1Listener);
     }
 
+    /**
+     * Create menu
+     */
     public void buildMainMenu() {
 
         mainMenu.setBackgroundColor(Color.TRANSPARENT);
@@ -467,6 +473,10 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         mainMenu.setEntryLabelTextSize(11f);
     }
 
+    /**
+     * Add Text in the center
+     * @return
+     */
     private SpannableString generateCenterSpannableText() {
 
         SpannableString s = new SpannableString("Yellit!\nWhat's up today?");
@@ -481,6 +491,11 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         return s;
     }
 
+    /**
+     * Create pie menu to choose the post type
+     * @param labels
+     * @param colorz
+     */
     private void setPieMenuData(String[] labels, int[] colorz) {
 
         ArrayList<PieEntry> entries = new ArrayList<PieEntry>();
@@ -515,9 +530,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
         if (e == null)
             return;
-
         if (isSubMenu) {
-
             switch (lastSubMenu) {
                 case 1:
                     handleSubMenuCategory2(e, h);
@@ -529,11 +542,8 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                     handleSubMenuCategory4(e, h);
                     break;
             }
-
         } else {
-
             int index = (int) h.getX();
-
             switch (index) {
                 case 0:
                     openBottomSheet();
@@ -554,10 +564,8 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                     openBottomSheet();
                     break;
             }
-
             lastSubMenu = index;
             currentCategory = mainCategoryLabels[lastSubMenu];
-
             if (index != 0 && index != 4) {
                 isSubMenu = true;
                 mainMenu.startAnimation(expandIn);
@@ -565,6 +573,9 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         }
     }
 
+    /**
+     * Open add post menu
+     */
     private void openBottomSheet() {
 
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
@@ -578,6 +589,11 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
     }
 
+    /**
+     *
+     * @param e
+     * @param h
+     */
     private void handleSubMenuCategory2(Entry e, Highlight h) {
 
         int index = (int) h.getX();
@@ -593,6 +609,11 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         }
     }
 
+    /**
+     *
+     * @param e
+     * @param h
+     */
     private void handleSubMenuCategory3(Entry e, Highlight h) {
 
         int index = (int) h.getX();
@@ -609,6 +630,11 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         }
     }
 
+    /**
+     *
+     * @param e
+     * @param h
+     */
     private void handleSubMenuCategory4(Entry e, Highlight h) {
 
         int index = (int) h.getX();
@@ -640,51 +666,14 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         if (requestCode == EZPhotoPick.PHOTO_PICK_GALERY_REQUEST_CODE || requestCode == EZPhotoPick.PHOTO_PICK_CAMERA_REQUEST_CODE) {
             String photoName = data.getStringExtra(EZPhotoPick.PICKED_PHOTO_NAME_KEY);
             String photoPath = ezPhotoPickStorage.getAbsolutePathOfStoredPhoto(DEMO_PHOTO_PATH, photoName);
-            Toast.makeText(getContext(), photoPath, Toast.LENGTH_LONG).show();
             setupImagePicker(photoPath);
         }
-
-//        if (requestCode == EZPhotoPick.PHOTO_PICK_GALERY_REQUEST_CODE) {
-//            ArrayList<String> pickedPhotoNames = data.getStringArrayListExtra(EZPhotoPick.PICKED_PHOTO_NAMES_KEY);
-//            setupImagePicker(ezPhotoPickStorage.getAbsolutePathOfStoredPhoto(DEMO_PHOTO_PATH, pickedPhotoNames.get(0)));
-//        } else if (requestCode == EZPhotoPick.PHOTO_PICK_CAMERA_REQUEST_CODE) {
-//                ArrayList<String> pickedPhotoNames = data.getStringArrayListExtra(EZPhotoPick.PICKED_PHOTO_NAMES_KEY);
-//                setupImagePicker(ezPhotoPickStorage.getAbsolutePathOfStoredPhoto(DEMO_PHOTO_PATH, pickedPhotoNames.get(0)));
-//                resetBottomSheet(false);
-//
-//        }
-
     }
 
     /**
-     * Save image
      *
-     * @param finalBitmap
+     * @param gridview
      */
-    private String saveImage(String name, Bitmap finalBitmap) {
-
-        String root = Environment.getExternalStorageDirectory().getAbsolutePath();
-        File myDir = new File(root + "/Yellit_Media");
-        myDir.mkdirs();
-
-        String fname = name + ".jpg";
-        File file = new File(myDir, fname);
-        if (file.exists())
-            file.delete();
-        try {
-            FileOutputStream out = new FileOutputStream(file);
-            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
-            out.flush();
-            out.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return file.getAbsolutePath();
-
-    }
-
-
     private void gridViewSetting(GridView gridview) {
 
         int size = 50;

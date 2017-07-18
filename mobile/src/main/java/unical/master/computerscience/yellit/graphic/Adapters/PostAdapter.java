@@ -93,7 +93,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         holder.setImagePost(currPost.getPostImagePost());
         holder.personName.setText(currPost.getUserName());
         holder.commentText.setText(currPost.getComment());
-        if (currPost.getComment() == null) {
+        if (currPost.getComment() == null || currPost.getComment().equals("")) {
             holder.commentText.setVisibility(View.GONE);
         } if(currPost.getUserImagePath() != null){
             if(!currPost.getUserImagePath().equals("")){
