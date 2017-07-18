@@ -19,4 +19,11 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="icon_size">26dp</dimen>
     <dimen name="text_size_info">16dp</dimen>
+    <dimen name="progressbar_update_top_margin">32dp</dimen>
+
+
+
+
+    <dimen name="refresher_offset">50dp</dimen>
+    <dimen name="refresher_offset_end">90dp</dimen>
 </resources>

@@ -48,6 +48,7 @@ import unical.master.computerscience.yellit.logic.objects.User;
 import unical.master.computerscience.yellit.utilities.BaseURL;
 import unical.master.computerscience.yellit.utilities.BuilderFile;
 import unical.master.computerscience.yellit.utilities.PrefManager;
+import unical.master.computerscience.yellit.utilities.UpdatePosts;
 
 import static unical.master.computerscience.yellit.utilities.SystemUI.changeSystemBar;
 
@@ -135,7 +136,7 @@ public class LoadActivity extends AppCompatActivity {
      * halt this activity and call the new activity
      */
     private void startNewActivity() {
-        getAllPost();
+        UpdatePosts.loadAllPost(getBaseContext());
         final Handler handler = new Handler();
         final Runnable runnable = new Runnable() {
             public void run() {
@@ -176,47 +177,5 @@ public class LoadActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * Initi list of posts
-     *
-     * @return
-     */
-    private List<Post> getAllPost() {
 
-        final List<Post> postsToShow = new ArrayList<>();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BaseURL.URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        PostGestureService postService = retrofit.create(PostGestureService.class);
-        Call<Post[]> call = postService.getAllPosts("getAll");
-        call.enqueue(new Callback<Post[]>() {
-            @Override
-            public void onResponse(Call<Post[]> call, Response<Post[]> response) {
-
-                Post[] posts = response.body();
-
-                if (posts != null)
-                    for (int i = posts.length - 1; i >= 0; i--) {
-                        postsToShow.add(posts[i]);
-                    }
-
-                InfoManager.getInstance().setmPostList(postsToShow);
-                InfoManager.getInstance().setmPostFilteredList(postsToShow);
-                final PostAdapter mPostAdapter = new PostAdapter(getBaseContext(), InfoManager.getInstance().getmPostFilteredList());
-                InfoManager.getInstance().setmPostAdapter(mPostAdapter);
-            }
-
-            @Override
-            public void onFailure(Call<Post[]> call, Throwable t) {
-
-                Log.e("On failure", "Post looking for");
-                t.printStackTrace();
-            }
-        });
-
-        return postsToShow;
-    }
 }

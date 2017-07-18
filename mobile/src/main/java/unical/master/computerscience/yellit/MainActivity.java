@@ -31,6 +31,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -105,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
     protected ListView mUsersList;
     @Bind(R.id.activityCatalogSearchContainer)
     protected CardView mSearchBarCardView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

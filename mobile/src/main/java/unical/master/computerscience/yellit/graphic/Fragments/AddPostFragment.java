@@ -358,12 +358,13 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                     }
 
                 } else {
-                    Toast.makeText(getContext(), "Server Response NULL", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Error Server Response", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<ServerResponse> call, Throwable t) {
+                progressDialog.dismiss();
                 Toast.makeText(getContext(), "Error to create new post ", Toast.LENGTH_SHORT).show();
 
             }
