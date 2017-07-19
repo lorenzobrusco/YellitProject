@@ -82,7 +82,7 @@ public class PostFragment extends Fragment implements SensorEventListener {
         mSwipeRefreshLayout.setProgressViewOffset(false,
                 getResources().getDimensionPixelSize(R.dimen.refresher_offset),
                 getResources().getDimensionPixelSize(R.dimen.refresher_offset_end));
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorFacebook,R.color.colorGoogle,R.color.colorConfirm);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -130,7 +130,7 @@ public class PostFragment extends Fragment implements SensorEventListener {
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         };
-        handler.postDelayed(runnable, 1500);
+        handler.postDelayed(runnable, 2500);
     }
 
 
@@ -142,9 +142,6 @@ public class PostFragment extends Fragment implements SensorEventListener {
                 /**
                  * enable to shake
                  */
-                Vibrator vibrator = (Vibrator) getContext().getSystemService(getContext().VIBRATOR_SERVICE);
-                vibrator.vibrate(100);
-                Toast.makeText(getContext(),"Update posts",Toast.LENGTH_SHORT).show();
                 UpdatePosts.loadAllPost(getContext());
 
             }

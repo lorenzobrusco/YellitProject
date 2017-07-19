@@ -21,6 +21,8 @@ import unical.master.computerscience.yellit.MainActivity;
 import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.utilities.PrefManager;
 
+import static unical.master.computerscience.yellit.utilities.SystemUI.changeSystemBar;
+
 /**
  * Activity show at the first launch and when user select it in the settings,
  * it show what application does.
@@ -36,6 +38,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        changeSystemBar(this, false);
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         initActivity();
@@ -88,6 +91,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
     /**
      * add the dot at the end of page to undersent where is user.
+     *
      * @param currentPage the position of slider pages
      */
     private void addBottomDots(int currentPage) {

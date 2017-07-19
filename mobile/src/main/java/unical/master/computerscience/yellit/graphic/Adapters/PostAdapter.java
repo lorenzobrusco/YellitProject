@@ -89,14 +89,16 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     @Override
     public void onBindViewHolder(final PostViewHolder holder, final int position) {
         final Post currPost = mPosts.get(position);
-        final String likes = currPost.getLikes() + " Like";
+        final String likes = "Like to " + currPost.getLikes() + " people";
         holder.setImagePost(currPost.getPostImagePost());
         holder.personName.setText(currPost.getUserName());
         holder.commentText.setText(currPost.getComment());
         if (currPost.getComment() == null || currPost.getComment().equals("")) {
             holder.commentText.setVisibility(View.GONE);
-        } if(currPost.getUserImagePath() != null){
-            if(!currPost.getUserImagePath().equals("")){
+            holder.mIconCommentPost.setVisibility(View.GONE);
+        }
+        if (currPost.getUserImagePath() != null) {
+            if (!currPost.getUserImagePath().equals("")) {
                 holder.setUserImage(currPost.getUserImagePath());
             }
         }
@@ -107,7 +109,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             holder.mPositionPost.setVisibility(View.GONE);
         else
             holder.mPosition.setText(currPost.getLocation());
-        this.isLike(InfoManager.getInstance().getmUser().getEmail(), mPosts.get(position).getIdPost(), holder);
+        if (currPost.getLikes() == 0)
+            holder.setLike(false);
+        else
+            this.isLike(InfoManager.getInstance().getmUser().getEmail(), mPosts.get(position).getIdPost(), holder);
         holder.mLikeButton.setOnLikeListener(new OnLikeListener() {
             @Override
             public void liked(LikeButton likeButton) {
@@ -247,6 +252,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         TextView mDataPost;
         @Bind(R.id.position_post_text)
         TextView mPosition;
+        @Bind(R.id.icon_comment_post)
+        ImageView mIconCommentPost;
 
         PostViewHolder(final View itemView) {
             super(itemView);
@@ -258,7 +265,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         }
 
         void setNumberOfLikes(int nLikes) {
-            mLikeContent.setText(nLikes + " Likes");
+            final String likes = "Like to " + nLikes + "" + " people";
+            mLikeContent.setText(likes);
         }
 
         void setUserImage(String userImgPath) {
