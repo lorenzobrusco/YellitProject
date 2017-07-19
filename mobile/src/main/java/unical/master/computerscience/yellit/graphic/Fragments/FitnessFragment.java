@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -73,7 +74,7 @@ public class FitnessFragment extends Fragment {
     @Bind(R.id.progressBar_weather)
     ProgressBar mWeatherProgressBar;
     @Bind(R.id.coming_soon_fitness)
-    TextView mComingSoon;
+    Button mComingSoon;
     @Bind(R.id.fitness_info_more_one_day)
     LinearLayout mInfoMoreOneDay;
     private Animation mAnimationDown;

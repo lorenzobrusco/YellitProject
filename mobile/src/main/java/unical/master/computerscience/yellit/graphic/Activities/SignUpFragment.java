@@ -203,7 +203,6 @@ public class SignUpFragment extends Fragment {
      * either from gallery or camera
      */
     private Dialog buildDialogFilter() {
-        //TODO Salvatore fix it because when we get an image and sign in it ignores the image
         final Dialog dialog = new Dialog(getContext());
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.dialog_signin);
@@ -375,7 +374,6 @@ public class SignUpFragment extends Fragment {
     /**
      * It used to check if the input is correct or not
      */
-    //TODO fix validate
     public boolean validate() {
         boolean valid = true;
         final String name = _nameText.getText().toString();

@@ -84,6 +84,7 @@ import unical.master.computerscience.yellit.graphic.custom.SelectorImageView;
 import unical.master.computerscience.yellit.logic.GoogleApiClient;
 import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.utilities.BaseURL;
+import unical.master.computerscience.yellit.utilities.UpdatePosts;
 
 
 /**
@@ -339,7 +340,7 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        PostGestureService getResponse = retrofit.create(PostGestureService.class);
+        final PostGestureService getResponse = retrofit.create(PostGestureService.class);
 
         Call<ServerResponse> call = getResponse.uploadPost(fileToUpload, filename, newUserMail, newComment, newPlace, newCategory, lat, longi, "adding");
         call.enqueue(new Callback<ServerResponse>() {
@@ -351,9 +352,8 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
                     if (serverResponse.getSuccess()) {
                         Toast.makeText(getContext(), serverResponse.getMessage(), Toast.LENGTH_LONG).show();
-
+                        UpdatePosts.loadAllPost(getContext());
                         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-
                         isSubMenu = false;
                         lastSubMenu = -1;
                         mainMenu.startAnimation(expandIn);

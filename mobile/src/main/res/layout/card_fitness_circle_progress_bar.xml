@@ -24,7 +24,7 @@
             android:layout_marginTop="8dp"
             android:text="Today:"
             android:textColor="@color/black"
-            android:textSize="20dp" />
+            android:textSize="20sp" />
 
 
         <RelativeLayout
@@ -38,6 +38,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
+                android:fontFamily="serif"
+                android:textColor="@color/black"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textSize="40sp" />
 
@@ -48,6 +50,8 @@
                 android:layout_below="@+id/textPercentage"
                 android:layout_centerHorizontal="true"
                 android:maxWidth="200dp"
+                android:fontFamily="serif"
+                android:textColor="@color/black"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <com.hookedonplay.decoviewlib.DecoView xmlns:custom="http://schemas.android.com/apk/res-auto"
@@ -79,9 +83,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:fontFamily="serif"
                     android:paddingLeft="4dp"
-                    android:text="fdd"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
 
                 <com.makeramen.roundedimageview.RoundedImageView
                     android:id="@+id/imageActivity1"
@@ -110,9 +116,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:fontFamily="serif"
                     android:gravity="center_horizontal"
-                    android:text="dwe"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
 
                 <com.makeramen.roundedimageview.RoundedImageView
                     android:id="@+id/imageActivity3"
@@ -142,10 +150,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:fontFamily="serif"
                     android:gravity="center_horizontal"
                     android:paddingRight="4dp"
-                    android:text="fdd"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
 
                 <com.makeramen.roundedimageview.RoundedImageView
                     android:id="@+id/imageActivity2"

@@ -63,5 +63,5 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:text="Close"
-        android:textColor="@color/colorPrimaryDark" />
+        android:textColor="@color/colorAccent" />
 </LinearLayout>

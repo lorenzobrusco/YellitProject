@@ -234,7 +234,6 @@ public class LoginFragment extends Fragment {
     /**
      * It used to chack if the input is correct or not
      */
-    //TODO Fix valide
     private boolean validate() {
 
         boolean valid = true;
