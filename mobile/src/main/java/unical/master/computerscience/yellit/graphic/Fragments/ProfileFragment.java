@@ -187,12 +187,16 @@ public class ProfileFragment extends Fragment {
     }
 
     private List<Post> initList() {
+        int i = 0;
         final List<Post> posts = new ArrayList<>();
         for (Post post : InfoManager.getInstance().getmPostList()) {
-            if (post.getUserName().equals(InfoManager.getInstance().getmUser().getEmail()) ||
-                    post.getUserName().equals(InfoManager.getInstance().getmUser().getNickname()) ||
-                    post.getUserName().equals(InfoManager.getInstance().getmUser().getFullname()))
-                posts.add(post);
+            if (i <= 10) {
+                if (post.getUserName().equals(InfoManager.getInstance().getmUser().getEmail()) ||
+                        post.getUserName().equals(InfoManager.getInstance().getmUser().getNickname()) ||
+                        post.getUserName().equals(InfoManager.getInstance().getmUser().getFullname()))
+                    posts.add(post);
+            }
+            i++;
         }
         return posts;
     }

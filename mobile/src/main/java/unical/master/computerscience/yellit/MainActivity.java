@@ -65,6 +65,7 @@ import unical.master.computerscience.yellit.logic.objects.Post;
 import unical.master.computerscience.yellit.utilities.GenerateMainCategories;
 import unical.master.computerscience.yellit.utilities.PermissionCheckUtils;
 import unical.master.computerscience.yellit.utilities.PrefManager;
+import unical.master.computerscience.yellit.utilities.UpdateGoogleInfo;
 
 import static unical.master.computerscience.yellit.utilities.SystemUI.changeSystemBar;
 
@@ -120,10 +121,10 @@ public class MainActivity extends AppCompatActivity {
         mSearchView.setFocusable(false);
         mSearchView.onActionViewExpanded();
         mSearchView.requestFocusFromTouch();
-        mSearchView.setQueryHint(" Search ");
+        mSearchView.setQueryHint(" Search an user ");
         currentFragment = new PostFragment();
         mFavoritesCatogories = new HashSet<>();
-
+        UpdateGoogleInfo.update(this);
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -143,8 +144,6 @@ public class MainActivity extends AppCompatActivity {
         });
         this.setFragment(currentFragment);
         this.setupViews();
-        GoogleApiClient.getInstance(this);
-        GoogleApiClient.getInstance(this).getPlaceDetection(this);
     }
 
     @Override

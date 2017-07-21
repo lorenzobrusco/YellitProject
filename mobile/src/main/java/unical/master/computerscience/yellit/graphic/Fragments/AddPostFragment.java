@@ -598,6 +598,10 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
 
         int index = (int) h.getX();
         switch (index) {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
             case 4:
                 openBottomSheet();
                 break;
@@ -619,6 +623,8 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         int index = (int) h.getX();
 
         switch (index) {
+            case 0:
+            case 1:
             case 2:
                 openBottomSheet();
                 break;
@@ -640,6 +646,9 @@ public class AddPostFragment extends Fragment implements OnChartValueSelectedLis
         int index = (int) h.getX();
 
         switch (index) {
+            case 0:
+            case 1:
+            case 2:
             case 3:
                 openBottomSheet();
                 break;

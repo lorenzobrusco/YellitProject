@@ -40,6 +40,7 @@ import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.logic.GoogleApiClient;
 import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.utilities.RemoteFetch;
+import unical.master.computerscience.yellit.utilities.UpdateGoogleInfo;
 
 
 public class FitnessFragment extends Fragment {
@@ -82,7 +83,8 @@ public class FitnessFragment extends Fragment {
     private int mSeries1Index;
     private int mSeries2Index;
     private int mSeries3Index;
-    private final float mSeriesMax = 50f;
+    private final float mseriesMax = 50f;
+    private final float mStepsMax = 10000f;
     private OnDataPointListener mListener = null;
     int randomint = 31;
 
@@ -107,11 +109,11 @@ public class FitnessFragment extends Fragment {
                         ? View.GONE : View.VISIBLE);
             }
         });
-        GoogleApiClient.getInstance((AppCompatActivity) getActivity()).readFitnessHistory(getContext());
-        GoogleApiClient.getInstance((AppCompatActivity) getActivity()).readFitnessGoal(getContext());
+        UpdateGoogleInfo.update((AppCompatActivity) getActivity());
+        textActivity1.setText(String.format("%.0f Steps", (float) InfoManager.getInstance().getmFitnessSessionData().steps));
+        textActivity2.setText(String.format("%.2f Kcal", InfoManager.getInstance().getmFitnessSessionData().calories));
+        textActivity3.setText(String.format("%.0f Km/h", InfoManager.getInstance().getmFitnessSessionData().speed));
         createDataSeries1();
-        createDataSeries2();
-        createDataSeries3();
         createEvents();
         initLineView(lines);
         randomSet(lines);
@@ -137,9 +139,7 @@ public class FitnessFragment extends Fragment {
                 if (json == null) {
                     handler.post(new Runnable() {
                         public void run() {
-                            Toast.makeText(getActivity(),
-                                    "Città non trovata",
-                                    Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), "Città non trovata", Toast.LENGTH_LONG).show();
                         }
                     });
                 } else {
@@ -147,14 +147,12 @@ public class FitnessFragment extends Fragment {
                         public void run() {
                             RemoteFetch.getData(json);
                             initWeather(data);
-
                         }
                     });
                 }
                 Log.e("TEMPO!", data.toString());
                 return json;
             }
-
             @Override
             protected void onPostExecute(JSONObject jsonObject) {
                 mWeatherProgressBar.setVisibility(View.INVISIBLE);
@@ -163,6 +161,7 @@ public class FitnessFragment extends Fragment {
         }.execute(city);
 
     }
+
 
     @Override
     public void onResume() {
@@ -209,6 +208,7 @@ public class FitnessFragment extends Fragment {
         }
     }
 
+
     private void initLineView(LineView lineView) {
         ArrayList<String> test = new ArrayList<>();
         for (int i = 0; i < randomint; i++) {
@@ -251,7 +251,7 @@ public class FitnessFragment extends Fragment {
 
     private void createBackSeries() {
         SeriesItem seriesItem = new SeriesItem.Builder(Color.parseColor("#FFE2E2E2"))
-                .setRange(0, mSeriesMax, 0)
+                .setRange(0, mStepsMax, 0)
                 .setInitialVisibility(true)
                 .build();
 
@@ -260,7 +260,7 @@ public class FitnessFragment extends Fragment {
 
     private void createDataSeries1() {
         final SeriesItem seriesItem = new SeriesItem.Builder(getResources().getColor(R.color.walk))
-                .setRange(0, mSeriesMax, 0)
+                .setRange(0, mStepsMax, 0)
                 .setInitialVisibility(false)
                 .build();
 
@@ -277,59 +277,50 @@ public class FitnessFragment extends Fragment {
             }
         });
 
-        seriesItem.addArcSeriesItemListener(new SeriesItem.SeriesItemListener() {
-            @Override
-            public void onSeriesItemAnimationProgress(float percentComplete, float currentPosition) {
-                textToGo.setText(String.format("%.1f Km to goal", seriesItem.getMaxValue() - currentPosition));
-
-            }
-
-            @Override
-            public void onSeriesItemDisplayProgress(float percentComplete) {
-
-            }
-        });
-
-        seriesItem.addArcSeriesItemListener(new SeriesItem.SeriesItemListener() {
-            @Override
-            public void onSeriesItemAnimationProgress(float percentComplete, float currentPosition) {
-                textActivity1.setText(String.format("%.0f Steps", (float) InfoManager.getInstance().getmFitnessSessionData().steps));
-            }
-
-            @Override
-            public void onSeriesItemDisplayProgress(float percentComplete) {
-
-            }
-        });
-
         mSeries1Index = mDecoView.addSeries(seriesItem);
     }
 
     private void createDataSeries2() {
-        final SeriesItem seriesItem = new SeriesItem.Builder(getResources().getColor(R.color.calories))
-                .setRange(0, mSeriesMax, 0)
-                .setInitialVisibility(false)
-                .build();
-
-
-        seriesItem.addArcSeriesItemListener(new SeriesItem.SeriesItemListener() {
-            @Override
-            public void onSeriesItemAnimationProgress(float percentComplete, float currentPosition) {
-                textActivity2.setText(String.format("%.2f Kcal", InfoManager.getInstance().getmFitnessSessionData().calories));
-            }
-
-            @Override
-            public void onSeriesItemDisplayProgress(float percentComplete) {
-
-            }
-        });
-
-        mSeries2Index = mDecoView.addSeries(seriesItem);
+//        final SeriesItem seriesItem = new SeriesItem.Builder(getResources().getColor(R.color.calories))
+//                .setRange(0, mKalMax, 0)
+//                .setInitialVisibility(false)
+//                .build();
+//
+//        /***********************************************/
+//
+//        seriesItem.addArcSeriesItemListener(new SeriesItem.SeriesItemListener() {
+//            @Override
+//            public void onSeriesItemAnimationProgress(float percentComplete, float currentPosition) {
+//                float percentFilled = ((InfoManager.getInstance().getmFitnessSessionData().steps) / (seriesItem.getMaxValue() - seriesItem.getMinValue()));
+//                textPercentage.setText(String.format("%.0f%%", percentFilled * 100f));
+//            }
+//
+//            @Override
+//            public void onSeriesItemDisplayProgress(float percentComplete) {
+//
+//            }
+//        });
+//
+//        seriesItem.addArcSeriesItemListener(new SeriesItem.SeriesItemListener() {
+//            @Override
+//            public void onSeriesItemAnimationProgress(float percentComplete, float currentPosition) {
+//                textActivity2.setText(String.format("%.2f Kcal", InfoManager.getInstance().getmFitnessSessionData().calories));
+//            }
+//
+//            @Override
+//            public void onSeriesItemDisplayProgress(float percentComplete) {
+//
+//            }
+//        });
+//
+//        mSeries2Index = mDecoView.addSeries(seriesItem);
     }
 
+
     private void createDataSeries3() {
-        final SeriesItem seriesItem = new SeriesItem.Builder(getResources().getColor(R.color.running))
-                .setRange(0, mSeriesMax, 0)
+        //TODO future developments
+       /* final SeriesItem seriesItem = new SeriesItem.Builder(getResources().getColor(R.color.running))
+                .setRange(0, mseriesMax, 0)
                 .setInitialVisibility(false)
                 .build();
 
@@ -345,14 +336,14 @@ public class FitnessFragment extends Fragment {
             }
         });
 
-        mSeries3Index = mDecoView.addSeries(seriesItem);
+        mSeries3Index = mDecoView.addSeries(seriesItem);*/
     }
 
 
     private void createEvents() {
         mDecoView.executeReset();
 
-        mDecoView.addEvent(new DecoEvent.Builder(mSeriesMax)
+        mDecoView.addEvent(new DecoEvent.Builder(mStepsMax)
                 .setIndex(mBackIndex)
                 .setDuration(1000)
                 .setDelay(100)
@@ -365,37 +356,37 @@ public class FitnessFragment extends Fragment {
                 .setDelay(1000)
                 .build());
 
-        mDecoView.addEvent(new DecoEvent.Builder(40.0f)
+
+        mDecoView.addEvent(new DecoEvent.Builder(InfoManager.getInstance().getmFitnessSessionData().steps)
                 .setIndex(mSeries1Index)
                 .setDuration(1000)
                 .setDelay(2000)
                 .build());
+//        mDecoView.addEvent(new DecoEvent.Builder(DecoDrawEffect.EffectType.EFFECT_SPIRAL_OUT)
+//                .setIndex(mSeries2Index)
+//                .setDuration(1000)
+//                .setEffectRotations(1)
+//                .setDelay(3000)
+//                .build());
 
-        mDecoView.addEvent(new DecoEvent.Builder(DecoDrawEffect.EffectType.EFFECT_SPIRAL_OUT)
-                .setIndex(mSeries2Index)
-                .setDuration(1000)
-                .setEffectRotations(1)
-                .setDelay(3000)
-                .build());
-
-        mDecoView.addEvent(new DecoEvent.Builder(16.3f)
-                .setIndex(mSeries2Index)
-                .setDuration(1000)
-                .setDelay(4000)
-                .build());
-
-        mDecoView.addEvent(new DecoEvent.Builder(DecoDrawEffect.EffectType.EFFECT_SPIRAL_OUT)
-                .setIndex(mSeries3Index)
-                .setDuration(1000)
-                .setEffectRotations(1)
-                .setDelay(5000)
-                .build());
-
-        mDecoView.addEvent(new DecoEvent.Builder(10.3f)
-                .setIndex(mSeries3Index)
-                .setDuration(1000)
-                .setDelay(6000)
-                .build());
+//        mDecoView.addEvent(new DecoEvent.Builder(16.3f)
+//                .setIndex(mSeries2Index)
+//                .setDuration(1000)
+//                .setDelay(4000)
+//                .build());
+//
+//        mDecoView.addEvent(new DecoEvent.Builder(DecoDrawEffect.EffectType.EFFECT_SPIRAL_OUT)
+//                .setIndex(mSeries3Index)
+//                .setDuration(1000)
+//                .setEffectRotations(1)
+//                .setDelay(5000)
+//                .build());
+//
+//        mDecoView.addEvent(new DecoEvent.Builder(10.3f)
+//                .setIndex(mSeries3Index)
+//                .setDuration(1000)
+//                .setDelay(6000)
+//                .build());
 
         // resetText();
     }

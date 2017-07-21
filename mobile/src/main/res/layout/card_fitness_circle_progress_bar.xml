@@ -50,6 +50,7 @@
                 android:layout_below="@+id/textPercentage"
                 android:layout_centerHorizontal="true"
                 android:maxWidth="200dp"
+                android:text="Goal is 10.000 steps"
                 android:fontFamily="serif"
                 android:textColor="@color/black"
                 android:textAppearance="?android:attr/textAppearanceSmall" />

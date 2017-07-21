@@ -42,12 +42,14 @@ import unical.master.computerscience.yellit.connection.PostGestureService;
 import unical.master.computerscience.yellit.connection.UsersService;
 import unical.master.computerscience.yellit.graphic.Adapters.PostAdapter;
 import unical.master.computerscience.yellit.graphic.Fragments.PostFragment;
+import unical.master.computerscience.yellit.logic.GoogleApiClient;
 import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.logic.objects.Post;
 import unical.master.computerscience.yellit.logic.objects.User;
 import unical.master.computerscience.yellit.utilities.BaseURL;
 import unical.master.computerscience.yellit.utilities.BuilderFile;
 import unical.master.computerscience.yellit.utilities.PrefManager;
+import unical.master.computerscience.yellit.utilities.UpdateGoogleInfo;
 import unical.master.computerscience.yellit.utilities.UpdatePosts;
 
 import static unical.master.computerscience.yellit.utilities.SystemUI.changeSystemBar;
@@ -68,6 +70,7 @@ public class LoadActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_load);
         ButterKnife.bind(this);
+        UpdateGoogleInfo.update(this);
         initXMLFile();
         PrefManager.getInstace(this);
         InfoManager.getInstance().setColorMode(PrefManager.getInstace(this).isColorMode());
