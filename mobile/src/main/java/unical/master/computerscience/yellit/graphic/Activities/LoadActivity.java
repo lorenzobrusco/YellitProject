@@ -59,7 +59,7 @@ import static unical.master.computerscience.yellit.utilities.SystemUI.changeSyst
  */
 public class LoadActivity extends AppCompatActivity {
 
-    private static final String ROOT = "info";
+    private static final String ROOT = "infoYellit";
     @Bind(R.id.imageView_load_page)
     protected ImageView mLogoImageView;
 
@@ -70,7 +70,6 @@ public class LoadActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_load);
         ButterKnife.bind(this);
-        UpdateGoogleInfo.update(this);
         initXMLFile();
         PrefManager.getInstace(this);
         InfoManager.getInstance().setColorMode(PrefManager.getInstace(this).isColorMode());

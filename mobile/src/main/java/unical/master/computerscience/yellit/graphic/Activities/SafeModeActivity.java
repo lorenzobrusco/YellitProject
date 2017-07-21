@@ -104,7 +104,7 @@ public class SafeModeActivity extends AppCompatActivity {
                     final Runnable runnable = new Runnable() {
                         public void run() {
 
-                            startActivity(new Intent(getBaseContext(), MainActivity.class));
+                            startActivity(new Intent(getBaseContext(), WelcomeActivity.class));
                             finish();
                         }
                     };

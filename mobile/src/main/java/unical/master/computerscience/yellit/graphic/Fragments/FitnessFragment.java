@@ -1,7 +1,9 @@
 package unical.master.computerscience.yellit.graphic.Fragments;
 
+import android.annotation.TargetApi;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -20,7 +22,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.Result;
 import com.google.android.gms.fitness.request.OnDataPointListener;
+import com.google.gson.JsonObject;
 import com.hookedonplay.decoviewlib.DecoView;
 import com.hookedonplay.decoviewlib.charts.DecoDrawEffect;
 import com.hookedonplay.decoviewlib.charts.SeriesItem;
@@ -44,9 +48,6 @@ import unical.master.computerscience.yellit.utilities.UpdateGoogleInfo;
 
 
 public class FitnessFragment extends Fragment {
-
-    private static final String TAG = "FitnessFragment";
-    public static final String ISO_8601_24H_FULL_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
 
     @Bind(R.id.dynamicArcView)
     DecoView mDecoView;
@@ -81,11 +82,7 @@ public class FitnessFragment extends Fragment {
     private Animation mAnimationDown;
     private int mBackIndex;
     private int mSeries1Index;
-    private int mSeries2Index;
-    private int mSeries3Index;
-    private final float mseriesMax = 50f;
     private final float mStepsMax = 10000f;
-    private OnDataPointListener mListener = null;
     int randomint = 31;
 
 
@@ -94,11 +91,43 @@ public class FitnessFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_fitness, container, false);
         ButterKnife.bind(this, view);
-        createBackSeries();
-        //TODO Cosco non gli passare la città a mano ma fattela calcolare
-        updateWeatherData("Cosenza");
-        mAnimationDown = AnimationUtils.loadAnimation(this.getContext(), R.anim.slide_down);
+        new AsyncTask<String, Void, JSONObject>() {
 
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                mWeatherProgressBar.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            protected JSONObject doInBackground(String... params) {
+                Toast.makeText(getContext(), "Do in back ground", Toast.LENGTH_LONG).show();
+                final JSONObject json = RemoteFetch.getJSON(getActivity(), params[0]);
+                final JSONObject data = RemoteFetch.getData(json);
+                return data;
+            }
+
+            @Override
+            protected void onPostExecute(JSONObject jsonObject) {
+                super.onPostExecute(jsonObject);
+                if (jsonObject == null)
+                    Toast.makeText(getActivity(), "Città non trovata", Toast.LENGTH_LONG).show();
+                else
+                    initWeather(jsonObject);
+                mWeatherProgressBar.setVisibility(View.GONE);
+
+            }
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "Cosenza");
+        UpdateGoogleInfo.update((AppCompatActivity) getActivity());
+        createBackSeries();
+        createDataSeries1();
+        createEvents();
+        initLineView(lines);
+        randomSet(lines);
+        mAnimationDown = AnimationUtils.loadAnimation(this.getContext(), R.anim.slide_down);
+        textActivity1.setText(String.format("%.0f Steps", (float) InfoManager.getInstance().getmFitnessSessionData().steps));
+        textActivity2.setText(String.format("%.2f Kcal", InfoManager.getInstance().getmFitnessSessionData().calories));
+        textActivity3.setText(String.format("%.0f Km/h", InfoManager.getInstance().getmFitnessSessionData().speed));
         mComingSoon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,68 +138,14 @@ public class FitnessFragment extends Fragment {
                         ? View.GONE : View.VISIBLE);
             }
         });
-        UpdateGoogleInfo.update((AppCompatActivity) getActivity());
-        textActivity1.setText(String.format("%.0f Steps", (float) InfoManager.getInstance().getmFitnessSessionData().steps));
-        textActivity2.setText(String.format("%.2f Kcal", InfoManager.getInstance().getmFitnessSessionData().calories));
-        textActivity3.setText(String.format("%.0f Km/h", InfoManager.getInstance().getmFitnessSessionData().speed));
-        createDataSeries1();
-        createEvents();
-        initLineView(lines);
-        randomSet(lines);
         return view;
     }
 
-    Handler handler = new Handler();
-
-    private void updateWeatherData(final String city) {
-
-        new AsyncTask<String, Void, JSONObject>() {
-
-            @Override
-            protected void onPreExecute() {
-                mWeatherProgressBar.setVisibility(View.VISIBLE);
-                super.onPreExecute();
-            }
-
-            @Override
-            protected JSONObject doInBackground(String... strings) {
-                final JSONObject json = RemoteFetch.getJSON(getActivity(), strings[0]);
-                final JSONObject data = RemoteFetch.getData(json);
-                if (json == null) {
-                    handler.post(new Runnable() {
-                        public void run() {
-                            Toast.makeText(getActivity(), "Città non trovata", Toast.LENGTH_LONG).show();
-                        }
-                    });
-                } else {
-                    handler.post(new Runnable() {
-                        public void run() {
-                            RemoteFetch.getData(json);
-                            initWeather(data);
-                        }
-                    });
-                }
-                Log.e("TEMPO!", data.toString());
-                return json;
-            }
-            @Override
-            protected void onPostExecute(JSONObject jsonObject) {
-                mWeatherProgressBar.setVisibility(View.INVISIBLE);
-                super.onPostExecute(jsonObject);
-            }
-        }.execute(city);
-
-    }
-
 
     @Override
-    public void onResume() {
-        super.onResume();
-    }
+    public void onStart() {
+        super.onStart();
 
-    @Override
-    public void onStop() {
-        super.onStop();
     }
 
     private void initWeather(JSONObject data) {
@@ -280,124 +255,24 @@ public class FitnessFragment extends Fragment {
         mSeries1Index = mDecoView.addSeries(seriesItem);
     }
 
-    private void createDataSeries2() {
-//        final SeriesItem seriesItem = new SeriesItem.Builder(getResources().getColor(R.color.calories))
-//                .setRange(0, mKalMax, 0)
-//                .setInitialVisibility(false)
-//                .build();
-//
-//        /***********************************************/
-//
-//        seriesItem.addArcSeriesItemListener(new SeriesItem.SeriesItemListener() {
-//            @Override
-//            public void onSeriesItemAnimationProgress(float percentComplete, float currentPosition) {
-//                float percentFilled = ((InfoManager.getInstance().getmFitnessSessionData().steps) / (seriesItem.getMaxValue() - seriesItem.getMinValue()));
-//                textPercentage.setText(String.format("%.0f%%", percentFilled * 100f));
-//            }
-//
-//            @Override
-//            public void onSeriesItemDisplayProgress(float percentComplete) {
-//
-//            }
-//        });
-//
-//        seriesItem.addArcSeriesItemListener(new SeriesItem.SeriesItemListener() {
-//            @Override
-//            public void onSeriesItemAnimationProgress(float percentComplete, float currentPosition) {
-//                textActivity2.setText(String.format("%.2f Kcal", InfoManager.getInstance().getmFitnessSessionData().calories));
-//            }
-//
-//            @Override
-//            public void onSeriesItemDisplayProgress(float percentComplete) {
-//
-//            }
-//        });
-//
-//        mSeries2Index = mDecoView.addSeries(seriesItem);
-    }
-
-
-    private void createDataSeries3() {
-        //TODO future developments
-       /* final SeriesItem seriesItem = new SeriesItem.Builder(getResources().getColor(R.color.running))
-                .setRange(0, mseriesMax, 0)
-                .setInitialVisibility(false)
-                .build();
-
-        seriesItem.addArcSeriesItemListener(new SeriesItem.SeriesItemListener() {
-            @Override
-            public void onSeriesItemAnimationProgress(float percentComplete, float currentPosition) {
-                textActivity3.setText(String.format("%.0f Km/h", (float) InfoManager.getInstance().getmFitnessSessionData().speed));
-            }
-
-            @Override
-            public void onSeriesItemDisplayProgress(float percentComplete) {
-
-            }
-        });
-
-        mSeries3Index = mDecoView.addSeries(seriesItem);*/
-    }
-
-
     private void createEvents() {
         mDecoView.executeReset();
-
         mDecoView.addEvent(new DecoEvent.Builder(mStepsMax)
                 .setIndex(mBackIndex)
                 .setDuration(1000)
                 .setDelay(100)
                 .build());
-
         mDecoView.addEvent(new DecoEvent.Builder(DecoDrawEffect.EffectType.EFFECT_SPIRAL_OUT)
                 .setIndex(mSeries1Index)
                 .setDuration(1000)
                 .setEffectRotations(1)
                 .setDelay(1000)
                 .build());
-
-
         mDecoView.addEvent(new DecoEvent.Builder(InfoManager.getInstance().getmFitnessSessionData().steps)
                 .setIndex(mSeries1Index)
                 .setDuration(1000)
                 .setDelay(2000)
                 .build());
-//        mDecoView.addEvent(new DecoEvent.Builder(DecoDrawEffect.EffectType.EFFECT_SPIRAL_OUT)
-//                .setIndex(mSeries2Index)
-//                .setDuration(1000)
-//                .setEffectRotations(1)
-//                .setDelay(3000)
-//                .build());
-
-//        mDecoView.addEvent(new DecoEvent.Builder(16.3f)
-//                .setIndex(mSeries2Index)
-//                .setDuration(1000)
-//                .setDelay(4000)
-//                .build());
-//
-//        mDecoView.addEvent(new DecoEvent.Builder(DecoDrawEffect.EffectType.EFFECT_SPIRAL_OUT)
-//                .setIndex(mSeries3Index)
-//                .setDuration(1000)
-//                .setEffectRotations(1)
-//                .setDelay(5000)
-//                .build());
-//
-//        mDecoView.addEvent(new DecoEvent.Builder(10.3f)
-//                .setIndex(mSeries3Index)
-//                .setDuration(1000)
-//                .setDelay(6000)
-//                .build());
-
-        // resetText();
-    }
-
-
-    private void resetText() {
-        textActivity1.setText("");
-        textActivity2.setText("");
-        textActivity3.setText("");
-        textPercentage.setText("");
-        textToGo.setText("");
     }
 
 

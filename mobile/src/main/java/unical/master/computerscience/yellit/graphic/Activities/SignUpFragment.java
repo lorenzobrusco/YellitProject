@@ -16,6 +16,7 @@ import android.support.v4.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,6 +77,7 @@ import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.logic.objects.User;
 import unical.master.computerscience.yellit.utilities.BaseURL;
 import unical.master.computerscience.yellit.utilities.PrefManager;
+import unical.master.computerscience.yellit.utilities.UpdateGoogleInfo;
 
 import static android.app.Activity.RESULT_OK;
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -83,7 +85,6 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 public class SignUpFragment extends Fragment {
 
     private static final String DEMO_PHOTO_PATH = "MyDemoPhotoDir";
-    private static final String TAG = "SignupFragment";
 
     private Dialog choosePhotoDialog;
     private String currentPhotoPath;
@@ -262,7 +263,7 @@ public class SignUpFragment extends Fragment {
         final String name = _nameText.getText().toString();
         final String email = _emailText.getText().toString();
         final String password = _passwordText.getText().toString();
-        if(!currentPhotoPath.equals("")){
+        if (!currentPhotoPath.equals("")) {
             final File file = new File(currentPhotoPath);
             RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
             MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
@@ -331,6 +332,7 @@ public class SignUpFragment extends Fragment {
      * It used to start the next activity because the sign in is successed
      */
     private void onSignupSuccess() {
+        UpdateGoogleInfo.update((AppCompatActivity) getActivity());
         final Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BaseURL.URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -348,7 +350,7 @@ public class SignUpFragment extends Fragment {
                 InfoManager.getInstance().setmAllUsers(usersList);
                 mProgressDialog.dismiss();
                 getActivity().setResult(RESULT_OK, null);
-                startActivity(new Intent(getContext(), MainActivity.class));
+                startActivity(new Intent(getContext(), WelcomeActivity.class));
                 getActivity().finish();
             }
 
@@ -386,12 +388,12 @@ public class SignUpFragment extends Fragment {
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             valid = false;
         }
-        if (password.isEmpty() ) {
+        if (password.isEmpty()) {
             valid = false;
         }
         if (!(reEnterPassword.equals(password))) {
             _reEnterPasswordText.setError("Password Do not match");
-            Toast.makeText(getContext(),"Password Do not match",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Password Do not match", Toast.LENGTH_SHORT).show();
             valid = false;
         }
         return valid;

@@ -51,41 +51,42 @@ public class WelcomeActivity extends AppCompatActivity {
         if (!PrefManager.getInstace(getApplicationContext()).isFirstTimeLaunch()) {
             launchHomeScreen();
             finish();
-        } else {
-            setContentView(R.layout.activity_welcome);
-            viewPager = (ViewPager) findViewById(R.id.view_pager);
-            dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
-            btnSkip = (Button) findViewById(R.id.btn_skip);
-            btnNext = (Button) findViewById(R.id.btn_next);
-            layouts = new int[]{
-                    R.layout.fragment_welcome1,
-                    R.layout.fragment_welcome2,
-                    R.layout.fragment_welcome3,
-                    R.layout.fragment_welcome4};
-            addBottomDots(0);
-            changeStatusBarColor();
-            myViewPagerAdapter = new MyViewPagerAdapter();
-            viewPager.setAdapter(myViewPagerAdapter);
-            viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
-            btnSkip.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        }
+
+        setContentView(R.layout.activity_welcome);
+        viewPager = (ViewPager) findViewById(R.id.view_pager);
+        dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
+        btnSkip = (Button) findViewById(R.id.btn_skip);
+        btnNext = (Button) findViewById(R.id.btn_next);
+        layouts = new int[]{
+                R.layout.fragment_welcome1,
+                R.layout.fragment_welcome2,
+                R.layout.fragment_welcome3,
+                R.layout.fragment_welcome4};
+        addBottomDots(0);
+        changeStatusBarColor();
+        myViewPagerAdapter = new MyViewPagerAdapter();
+        viewPager.setAdapter(myViewPagerAdapter);
+        viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
+        btnSkip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                launchHomeScreen();
+            }
+        });
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /** checking for last page if last page home screen will be launched */
+                int current = getItem(+1);
+                if (current < layouts.length) {
+                    viewPager.setCurrentItem(current);
+                } else {
                     launchHomeScreen();
                 }
-            });
-            btnNext.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    /** checking for last page if last page home screen will be launched */
-                    int current = getItem(+1);
-                    if (current < layouts.length) {
-                        viewPager.setCurrentItem(current);
-                    } else {
-                        launchHomeScreen();
-                    }
-                }
-            });
-        }
+            }
+        });
+
     }
 
 

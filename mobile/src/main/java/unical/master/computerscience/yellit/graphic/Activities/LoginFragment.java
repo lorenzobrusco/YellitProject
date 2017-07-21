@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +49,7 @@ import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.logic.objects.User;
 import unical.master.computerscience.yellit.utilities.BaseURL;
 import unical.master.computerscience.yellit.utilities.PrefManager;
+import unical.master.computerscience.yellit.utilities.UpdateGoogleInfo;
 
 /**
  * Fragment to login
@@ -191,6 +193,7 @@ public class LoginFragment extends Fragment {
      * It used to start the next activity because the login is successed
      */
     private void onLoginSuccess() {
+        UpdateGoogleInfo.update((AppCompatActivity)getActivity());
         final Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BaseURL.URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -215,7 +218,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onFailure(Call<User[]> call, Throwable t) {
                 progressDialog.dismiss();
-                startActivity(new Intent(getContext(), WelcomeActivity.class));
+                startActivity(new Intent(getContext(), LoginSignupActivity.class));
                 getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
                 getActivity().finish();
             }

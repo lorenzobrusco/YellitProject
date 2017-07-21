@@ -18,6 +18,8 @@ import android.widget.CompoundButton;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.Switch;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -96,6 +98,7 @@ public class SettingActivity extends AppCompatActivity {
                     mColorsLinearLayout.setVisibility(View.VISIBLE);
                 } else
                     mColorsLinearLayout.setVisibility(View.GONE);
+                Toast.makeText(getBaseContext(),"To see the change restart app",Toast.LENGTH_SHORT).show();
             }
         });
         this.mSafeModeSwitch.setChecked(PrefManager.getInstace(getApplicationContext()).isSafeMode());
