@@ -30,7 +30,7 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="29dp"
                 android:gravity="center"
-                android:text="Testo"
+                android:text="Discover the activities your friends are doing, and join them!"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </RelativeLayout>
     </ScrollView>

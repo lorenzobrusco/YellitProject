@@ -32,7 +32,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:fontFamily="sans-serif-smallcaps"
-        android:text="Waiting to load everything...." />
+        android:text="Please wait..." />
 
 
 </RelativeLayout>
