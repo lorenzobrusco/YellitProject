@@ -109,25 +109,31 @@ public class LoadActivity extends AppCompatActivity {
                 .build();
         String user = PrefManager.getInstace(LoadActivity.this).getUser();
         final LoginService loginService = retrofit.create(LoginService.class);
-        Call<User> call = loginService.getProfile(user.split("#")[0], user.split("#")[1].equals("NULL") ? "" : user.split("#")[1]);
-        call.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                User profile = response.body();
-                InfoManager.getInstance().setmUser(profile);
-                startActivity(new Intent(getApplicationContext(), SafeModeActivity.class));
-                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-                finish();
-            }
+        if (user.split("#").length > 1) {
+            Call<User> call = loginService.getProfile(user.split("#")[0], user.split("#")[1].equals("NULL") ? "" : user.split("#")[1]);
+            call.enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    User profile = response.body();
+                    InfoManager.getInstance().setmUser(profile);
+                    startActivity(new Intent(getApplicationContext(), SafeModeActivity.class));
+                    overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                    finish();
+                }
 
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                Log.e("Facebook signin", "errore di signin");
-                startActivity(new Intent(getApplicationContext(), LoginSignupActivity.class));
-                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-                finish();
-            }
-        });
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+                    Log.e("Facebook signin", "errore di signin");
+                    startActivity(new Intent(getApplicationContext(), LoginSignupActivity.class));
+                    overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                    finish();
+                }
+            });
+        } else {
+            startActivity(new Intent(getApplicationContext(), LoginSignupActivity.class));
+            overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+            finish();
+        }
     }
 
     /**
