@@ -12,25 +12,13 @@
     <string name="play_again_desc">To see the welcome pages again, click here</string>
 
     <string name="privacy_policy">
-        L\'applicazione Routines non memorizza alcun dato dell\'utente fata eccezzione per i dati
-        utili a capire delle abitudini. questi vengono trattati secondo gli standard di Androied e
-        Google.
+        Yellit application send information about you on our serve.\nThis information are treated according Android and Google stantard.
     </string>
     <string name="permissions">
-        ACCESS:_NETWORK_STATE: per Google Analytics
-        ACCESS_FINE_LOCATION,INTERNET: richiesto per prenderci la posizione corrente
-        READ_PHONE_STATE,RECEIVE_SMS,READ_CONTACTS: richiesto per memorizzare le relazioni con i
-        tuoi contatti preferiti
+        ACCESS_FINE_LOCATION: For position\nINTERNET: to get and put posts\nREAD_WRITE_STORAGE: to store some information\nCAMERA: to take a photo\nSEND_SMS: future development\nBODY_SENSORS: to the fitness page
     </string>
     <string name="conditions">
-        L\'uso di queste applicazione e le eventuali controversie che ne derivano, sono soggette a
-        questa privacy ed alle condizioni di utilizzo.
-        Ci riserviamo il dirirro di modificare questa privacy in qualsiasi momento. Modifiche non
-        sostanziali e chiarimenti avranno efferro immediato, mentre per modifiche sostanziali
-        entreranno in vigore con l\'installazione di eventuali aggiornamenti del\'applicazione sul
-        markert ufficiale android.
-        L\'applicazione si riserva il dirito di tenere traccia e di creare report in forma anonima
-        dell\'utilizzo del\'applicazione stessa utilizzando strumenti come Google Analytics.
+        The use of this application and any disputes arising therefrom are subject to\nThis privacy and terms of use.\nWe reserve the right to change this privacy at any time. No modifications\nSubstantial and clearer will have immediate effect, while for substantial changes\nWill come into effect with the installation of any updates to the application\nOfficial markert android.
     </string>
     <string name="build_version">1.0</string>
 
@@ -87,6 +75,6 @@
     </string-array>
 
     <string name="facebook_app_id">314270565670185</string>
-    <string name="signin_constraint" >To register you should respect the following constraints\nEmail correct\nNick name non empty\nPassword with at leat 4 characters</string>
+    <string name="signin_constraint">To register you should respect the following constraints\nEmail correct\nNick name non empty\nPassword with at leat 4 characters</string>
 
 </resources>

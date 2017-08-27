@@ -32,7 +32,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Permessi"
+                android:text="Permits"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <TextView
@@ -45,7 +45,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Condizioni di utilizzo"
+                android:text="Condition of use"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <TextView

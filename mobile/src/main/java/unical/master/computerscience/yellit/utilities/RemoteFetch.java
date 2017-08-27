@@ -17,7 +17,7 @@ public class RemoteFetch {
             "http://api.openweathermap.org/data/2.5/forecast/daily?q=%s&units=metric";
 
     /**
-     * 
+     * Get json from open weather
      * @param context
      * @param city
      * @return
@@ -53,7 +53,7 @@ public class RemoteFetch {
     }
 
     /**
-     *
+     * get usefful data from above json
      * @param json
      * @return
      */
