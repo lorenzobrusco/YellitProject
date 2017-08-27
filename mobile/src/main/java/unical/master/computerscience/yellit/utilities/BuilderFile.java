@@ -1,13 +1,10 @@
 package unical.master.computerscience.yellit.utilities;
 
 import android.content.Context;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
 import java.io.File;
 import java.io.FileOutputStream;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -17,10 +14,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
-/**
- * Created by Francesco on 04/04/2017.
- */
 
 public class BuilderFile {
 
@@ -35,10 +28,6 @@ public class BuilderFile {
     private static final String INSIDE = "inside";
     private static final String OUTSIDE = "outside";
 
-    private BuilderFile() {
-
-    }
-
     public static BuilderFile getInstance() {
         if (mBuilderFile == null) {
             mBuilderFile = new BuilderFile();
@@ -47,6 +36,11 @@ public class BuilderFile {
     }
 
 
+    /**
+     * Add the xml version on the top
+     * @param context
+     * @param name
+     */
     private void addVersion(final Context context, String name) {
         name += ".xml";
         final File file = new File(context.getFilesDir(), name);
@@ -62,6 +56,11 @@ public class BuilderFile {
         }
     }
 
+    /**
+     * Create the xml
+     * @param context
+     * @param name
+     */
     private void writeOnXMLFile(final Context context, String name) {
         try {
             name += ".xml";
@@ -125,6 +124,11 @@ public class BuilderFile {
         }
     }
 
+    /**
+     * Create a new xml file
+     * @param context
+     * @param name
+     */
     public void newXMLFile(final Context context, String name) {
         this.addVersion(context, name);
         this.writeOnXMLFile(context, name);

@@ -16,7 +16,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import unical.master.computerscience.yellit.MainActivity;
 import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.utilities.PrefManager;

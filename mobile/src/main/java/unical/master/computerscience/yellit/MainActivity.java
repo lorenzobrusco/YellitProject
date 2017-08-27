@@ -2,16 +2,12 @@ package unical.master.computerscience.yellit;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -21,38 +17,27 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.Toast;
-
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
-
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import unical.master.computerscience.yellit.graphic.Activities.LoadActivity;
-import unical.master.computerscience.yellit.graphic.Activities.LoginSignupActivity;
-import unical.master.computerscience.yellit.graphic.Activities.PlaceActivity;
 import unical.master.computerscience.yellit.graphic.Activities.SettingActivity;
 import unical.master.computerscience.yellit.graphic.Adapters.UsersAdapter;
 import unical.master.computerscience.yellit.graphic.Fragments.AddPostFragment;
@@ -161,6 +146,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Initialize all views
+     */
     private void setupViews() {
         AHBottomNavigationItem itemFitness = new AHBottomNavigationItem(R.string.tab_fitness, R.drawable.ic_fitness_center_black_24, R.color.page1);
         AHBottomNavigationItem itemProfile = new AHBottomNavigationItem(R.string.tab_profile, R.drawable.ic_person_black_24, R.color.page2);
@@ -313,6 +301,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Build diaolg to filter posts
+     */
     private void buildDialogFilter() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -410,6 +401,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -424,6 +421,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Add new fragment
+     * @param fragment
+     */
     protected void setFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction =
@@ -432,6 +433,10 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
+    /**
+     * Remove current fragment
+     * @param fragment
+     */
     protected void removeFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction =

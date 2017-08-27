@@ -1,7 +1,6 @@
 package unical.master.computerscience.yellit.utilities;
 
 import android.content.Context;
-
 import unical.master.computerscience.yellit.R;
 
 /**

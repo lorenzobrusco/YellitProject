@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -18,10 +17,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -39,19 +35,14 @@ import com.github.mikephil.charting.data.RadarEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IRadarDataSet;
 import com.github.paolorotolo.expandableheightlistview.ExpandableHeightListView;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.graphic.Adapters.PostProfileAdapter;
-import unical.master.computerscience.yellit.graphic.custom.SelectorImageView;
-import unical.master.computerscience.yellit.logic.GoogleApiClient;
 import unical.master.computerscience.yellit.logic.InfoManager;
-import unical.master.computerscience.yellit.logic.objects.Friend;
 import unical.master.computerscience.yellit.logic.objects.Post;
 import unical.master.computerscience.yellit.logic.objects.User;
 import unical.master.computerscience.yellit.utilities.PrefManager;
@@ -115,6 +106,9 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
+    /**
+     * It used to initialize the views like profile's photo and so on
+     */
     private void setupInfo() {
         if (InfoManager.getInstance().getmUser().getPathImg() != null) {
             Glide.with(this)
@@ -138,6 +132,9 @@ public class ProfileFragment extends Fragment {
         mFullNameProfile.setText(InfoManager.getInstance().getmUser().getFullname() == null ? PrefManager.getInstace(getContext()).getUser().split("#")[0].toUpperCase() : InfoManager.getInstance().getmUser().getFullname().toUpperCase());
     }
 
+    /**
+     * Setup expand layout so as when user press on the layout opens
+     */
     private void setupButtonExpandLayout() {
 
         mFitnessButton.setOnClickListener(new View.OnClickListener() {
@@ -186,6 +183,10 @@ public class ProfileFragment extends Fragment {
 
     }
 
+    /**
+     * Initialize the list of posts with last ten
+     * @return list of posts
+     */
     private List<Post> initList() {
         int i = 0;
         final List<Post> posts = new ArrayList<>();
@@ -201,6 +202,9 @@ public class ProfileFragment extends Fragment {
         return posts;
     }
 
+    /**
+     *  It used to initialize radar that contains all macro category
+     */
     private void setupRadar() {
         mRadarInfo.getDescription().setEnabled(false);
 
@@ -209,9 +213,6 @@ public class ProfileFragment extends Fragment {
         mRadarInfo.setWebLineWidthInner(1f);
         mRadarInfo.setWebColorInner(Color.LTGRAY);
         mRadarInfo.setWebAlpha(100);
-
-        // create a custom MarkerView (extend MarkerView) and specify the layout
-        // to use for it
 
         setData();
 
@@ -251,17 +252,18 @@ public class ProfileFragment extends Fragment {
         l.setTextColor(Color.BLACK);
     }
 
+    /**
+     * Create fake data
+     */
     public void setData() {
-
+        //TODO future developments
+        /** Replace this method with another that get data from db*/
         float mult = 80;
         float min = 20;
         int cnt = 5;
 
         ArrayList<RadarEntry> entries1 = new ArrayList<RadarEntry>();
         ArrayList<RadarEntry> entries2 = new ArrayList<RadarEntry>();
-
-        // NOTE: The order of the entries when being added to the entries array determines their position around the center of
-        // the chart.
         for (int i = 0; i < cnt; i++) {
             float val1 = (float) (Math.random() * mult) + min;
             entries1.add(new RadarEntry(val1));
@@ -292,17 +294,22 @@ public class ProfileFragment extends Fragment {
 
     }
 
-
+    /**
+     * Initialize friends
+     */
     private void setupFriendGridView() {
         this.mFriends = InfoManager.getInstance().getmAllUsers();
         mFriendsGridView.setAdapter(new ImageAdapter(getActivity()));
         this.gridViewSetting(this.mFriendsGridView);
     }
 
+    /**
+     * Create grid view with only row for friends
+     * @param gridview
+     */
     private void gridViewSetting(GridView gridview) {
 
         int size = mFriends.size();
-        // Calculated single Item Layout Width for each grid element ....
         int width = 70;
 
         DisplayMetrics dm = new DisplayMetrics();

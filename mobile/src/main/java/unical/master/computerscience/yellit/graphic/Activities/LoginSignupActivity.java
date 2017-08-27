@@ -11,20 +11,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Base64;
-import android.util.Log;
 import android.widget.Toast;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import unical.master.computerscience.yellit.R;
-import unical.master.computerscience.yellit.logic.InfoManager;
-import unical.master.computerscience.yellit.utilities.PrefManager;
 
 import static unical.master.computerscience.yellit.utilities.SystemUI.changeSystemBar;
 

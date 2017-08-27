@@ -1,15 +1,11 @@
 package unical.master.computerscience.yellit.graphic.Fragments;
 
-import android.annotation.TargetApi;
 import android.graphics.Color;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,69 +17,65 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.gms.common.api.Result;
-import com.google.android.gms.fitness.request.OnDataPointListener;
-import com.google.gson.JsonObject;
 import com.hookedonplay.decoviewlib.DecoView;
 import com.hookedonplay.decoviewlib.charts.DecoDrawEffect;
 import com.hookedonplay.decoviewlib.charts.SeriesItem;
 import com.hookedonplay.decoviewlib.events.DecoEvent;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import im.dacer.androidcharts.LineView;
 import unical.master.computerscience.yellit.R;
-import unical.master.computerscience.yellit.logic.GoogleApiClient;
 import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.utilities.RemoteFetch;
 import unical.master.computerscience.yellit.utilities.UpdateGoogleInfo;
 
 
+/**
+ * Show a set of views for the fitness
+ */
 public class FitnessFragment extends Fragment {
 
     @Bind(R.id.dynamicArcView)
-    DecoView mDecoView;
+    protected DecoView mDecoView;
     @Bind(R.id.textPercentage)
-    TextView textPercentage;
+    protected TextView textPercentage;
     @Bind(R.id.textRemaining)
-    TextView textToGo;
+    protected TextView textToGo;
     @Bind(R.id.textActivity1)
-    TextView textActivity1;
+    protected TextView textActivity1;
     @Bind(R.id.textActivity2)
-    TextView textActivity2;
+    protected TextView textActivity2;
     @Bind(R.id.textActivity3)
-    TextView textActivity3;
+    protected TextView textActivity3;
     @Bind(R.id.chart_repo_lines)
-    LineView lines;
+    protected LineView lines;
     @Bind(R.id.type_weather)
-    TextView mTypeWeatherTextView;
+    protected TextView mTypeWeatherTextView;
     @Bind(R.id.temperature_weather)
-    TextView mTemperature;
+    protected TextView mTemperature;
     @Bind(R.id.icon_weather)
-    ImageView mIconWeather;
+    protected ImageView mIconWeather;
     @Bind(R.id.day_weather)
-    TextView mDay;
+    protected TextView mDay;
     @Bind(R.id.image_weather)
-    ImageView mImageWeather;
+    protected ImageView mImageWeather;
     @Bind(R.id.progressBar_weather)
-    ProgressBar mWeatherProgressBar;
+    protected ProgressBar mWeatherProgressBar;
     @Bind(R.id.coming_soon_fitness)
-    Button mComingSoon;
+    protected Button mComingSoon;
     @Bind(R.id.fitness_info_more_one_day)
-    LinearLayout mInfoMoreOneDay;
+    protected LinearLayout mInfoMoreOneDay;
+
     private Animation mAnimationDown;
     private int mBackIndex;
     private int mSeries1Index;
     private final float mStepsMax = 10000f;
-    int randomint = 31;
+    private int randomint = 31;
 
 
     @Nullable
@@ -91,6 +83,7 @@ public class FitnessFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_fitness, container, false);
         ButterKnife.bind(this, view);
+        /** Getting weather */
         new AsyncTask<String, Void, JSONObject>() {
 
             @Override
@@ -111,7 +104,7 @@ public class FitnessFragment extends Fragment {
             protected void onPostExecute(JSONObject jsonObject) {
                 super.onPostExecute(jsonObject);
                 if (jsonObject == null)
-                    Toast.makeText(getActivity(), "Città non trovata", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "City not found", Toast.LENGTH_LONG).show();
                 else
                     initWeather(jsonObject);
                 mWeatherProgressBar.setVisibility(View.GONE);
@@ -148,6 +141,10 @@ public class FitnessFragment extends Fragment {
 
     }
 
+    /**
+     * Initialize weather
+     * @param data from asyntask
+     */
     private void initWeather(JSONObject data) {
         try {
             Calendar c = Calendar.getInstance();
@@ -164,6 +161,10 @@ public class FitnessFragment extends Fragment {
         }
     }
 
+    /**
+     * Change icon according the weather
+     * @param weather
+     */
     private void setWeatherIcon(String weather) {
         if (weather.contains("thunderstorm")) {
             mIconWeather.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_storm));
@@ -184,6 +185,10 @@ public class FitnessFragment extends Fragment {
     }
 
 
+    /**
+     *
+     * @param lineView
+     */
     private void initLineView(LineView lineView) {
         ArrayList<String> test = new ArrayList<>();
         for (int i = 0; i < randomint; i++) {
@@ -197,6 +202,10 @@ public class FitnessFragment extends Fragment {
     }
 
 
+    /**
+     *
+     * @param lineViewFloat
+     */
     private void randomSet(LineView lineViewFloat) {
 
         ArrayList<Float> dataListF = new ArrayList<>();
@@ -224,6 +233,9 @@ public class FitnessFragment extends Fragment {
         lineViewFloat.setFloatDataList(dataListFs);
     }
 
+    /**
+     * Used to create gray background to progress bar circular
+     */
     private void createBackSeries() {
         SeriesItem seriesItem = new SeriesItem.Builder(Color.parseColor("#FFE2E2E2"))
                 .setRange(0, mStepsMax, 0)
@@ -233,6 +245,9 @@ public class FitnessFragment extends Fragment {
         mBackIndex = mDecoView.addSeries(seriesItem);
     }
 
+    /**
+     * Create a real series of data from google fitness
+     */
     private void createDataSeries1() {
         final SeriesItem seriesItem = new SeriesItem.Builder(getResources().getColor(R.color.walk))
                 .setRange(0, mStepsMax, 0)
@@ -255,6 +270,9 @@ public class FitnessFragment extends Fragment {
         mSeries1Index = mDecoView.addSeries(seriesItem);
     }
 
+    /**
+     *  Start the animation
+     */
     private void createEvents() {
         mDecoView.executeReset();
         mDecoView.addEvent(new DecoEvent.Builder(mStepsMax)

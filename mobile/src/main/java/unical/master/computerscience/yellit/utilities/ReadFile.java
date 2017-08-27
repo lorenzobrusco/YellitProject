@@ -1,7 +1,6 @@
 package unical.master.computerscience.yellit.utilities;
 
 import android.content.Context;
-
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -9,9 +8,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
-/**
- * Created by Francesco on 04/04/2017.
- */
 
 public class ReadFile {
 
@@ -30,6 +26,12 @@ public class ReadFile {
         return mReadFile;
     }
 
+    /**
+     * Read xml file
+     * @param context
+     * @param name
+     * @return
+     */
     public String readXMLFile(final Context context, String name) {
         String filename = name + ".xml";
         try {

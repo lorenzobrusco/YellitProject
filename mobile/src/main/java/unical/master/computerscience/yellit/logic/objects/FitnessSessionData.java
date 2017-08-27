@@ -1,6 +1,5 @@
 package unical.master.computerscience.yellit.logic.objects;
 
-import java.util.Date;
 
 /**
  * Created by Lorenzo on 09/04/2017.

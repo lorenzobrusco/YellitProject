@@ -18,7 +18,6 @@ public class InfoManager {
     private static InfoManager mInfoManager;
     private User mUser;
     private String mToken;
-    private Statistics mStatistics;
     private FitnessSessionData mFitnessSessionData;
     private PlaceData mPlaceData;
     private List<Post> mPostList;
@@ -52,14 +51,6 @@ public class InfoManager {
 
     public void setmToken(String mToken) {
         this.mToken = mToken;
-    }
-
-    public Statistics getmStatistics() {
-        return mStatistics;
-    }
-
-    public void setmStatistics(Statistics mStatistics) {
-        this.mStatistics = mStatistics;
     }
 
     public User getmUser() {

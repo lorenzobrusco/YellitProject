@@ -2,10 +2,6 @@ package unical.master.computerscience.yellit.logic.objects;
 
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by Francesco on 08/05/2017.
- */
-
 public class Like {
 
     @SerializedName("likes")

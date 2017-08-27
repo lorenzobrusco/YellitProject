@@ -1,6 +1,5 @@
 package unical.master.computerscience.yellit.utilities;
 
-
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -8,6 +7,8 @@ import android.hardware.SensorEventListener;
 /**
  * This class is used when needed to detecion a shake of the your weareble
  */
+//TODO future develop
+/** Add this class so as when user shakes him phone the application updates posts*/
 public class ShakeDetection implements SensorEventListener {
 
     /* minimum acceleration needed to count as a shake movement */

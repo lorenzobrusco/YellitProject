@@ -2,10 +2,6 @@ package unical.master.computerscience.yellit.logic.objects;
 
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by Lorenzo on 14/03/2017.
- */
-
 public class Post {
 
     @SerializedName("id_post")

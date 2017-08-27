@@ -19,7 +19,6 @@ import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -28,6 +27,7 @@ import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.graphic.Dialog.CustomDialogPrivacy;
 import unical.master.computerscience.yellit.logic.InfoManager;
 import unical.master.computerscience.yellit.utilities.PrefManager;
+
 import static unical.master.computerscience.yellit.utilities.SystemUI.changeSystemBar;
 
 /**

@@ -2,12 +2,6 @@ package unical.master.computerscience.yellit.logic.objects;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
-/**
- * Created by Lorenzo on 22/02/2017.
- */
-
 public class User {
 
     @SerializedName("nickname")

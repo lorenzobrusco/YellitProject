@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import unical.master.computerscience.yellit.R;

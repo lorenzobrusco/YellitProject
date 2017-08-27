@@ -20,15 +20,11 @@ import android.widget.Toast;
 import org.w3c.dom.Document;
 
 import java.io.File;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import retrofit2.Call;
@@ -38,18 +34,12 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import unical.master.computerscience.yellit.R;
 import unical.master.computerscience.yellit.connection.LoginService;
-import unical.master.computerscience.yellit.connection.PostGestureService;
 import unical.master.computerscience.yellit.connection.UsersService;
-import unical.master.computerscience.yellit.graphic.Adapters.PostAdapter;
-import unical.master.computerscience.yellit.graphic.Fragments.PostFragment;
-import unical.master.computerscience.yellit.logic.GoogleApiClient;
 import unical.master.computerscience.yellit.logic.InfoManager;
-import unical.master.computerscience.yellit.logic.objects.Post;
 import unical.master.computerscience.yellit.logic.objects.User;
 import unical.master.computerscience.yellit.utilities.BaseURL;
 import unical.master.computerscience.yellit.utilities.BuilderFile;
 import unical.master.computerscience.yellit.utilities.PrefManager;
-import unical.master.computerscience.yellit.utilities.UpdateGoogleInfo;
 import unical.master.computerscience.yellit.utilities.UpdatePosts;
 
 import static unical.master.computerscience.yellit.utilities.SystemUI.changeSystemBar;

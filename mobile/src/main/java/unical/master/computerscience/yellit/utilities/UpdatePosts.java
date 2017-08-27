@@ -3,10 +3,8 @@ package unical.master.computerscience.yellit.utilities;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
